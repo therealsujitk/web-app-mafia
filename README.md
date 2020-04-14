@@ -6,7 +6,7 @@ Mafia is a social deduction game, created by Dimitry Davidoff in 1986. The game 
 
 ### Usage
 
-To play the game visit: [`https://palymafia.cf`](https://playmafia.cf)
+To play the game visit: [`https://playmafia.cf`](https://playmafia.cf)
 
 ### Links
 
