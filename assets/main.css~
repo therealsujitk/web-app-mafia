@@ -1,0 +1,188 @@
+body {
+	background: #1f1414;
+	font-family: 'Raleway', sans-serif;
+	margin: 0;
+}
+
+#header {
+	position: absolute;
+	width: 100%;
+}
+
+.header {
+	color: #936c6c;
+	font-size: 14px;
+	font-weight: bold;
+	margin-left: 10px;
+	margin-right: 10px;
+	background: none;
+	border: none;
+	outline: none;
+}
+
+.header2 {
+	color: #936c6c;
+	font-size: 17px;
+	font-weight: bold;
+	margin-left: 10px;
+	margin-right: 10px;
+	background: none;
+	border: none;
+	outline: none;	
+}
+
+.link {
+	cursor: pointer;
+}
+
+.link:hover {
+	color: #c80000;
+}
+
+#user-details {
+	position: absolute;
+	margin-top: 50vh;
+	margin-left: 50%;
+	transform: translate(-50%, -50%);
+}
+
+table {
+	color: #fff;
+}
+
+td {
+	padding: 10px;
+}
+
+span {
+	font-size: 15px;
+	font-weight: bold;
+}
+
+#name {
+	background: none;
+	color: #fff;
+	border-style: solid;
+	border-color: #936c6c;
+	border-top: none;
+	border-left: none;
+	border-right: none;
+	font-size: 15px;
+	padding: 4px;
+	width: 100%;
+	transition: border 0.5s;
+	outline: none;
+}
+
+#name:focus {
+	border-color: #c80000;
+}
+
+#avatar {
+	border-radius: 10px;
+}
+
+.btn {
+	font-size: 15px;
+	font-weight: bold;
+	color: none;
+	padding: 25px;
+	padding-top: 10px;
+	padding-bottom: 10px;
+	border-radius: 7px;
+	border-style: none;
+	background: #c80000;
+	cursor: pointer;
+	outline: none;
+}
+
+.btn:hover {
+	background: #af0000;
+}
+
+.btn2 {
+	color: #c80000;
+	cursor: pointer;
+}
+
+.btn2:hover {
+	color: #af0000;
+}
+
+p {
+	padding-left: 10px;
+	padding-right: 10px;
+	color: white;
+	font-size: 15px;
+}
+
+#modal-background {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background: #1f1414;
+	opacity: 0.9;
+	display: none;
+}
+
+.modal {
+	text-align: center;
+	position: absolute;
+	border-radius: 10px;
+	width: 32%;
+	padding: 10px;
+	background: #1f1414;
+	margin-left: 50%;
+	margin-top: 50vh;
+	box-shadow: 4px 4px 4px 5px;
+	transform: translate(-50%, -50%);
+	display: none;
+}
+
+.show-modal {
+	display: block;
+	animation: fadeIn 0.5s, zoomIn 0.5s;
+}
+
+@keyframes fadeIn {
+	from {opacity: 0; transform: translate(-50%, -50%);}
+	to {opacity: 1; transform: translate(-50%, -50%);}
+}
+
+@keyframes zoomIn {
+	from {transform: translate(-50%, -50%) scale(0.8);}
+	to {transform: translate(-50%, -50%) scale(1);}
+}
+
+#close {
+	color: #936c6c;
+}
+
+#close:hover {
+	color: #c80000;
+}
+
+::placeholder {
+	color: #936c6c;
+}
+
+textArea {
+	background: none;
+	color: #fff;
+	border-style: solid;
+	border-color: #936c6c;
+	border-top: none;
+	border-left: none;
+	border-right: none;
+	border-width: 2px;
+	font-size: 15px;
+	padding: 4px;
+	width: 100%;
+	transition: border 0.5s;
+	outline: none;
+	resize: none;
+}
+
+textArea:focus {
+	border-color: #c80000;
+}

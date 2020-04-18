@@ -15,6 +15,5 @@ To play the game visit: [`https://playmafia.cf`](https://playmafia.cf)
 
 ### Built by
 
-- [Abhinav TJ](https://github.com/deltarager)
-- [Abishek Devendran]()
-- [Sujit Kumar](https://github.com/therealsujitk)
+- [Abishek Devendran]() (Graphic Designer)
+- [Sujit Kumar](https://github.com/therealsujitk) (Lead Developer)
