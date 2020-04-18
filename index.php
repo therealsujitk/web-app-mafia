@@ -26,8 +26,8 @@
 					<div>
 						<img id="avatar" src="./assets/avatar_01.png">
 						<table cellpadding="0" cellspacing="0" width="100%">
-							<td style = "text-align: right; padding-right: 15px;"><i class="btn2 fas fa-caret-left fa-3x" onclick="next()"></i></td>
-							<td style = "text-align: left; padding-left: 15px;"><i class="btn2 fas fa-caret-right fa-3x" onclick="prev()"></i></input></td>
+							<td style = "text-align: right; padding-right: 15px;"><i class="btn2 fas fa-caret-left fa-3x" onclick="prev()"></i></td>
+							<td style = "text-align: left; padding-left: 15px;"><i class="btn2 fas fa-caret-right fa-3x" onclick="next()"></i></input></td>
 						</table>
 					</div>
 				</td>

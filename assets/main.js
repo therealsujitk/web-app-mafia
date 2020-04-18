@@ -107,9 +107,31 @@ function closeAll() {
 }
 
 function next() {
+	let x = document.getElementById('avatar');
+	let index = x.src.slice(-6, -4);
+
+	if(index == 10)
+		index = 1;
+	else
+		++index;
 	
+	if(index == 10)
+		x.src = './assets/avatar_' + index + '.png';
+	else
+		x.src = './assets/avatar_0' + index + '.png';
 }
 
 function prev() {
+	let x = document.getElementById('avatar');
+	let index = x.src.slice(-6, -4);
 
+	if(index == 1)
+		index = 10;
+	else
+		--index;
+	
+	if(index == 10)
+		x.src = './assets/avatar_' + index + '.png';
+	else
+		x.src = './assets/avatar_0' + index + '.png';
 }
