@@ -3,7 +3,10 @@
 	<head>
 		<link rel="stylesheet" type="text/css" href="./assets/main.css">
 		<link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet">
+		<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
+		<meta content="utf-8" http-equiv="encoding">
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
+		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
 		<script src="./assets/main.js"></script>
 		<title>Mafia</title>
 	</head>
@@ -35,7 +38,7 @@
 					<div>
 						<table cellpadding="0" cellspacing="0" style="margin-top: -70px;" width="100%">
 							<td style="padding-right: 1px;"><span>Name:</span></td>
-							<td style="padding-left: 1px;"><input id="name" type="text" autocomplete="off" spellcheck="false"></input></td>
+							<td style="padding-left: 1px;"><input id="name" class="text-box" type="text" autocomplete="off" spellcheck="false"></input></td>
 						</table>
 						<span id="name-error" style="padding-left: 10px; color: #c80000; display: none;">Error! Please enter a valid name.</span>
 						<table cellpadding="0" cellspacing="0">
@@ -62,10 +65,12 @@
 				<td class="header2" style="text-align: left;">Report Bug</td>
 				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeBug()"></i></td>
 			</table>
-			<table cellpadding="0" cellspacing="0" style="width: 100%;">
-				<td><textArea id="name" placeholder="Write a bug report..."></textArea></td>
-			</table>
-			<a href=""><input class="btn" type="button" value="Submit Bug Report"  style="margin: 10px;"></input></a>
+			<form id="bug-report" style="margin: 10px;">
+				<textArea name="bug-report" class="text-box" placeholder="Write a bug report..."></textArea>
+				<p id="success-bug" style="margin: 10px; margin-top: 20px; margin-bottom: 0; color: #c80000; display: none;">Success! Your report has been submitted.</p>
+				<p id="error-bug" style="margin: 10px; margin-top: 20px; margin-bottom: 0; color: #c80000; display: none;">Error! Please try again later.</p>
+				<button name="submit" class="btn" type="submit" style="margin-top: 20px;">Submit Bug Report</button>
+			</form>
 		</div>
 		
 		<div id="about-modal" class="modal" style="text-align: left;">
@@ -74,7 +79,7 @@
 				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAbout()"></i></td>
 			</table>
 			<p>Made with love by a team of talented people from <b>BinaryStack</b>.</p>
-			<p>Built By: @AbishekDevendran & @therealsujitk</p>
+			<p><b>Built By:</b> @AbishekDevendran & @therealsujitk</p>
 		</div>
 		
 		<div id="create-modal" class="modal">
@@ -82,17 +87,19 @@
 				<td class="header2" style="text-align: left;">Create a Town</td>
 				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeCreate()"></i></td>
 			</table>
-			<table cellpadding="0" cellspacing="0" style="width: 100%;">
-				<tr>
-					<td style="padding-right: 1px;"><span>Town's name:</span></td>
-					<td style="padding-left: 1px;"><input id="name" type="text" autocomplete="off" spellcheck="false" placeholder="(optional)"></input></td>
-				</tr>
-				<tr>
-					<td style="padding-right: 1px;"><span>Mob's name:</span></td>
-					<td style="padding-left: 1px;"><input id="name" type="text" autocomplete="off" spellcheck="false" placeholder="(optional)"></input></td>
-				</tr>
-			</table>
-			<a href=""><input class="btn" type="button" value="Create Town"  style="margin: 10px;"></input></a>
+			<form action="create-town-1.php" method="post" style="margin: 0;">
+				<table cellpadding="0" cellspacing="0" style="width: 100%;">
+					<tr>
+						<td style="padding-right: 1px;"><span>Town's name:</span></td>
+						<td style="padding-left: 1px;"><input id="town" class="text-box" type="text" autocomplete="off" spellcheck="false" placeholder="(optional)" name="town"></input></td>
+					</tr>
+					<tr>
+						<td style="padding-right: 1px;"><span>Mob's name:</span></td>
+						<td style="padding-left: 1px;"><input id="mob" class="text-box" type="text" autocomplete="off" spellcheck="false" placeholder="(optional)" name="mob"></input></td>
+					</tr>
+				</table>
+				<button class="btn" type="submit" style="margin: 10px;">Create Town</button></a>
+			</form>
 		</div>
 		
 		<div id="join-modal" class="modal">
@@ -102,10 +109,31 @@
 			</table>
 			<table cellpadding="0" cellspacing="0" style="width: 100%;">
 				<td style="padding-right: 1px;"><span>Town ID:</span></td>
-				<td style="padding-left: 1px;"><input id="name" type="text" autocomplete="off" spellcheck="false"></input></td>
+				<td style="padding-left: 1px;"><input id="id" class="text-box" type="text" autocomplete="off" spellcheck="false"></input></td>
 			</table>
 			<a href=""><input class="btn" type="button" value="Join Town"  style="margin: 10px;"></input></a>
 		</div>
 	</body>
+	
+	<script>
+		$(function () {
+			$('#bug-report').on('submit', function (event) {
+				// using this page stop being refreshing 
+				event.preventDefault();
+
+				$.ajax({
+					type: 'POST',
+					url: 'report-bug.php',
+					data: $('#bug-report').serialize(),
+					success: function () {
+						document.getElementById('success-bug').style.display = "block";
+					},
+					error: function () {
+						document.getElementById('error-bug').style.display = "block";
+					}
+				});
+			});
+		});
+	</script>
 </html>
 

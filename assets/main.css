@@ -59,7 +59,7 @@ span {
 	font-weight: bold;
 }
 
-#name {
+.text-box {
 	background: none;
 	color: #fff;
 	border-style: solid;
@@ -74,7 +74,7 @@ span {
 	outline: none;
 }
 
-#name:focus {
+.text-box:focus {
 	border-color: #c80000;
 }
 
@@ -85,7 +85,7 @@ span {
 .btn {
 	font-size: 15px;
 	font-weight: bold;
-	color: none;
+	color: #1f1414;
 	padding: 25px;
 	padding-top: 10px;
 	padding-bottom: 10px;

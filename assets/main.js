@@ -28,6 +28,9 @@ function closeBug() {
 	
 	x.classList.remove("show-modal");
 	y.style.display = "none";
+	
+	document.getElementById('success-bug').style.display = "none";
+	document.getElementById('error-bug').style.display = "none";
 }
 
 function openPrivacy() {
@@ -104,6 +107,9 @@ function closeAll() {
 	d.classList.remove("show-modal");
 	e.classList.remove("show-modal");
 	f.classList.remove("show-modal");
+	
+	document.getElementById('success-bug').style.display = "none";
+	document.getElementById('error-bug').style.display = "none";
 }
 
 function next() {
