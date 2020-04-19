@@ -6,7 +6,7 @@
 		<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 		<meta content="utf-8" http-equiv="encoding">
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
-		<script src="http://code.jquery.com/jquery-1.9.1.js"></script>
+		<script src="http://code.jquery.com/jquery-3.5.0.js"></script>
 		<script src="./assets/main.js"></script>
 		<title>Mafia</title>
 	</head>
@@ -16,27 +16,21 @@
 				<td><h1 style="color: white; margin: 0;">Mafia</h1></td>
 				<td style="text-align: right;">
 					<nav>
-						<input class="header link" type="button" value="Privacy Policy" onclick="openPrivacy()"></input>
-						<input class="header link" type="button" value="Report Bug" onclick="openBug()"></input>
-						<input class="header link" type="button" value="About Us" onclick="openAbout()"></input>
+						<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Privacy Policy" onclick="openPrivacy()"></input>
+						<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Report Bug" onclick="openBug()"></input>
+						<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="About Us" onclick="openAbout()"></input>
 					</nav>
 				</td>
 			</table>
 		</div>
 		<div align="center">
 			<table id="user-details">
-				<td>
-					<div>
+				<tr>
+					<td>
 						<img id="avatar" src="./assets/avatar_01.png">
+					</td>
+					<td>
 						<table cellpadding="0" cellspacing="0" width="100%">
-							<td style = "text-align: right; padding-right: 15px;"><i class="btn2 fas fa-caret-left fa-3x" onclick="prev()"></i></td>
-							<td style = "text-align: left; padding-left: 15px;"><i class="btn2 fas fa-caret-right fa-3x" onclick="next()"></i></input></td>
-						</table>
-					</div>
-				</td>
-				<td>
-					<div>
-						<table cellpadding="0" cellspacing="0" style="margin-top: -70px;" width="100%">
 							<td style="padding-right: 1px;"><span>Name:</span></td>
 							<td style="padding-left: 1px;"><input id="name" class="text-box" type="text" autocomplete="off" spellcheck="false"></input></td>
 						</table>
@@ -45,8 +39,16 @@
 							<td><input class="btn" type="button" value="Create a Town" onclick="openCreate()"></input></td>
 							<td><input class="btn" type="button" value="Join a Town" onclick="openJoin()"></input></td>
 						</table>
-					</div>
-				</td>
+					</td>
+				</tr>
+				<tr>
+					<td style = "padding: 0;">
+						<table cellpadding="0" cellspacing="0" width="100%">
+							<td style = "text-align: right; padding: 0; padding-right: 15px;"><i class="btn2 fas fa-caret-left fa-3x" onclick="prev()"></i></td>
+							<td style = "text-align: left; padding: 0; padding-left: 15px;"><i class="btn2 fas fa-caret-right fa-3x" onclick="next()"></i></input></td>
+						</table>
+					</td>
+				</tr>
 			</table>
 		</div>
 		
@@ -66,10 +68,10 @@
 				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeBug()"></i></td>
 			</table>
 			<form id="bug-report" style="margin: 10px;">
-				<textArea name="bug-report" class="text-box" placeholder="Write a bug report..."></textArea>
-				<p id="success-bug" style="margin: 10px; margin-top: 20px; margin-bottom: 0; color: #c80000; display: none;">Success! Your report has been submitted.</p>
-				<p id="error-bug" style="margin: 10px; margin-top: 20px; margin-bottom: 0; color: #c80000; display: none;">Error! Please try again later.</p>
-				<button name="submit" class="btn" type="submit" style="margin-top: 20px;">Submit Bug Report</button>
+				<textArea name="bug-report" class="text-box" style="margin-bottom: 10px;" placeholder="Write a bug report..."></textArea>
+				<p id="success-bug" style="margin: 10px; margin-top: 0; margin-bottom: 0; color: #c80000; display: none;">Success! Your report has been submitted.</p>
+				<p id="error-bug" style="margin: 10px; margin-top: 0; margin-bottom: 0; color: #c80000; display: none;">Error! Please try again later.</p>
+				<button class="btn" type="submit" style="margin-top: 10px;">Submit Bug Report</button>
 			</form>
 		</div>
 		
@@ -79,7 +81,7 @@
 				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAbout()"></i></td>
 			</table>
 			<p>Made with love by a team of talented people from <b>BinaryStack</b>.</p>
-			<p><b>Built By:</b> @AbishekDevendran & @therealsujitk</p>
+			<p>Built By: <b><a class="link2" href="https://instagram.com/abishek_devendran/">@AbishekDevendran</a></b> & <b><a class="link2" href="https://instagram.com/therealsujitk">@therealsujitk</a></b>.</p>
 		</div>
 		
 		<div id="create-modal" class="modal">
@@ -87,7 +89,7 @@
 				<td class="header2" style="text-align: left;">Create a Town</td>
 				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeCreate()"></i></td>
 			</table>
-			<form action="create-town-1.php" method="post" style="margin: 0;">
+			<form action="initialize-town.php" method="POST" style="margin: 0;">
 				<table cellpadding="0" cellspacing="0" style="width: 100%;">
 					<tr>
 						<td style="padding-right: 1px;"><span>Town's name:</span></td>
@@ -134,6 +136,32 @@
 				});
 			});
 		});
-	</script>
+		
+		function getCookie(cname) {
+			// Split cookie string and get all individual name=value pairs in an array
+			var cookieArr = document.cookie.split(";");
+
+			// Loop through the array elements
+			for(var i = 0; i < cookieArr.length; i++) {
+				var cookiePair = cookieArr[i].split("=");
+
+				/* Removing whitespace at the beginning of the cookie name
+				and compare it with the given string */
+				if(cname == cookiePair[0].trim()) {
+					// Decode the cookie value and return
+					return decodeURIComponent(cookiePair[1]);
+				}
+			}
+
+			// Return null if not found
+			return null;
+		}
+		
+		if(getCookie('name') != null)
+			document.getElementById('name').value = getCookie('name');
+		
+		if(getCookie('avatar') != null)
+			document.getElementById('avatar').src = getCookie('avatar');
+	</script>	
 </html>
 

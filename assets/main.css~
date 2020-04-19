@@ -13,6 +13,8 @@ body {
 	color: #936c6c;
 	font-size: 14px;
 	font-weight: bold;
+	margin-left: 10px;
+	margin-right: 10px;
 	background: none;
 	border: none;
 	outline: none;

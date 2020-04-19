@@ -155,4 +155,6 @@ function setCookie() {
 	
 	document.cookie = "name=" + name + ";expires=" + expires + ";path=/";
 	document.cookie = "avatar=" + avatar + ";expires=" + expires + ";path=/";
+	
+	alert('success');
 }
