@@ -1,4 +1,4 @@
-<!DOCTYPE HTML PUBLIC>
+<!DOCTYPE html public>
 <html>
 	<head>
 		<link rel="stylesheet" type="text/css" href="./assets/main.css">
@@ -115,53 +115,52 @@
 			</table>
 			<a href=""><input class="btn" type="button" value="Join Town"  style="margin: 10px;"></input></a>
 		</div>
-	</body>
-	
-	<script>
-		$(function () {
-			$('#bug-report').on('submit', function (event) {
-				// using this page stop being refreshing 
-				event.preventDefault();
 
-				$.ajax({
-					type: 'POST',
-					url: 'report-bug.php',
-					data: $('#bug-report').serialize(),
-					success: function () {
-						document.getElementById('success-bug').style.display = "block";
-					},
-					error: function () {
-						document.getElementById('error-bug').style.display = "block";
-					}
+		<script>
+			$(function () {
+				$('#bug-report').on('submit', function (event) {
+					// using this page stop being refreshing 
+					event.preventDefault();
+
+					$.ajax({
+						type: 'POST',
+						url: 'report-bug.php',
+						data: $('#bug-report').serialize(),
+						success: function () {
+							document.getElementById('success-bug').style.display = "block";
+						},
+						error: function () {
+							document.getElementById('error-bug').style.display = "block";
+						}
+					});
 				});
 			});
-		});
-		
-		function getCookie(cname) {
-			// Split cookie string and get all individual name=value pairs in an array
-			var cookieArr = document.cookie.split(";");
 
-			// Loop through the array elements
-			for(var i = 0; i < cookieArr.length; i++) {
-				var cookiePair = cookieArr[i].split("=");
+			function getCookie(cname) {
+				// Split cookie string and get all individual name=value pairs in an array
+				var cookieArr = document.cookie.split(";");
 
-				/* Removing whitespace at the beginning of the cookie name
-				and compare it with the given string */
-				if(cname == cookiePair[0].trim()) {
-					// Decode the cookie value and return
-					return decodeURIComponent(cookiePair[1]);
+				// Loop through the array elements
+				for(var i = 0; i < cookieArr.length; i++) {
+					var cookiePair = cookieArr[i].split("=");
+
+					/* Removing whitespace at the beginning of the cookie name
+					and compare it with the given string */
+					if(cname == cookiePair[0].trim()) {
+						// Decode the cookie value and return
+						return decodeURIComponent(cookiePair[1]);
+					}
 				}
+
+				// Return null if not found
+				return null;
 			}
 
-			// Return null if not found
-			return null;
-		}
-		
-		if(getCookie('name') != null)
-			document.getElementById('name').value = getCookie('name');
-		
-		if(getCookie('avatar') != null)
-			document.getElementById('avatar').src = getCookie('avatar');
-	</script>	
-</html>
+			if(getCookie('name') != null)
+				document.getElementById('name').value = getCookie('name');
 
+			if(getCookie('avatar') != null)
+				document.getElementById('avatar').src = getCookie('avatar');
+		</script>
+	</body>
+</html>
