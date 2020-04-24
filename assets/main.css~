@@ -257,6 +257,7 @@ figcaption {
 	width: 90%;
 	height: 70vh;
 	margin-left: 50%;
+	table-layout: fixed;
 	transform: translate(-50%, 0%);
 }
 

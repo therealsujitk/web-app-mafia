@@ -68,7 +68,7 @@
 				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeBug()"></i></td>
 			</table>
 			<form id="bug-report" style="margin: 10px;">
-				<textArea name="bug-report" class="text-box" style="margin-bottom: 10px;" placeholder="Write a bug report..."></textArea>
+				<textArea id="report" class="text-box" style="margin-bottom: 10px;" placeholder="Write a bug report..."></textArea>
 				<p id="success-bug" style="margin: 10px; margin-top: 0; margin-bottom: 0; color: #c80000; display: none;">Success! Your report has been submitted.</p>
 				<p id="error-bug" style="margin: 10px; margin-top: 0; margin-bottom: 0; color: #c80000; display: none;">Error! Please try again later.</p>
 				<button class="btn" type="submit" style="margin-top: 10px;">Submit Bug Report</button>
@@ -89,18 +89,18 @@
 				<td class="header2" style="text-align: left;">Create a Town</td>
 				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeCreate()"></i></td>
 			</table>
-			<form action="initialize-town.php" method="POST" style="margin: 0;">
+			<form id="create" style="margin: 0;">
 				<table cellpadding="0" cellspacing="0" style="width: 100%;">
 					<tr>
 						<td style="padding-right: 1px;"><span>Town's name:</span></td>
-						<td style="padding-left: 1px;"><input id="town" class="text-box" type="text" autocomplete="off" spellcheck="false" placeholder="(optional)" name="town"></input></td>
+						<td style="padding-left: 1px;"><input id="town" name="town" class="text-box" type="text" autocomplete="off" spellcheck="false" placeholder="(optional)" name="town"></input></td>
 					</tr>
 					<tr>
 						<td style="padding-right: 1px;"><span>Mob's name:</span></td>
-						<td style="padding-left: 1px;"><input id="mob" class="text-box" type="text" autocomplete="off" spellcheck="false" placeholder="(optional)" name="mob"></input></td>
+						<td style="padding-left: 1px;"><input id="mob" name="mob" class="text-box" type="text" autocomplete="off" spellcheck="false" placeholder="(optional)" name="mob"></input></td>
 					</tr>
 				</table>
-				<button class="btn" type="submit" style="margin: 10px;">Create Town</button></a>
+				<button class="btn" type="submit" style="margin: 10px;">Create Town</button>
 			</form>
 		</div>
 		
@@ -109,11 +109,13 @@
 				<td class="header2" style="text-align: left;">Join a Town</td>
 				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeJoin()"></i></td>
 			</table>
-			<table cellpadding="0" cellspacing="0" style="width: 100%;">
-				<td style="padding-right: 1px;"><span>Town ID:</span></td>
-				<td style="padding-left: 1px;"><input id="id" class="text-box" type="text" autocomplete="off" spellcheck="false"></input></td>
-			</table>
-			<a href=""><input class="btn" type="button" value="Join Town"  style="margin: 10px;"></input></a>
+			<form id="join" style="margin: 0;">
+				<table cellpadding="0" cellspacing="0" style="width: 100%;">
+					<td style="padding-right: 1px;"><span>Town ID:</span></td>
+					<td style="padding-left: 1px;"><input id="town-id" class="text-box" type="text" autocomplete="off" spellcheck="false"></input></td>
+				</table>
+				<button class="btn" type="submit" style="margin: 10px;">Join Town</button>
+			</form>
 		</div>
 
 		<script>
@@ -121,11 +123,15 @@
 				$('#bug-report').on('submit', function (event) {
 					// using this page stop being refreshing 
 					event.preventDefault();
+					
+					let report = document.getElementById('report').value;
 
 					$.ajax({
 						type: 'POST',
 						url: 'report-bug.php',
-						data: $('#bug-report').serialize(),
+						data: {
+							report: report
+						},
 						success: function () {
 							document.getElementById('success-bug').style.display = "block";
 						},
@@ -134,8 +140,60 @@
 						}
 					});
 				});
-			});
+			
+				$('#create').on('submit', function (event) {
+					// using this page stop being refreshing 
+					event.preventDefault();
+					
+					let town = document.getElementById('town').value;
+					let mob = document.getElementById('mob').value;
+					let name = document.getElementById('name').value;
+					let avatar = document.getElementById('avatar').src;
 
+					$.ajax({
+						type: 'POST',
+						url: 'initialize-town.php',
+						data: {
+							town: town,
+							mob: mob,
+							name: name,
+							avatar: avatar
+						},
+						success: function () {
+							//do something
+						},
+						error: function () {
+							//do something
+						}
+					});
+				});
+				
+				$('#join').on('submit', function (event) {
+					// using this page stop being refreshing 
+					event.preventDefault();
+					
+					let townID = document.getElementById('town-id').value;
+					let name = document.getElementById('name').value;
+					let avatar = document.getElementById('avatar').src;
+
+					$.ajax({
+						type: 'POST',
+						url: 'join-town.php',
+						data: {
+							townID: townID,
+							name: name,
+							avatar: avatar
+						},
+						success: function () {
+							//do something
+						},
+						error: function () {
+							//do something
+						}
+					});
+				});
+			});
+		
 			function getCookie(cname) {
 				// Split cookie string and get all individual name=value pairs in an array
 				var cookieArr = document.cookie.split(";");
@@ -155,12 +213,13 @@
 				// Return null if not found
 				return null;
 			}
-
+		
 			if(getCookie('name') != null)
 				document.getElementById('name').value = getCookie('name');
-
+		
 			if(getCookie('avatar') != null)
 				document.getElementById('avatar').src = getCookie('avatar');
 		</script>
-	</body>
+	</body>	
 </html>
+
