@@ -1,13 +1,31 @@
 <!DOCTYPE html public>
 <html>
 	<head>
-		<link rel="stylesheet" type="text/css" href="./assets/main.css">
+		<link rel="stylesheet" type="text/css" href="assets/css/main.css">
 		<link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet">
 		<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 		<meta content="utf-8" http-equiv="encoding">
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
 		<script src="http://code.jquery.com/jquery-3.5.0.js"></script>
-		<script src="./assets/main.js"></script>
+		<script src="assets/js/main.js"></script>
+		<meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=0.7 maximum-scale=1.0, user-scalable=no">
+		<meta name="description" content="Mafia is a free multiplayer social deduction game. The game models a conflict between two groups: an informed minority, and an uninformed majority. At the start of the game, each player is secretly assigned a role affiliated with one of these teams.">
+		<meta name="keywords" content="mafia, mafia cf, mafiacf, mafia.cf, cf, fun, winner, browser, free, friends">
+		<meta name="robots" content="index">
+		<meta http-equiv="content-language" content="en">
+		<meta property="og:type" content="website">
+		<meta property="og:title" content="Mafia - Free multiplayer social deduction game">
+		<meta property="og:url" content="https://playmafia.cf/">
+		<meta property="og:description" content="Mafia is a free multiplayer social deduction game. The game models a conflict between two groups: an informed minority, and an uninformed majority. At the start of the game, each player is secretly assigned a role affiliated with one of these teams.">
+		<meta property="og:site_name" content="Mafia">
+		<meta property="og:image" content="https://playmafia.cf/assets/images/thumbnail.png">
+		<meta property="og:image:width" content="768">
+		<meta property="og:image:height" content="435">
+		<meta name="twitter:card" content="summary_large_image">
+		<meta name="twitter:title" content="Mafia - Free multiplayer social deduction game">
+		<meta name="twitter:description" content="Mafia is a free multiplayer social deduction game. The game models a conflict between two groups: an informed minority, and an uninformed majority. At the start of the game, each player is secretly assigned a role affiliated with one of these teams.">
+		<meta name="twitter:image" content="https://playmafia.cf/assets/images/thumbnail.png">
 		<title>Mafia</title>
 	</head>
 	<body>
@@ -27,7 +45,7 @@
 			<table id="user-details">
 				<tr>
 					<td>
-						<img id="avatar" src="./assets/avatar_01.png">
+						<img id="avatar" src="./assets/avatars/avatar_01.png">
 					</td>
 					<td>
 						<table cellpadding="0" cellspacing="0" width="100%">
@@ -59,7 +77,8 @@
 				<td class="header2" style="text-align: left;">Privacy Policy</td>
 				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closePrivacy()"></i></td>
 			</table>
-			<p>We don't store shit.</p>
+			<p>We use cookies to store your name and the avatar you selected.</p>
+			<p>Details necessary to set up the game environment are stored in our database. All data stored is deleted shortly after the game ends.</p>
 		</div>
 		
 		<div id="bug-modal" class="modal">
@@ -119,78 +138,76 @@
 		</div>
 
 		<script>
-			$(function () {
-				$('#bug-report').on('submit', function (event) {
-					// using this page stop being refreshing 
-					event.preventDefault();
-					
-					let report = document.getElementById('report').value;
-
-					$.ajax({
-						type: 'POST',
-						url: 'report-bug.php',
-						data: {
-							report: report
-						},
-						success: function () {
-							document.getElementById('success-bug').style.display = "block";
-						},
-						error: function () {
-							document.getElementById('error-bug').style.display = "block";
-						}
-					});
-				});
-			
-				$('#create').on('submit', function (event) {
-					// using this page stop being refreshing 
-					event.preventDefault();
-					
-					let town = document.getElementById('town').value;
-					let mob = document.getElementById('mob').value;
-					let name = document.getElementById('name').value;
-					let avatar = document.getElementById('avatar').src;
-
-					$.ajax({
-						type: 'POST',
-						url: 'initialize-town.php',
-						data: {
-							town: town,
-							mob: mob,
-							name: name,
-							avatar: avatar
-						},
-						success: function () {
-							//do something
-						},
-						error: function () {
-							//do something
-						}
-					});
-				});
+			$('#bug-report').on('submit', function (event) {
+				// using this page stop being refreshing 
+				event.preventDefault();
 				
-				$('#join').on('submit', function (event) {
-					// using this page stop being refreshing 
-					event.preventDefault();
-					
-					let townID = document.getElementById('town-id').value;
-					let name = document.getElementById('name').value;
-					let avatar = document.getElementById('avatar').src;
+				let report = document.getElementById('report').value;
 
-					$.ajax({
-						type: 'POST',
-						url: 'join-town.php',
-						data: {
-							townID: townID,
-							name: name,
-							avatar: avatar
-						},
-						success: function () {
-							//do something
-						},
-						error: function () {
-							//do something
-						}
-					});
+				$.ajax({
+					type: 'POST',
+					url: 'report-bug.php',
+					data: {
+						report: report
+					},
+					success: function () {
+						document.getElementById('success-bug').style.display = "block";
+					},
+					error: function () {
+						document.getElementById('error-bug').style.display = "block";
+					}
+				});
+			});
+		
+			$('#create').on('submit', function (event) {
+				// using this page stop being refreshing 
+				event.preventDefault();
+				
+				let town = document.getElementById('town').value;
+				let mob = document.getElementById('mob').value;
+				let name = document.getElementById('name').value;
+				let avatar = document.getElementById('avatar').src;
+
+				$.ajax({
+					type: 'POST',
+					url: 'initialize-town.php',
+					data: {
+						town: town,
+						mob: mob,
+						name: name,
+						avatar: avatar
+					},
+					success: function () {
+						//do something
+					},
+					error: function () {
+						//do something
+					}
+				});
+			});
+			
+			$('#join').on('submit', function (event) {
+				// using this page stop being refreshing 
+				event.preventDefault();
+				
+				let townID = document.getElementById('town-id').value;
+				let name = document.getElementById('name').value;
+				let avatar = document.getElementById('avatar').src;
+
+				$.ajax({
+					type: 'POST',
+					url: 'join-town.php',
+					data: {
+						townID: townID,
+						name: name,
+						avatar: avatar
+					},
+					success: function () {
+						window.location.href = '/' + townID + '/';
+					},
+					error: function () {
+						//do something
+					}
 				});
 			});
 		

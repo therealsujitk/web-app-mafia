@@ -1,15 +1,20 @@
 <!DOCTYPE html public>
 <html>
 	<head>
-		<link rel="stylesheet" type="text/css" href="./assets/main.css">
+		<link rel="stylesheet" type="text/css" href="assets/css/main.css">
 		<link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet">
 		<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 		<meta content="utf-8" http-equiv="encoding">
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
 		<script src="http://code.jquery.com/jquery-3.5.0.js"></script>
-		<script src="./assets/main.js"></script>
+		<script src="assets/js/main.js"></script>
 		<script>
 			var townID = <?php session_start(); echo json_encode($_SESSION["townID"]); ?>;
+			//var id = window.location.href;
+			//id = id.replace('https://playmafia.cf/', '');
+			//id = id.split('/')[0];
+			//if (id != townID)
+				//window.location.replace('https://playmafia.cf');
 		</script>
 		<title>Mafia</title>
 	</head>
@@ -30,7 +35,7 @@
 		<div id="town-players">
 			<h2><?php
 				session_start();
-				$conn = new mysqli('localhost', 'root', '299792458', 'mafia');
+				include('conn.php');
 				$townID = $_SESSION["townID"];
 				$query = "SELECT town_name FROM town_details WHERE town_id = '$townID';";
 				
@@ -42,7 +47,7 @@
 			<table id="player-cards" cellpadding="0" cellspacing="0">
 				<?php
 					session_start();
-					$conn = new mysqli('localhost', 'root', '299792458', 'mafia');
+					$conn = mysqli_connect('sql300.epizy.com', 'epiz_25248784', 'oHooXKYBnmNP', 'epiz_25248784_mafia');
 					$query = "SELECT * FROM town_" . $_SESSION["townID"] . ";";
 					
 					if($result = mysqli_query($conn, $query))
@@ -57,8 +62,8 @@
 				?>
 			</table>
 
-			<p id="share">Your Town ID is <b><?php session_start(); echo $_SESSION["townID"]; ?></b>. <span class="link3" onclick="copyInvite(townID);">Click here</span> to copy.</p>
-			<input class="btn" type="button" value="Start Game" disabled></input>
+			<p id="share">Your Town ID is <b><?php session_start(); echo $_SESSION["townID"]; ?></b>. <span class="link3" onclick="copyInvite(townID);">Click here</span> to copy the invite link.</p>
+			<input id="start" class="btn" type="button" value="Start Game" ></input>
 		</div>
 		
 		<div id="modal-background" onclick="closeAll()"></div>
@@ -68,7 +73,8 @@
 				<td class="header2" style="text-align: left;">Privacy Policy</td>
 				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closePrivacy()"></i></td>
 			</table>
-			<p>We don't store shit.</p>
+			<p>We use cookies to store your name and the avatar you selected.</p>
+			<p>Details necessary to set up the game environment are stored in our database. All data stored is deleted shortly after the game ends.</p>
 		</div>
 		
 		<div id="bug-modal" class="modal">
@@ -126,10 +132,22 @@
 		</div>
 		
 		<script>
-			$(document).ready(function(){
-				setInterval(function(){
-					$("#player-cards").load(window.location.href + " #player-cards > *" );
-				}, 1000);
+			setInterval(function(){
+				$("#player-cards").load("https://playmafia.cf/pre-game.php" + " #player-cards > *" );
+			}, 1000);
+			
+			$('#start').on('click', function (event) {
+
+				$.ajax({
+					type: 'POST',
+					url: '../build-town.php',
+					success: function () {
+						window.location.href = '../play/' + townID + '/';
+					},
+					error: function () {
+						//do something
+					}
+				});
 			});
 		</script>
 	</body>	

@@ -1,5 +1,5 @@
 <?php
-	$conn = new mysqli('localhost', 'root', '299792458', 'mafia');
+	include('conn.php');
 	$townID = $_POST['townID'];
 	$name = $_POST['name'];
 	$avatar = $_POST['avatar'];

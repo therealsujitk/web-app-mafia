@@ -1,6 +1,5 @@
 <?php
-
-	$conn = mysqli_connect('localhost', 'root', '299792458', 'mafia');
+	include('conn.php');
 
 	$report = $_POST['report'];
 	$report = str_replace("'", "\'", $report);

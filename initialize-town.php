@@ -11,7 +11,7 @@
 		return $ID;
 	}
 	
-	$conn = new mysqli('localhost', 'root', '299792458', 'mafia');
+	include('conn.php');
 	
 	while(true) {
 		$townID = uniqueID();

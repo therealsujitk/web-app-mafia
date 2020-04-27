@@ -1,13 +1,13 @@
 <!DOCTYPE html public>
 <html>
 	<head>
-		<link rel="stylesheet" type="text/css" href="./assets/main.css">
+		<link rel="stylesheet" type="text/css" href="assets/css/main.css">
 		<link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet">
 		<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 		<meta content="utf-8" http-equiv="encoding">
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
 		<script src="http://code.jquery.com/jquery-3.5.0.js"></script>
-		<script src="./assets/main.js"></script>
+		<script src="assets/js/main.js"></script>
 		<script>
 			var townID = <?php session_start(); echo json_encode($_SESSION["townID"]); ?>;
 		</script>
@@ -35,16 +35,22 @@
 				</tr>
 				<tr>
 					<td id="game-content-l" style="width: 80%; padding: 0;">
-						<div id="news-bar" style="background: #000; width: 99.5%; border-radius: 20px 20px 0px 0px; padding: 0.25%;">
-							<p>Citizens of Riverdale, ... </p>
-						</div>
-						<div id="day-chat" style="width: 100%; height: 88%; background: #111; border-radius: 0px 0px 20px 20px;">
+						<div id="content" style="width: 100%; height: 100%; background: #111; border-radius: 20px;">
+							<div id="news-bar" style="background: #000; width: 99.5%; border-radius: 20px 20px 0px 0px; padding: 0.25%;">
+								<p id="news">Welcome to <?php
+									include('conn.php');
+									$townID = $_SESSION["townID"];
+									$query = "SELECT town_name FROM town_details WHERE town_id = '$townID';";
+									echo '<b>' . mysqli_fetch_assoc(mysqli_query($conn, $query))["town_name"] . '</b>';
+									mysqli_close($conn);
+								?>.</p>
+							</div>
 						</div>
 					</td>
 					<td id="game-content-r" style="width: 20%;">
 						<?php
 							session_start();
-							$conn = new mysqli('localhost', 'root', '299792458', 'mafia');
+							include('conn.php');
 							$query = "SELECT * FROM town_" . $_SESSION["townID"] . ";";
 					
 							if($result = mysqli_query($conn, $query)) {
@@ -92,7 +98,8 @@
 				<td class="header2" style="text-align: left;">Privacy Policy</td>
 				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closePrivacy()"></i></td>
 			</table>
-			<p>We don't store shit.</p>
+			<p>We use cookies to store your name and the avatar you selected.</p>
+			<p>Details necessary to set up the game environment are stored in our database. All data stored is deleted shortly after the game ends.</p>
 		</div>
 		
 		<div id="bug-modal" class="modal">
