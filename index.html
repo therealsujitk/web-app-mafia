@@ -28,7 +28,7 @@
 		<meta name="twitter:image" content="https://playmafia.cf/assets/images/thumbnail.png">
 		<title>Mafia</title>
 	</head>
-	<body>
+	<body>	
 		<div id="header">
 			<table cellpadding="0" cellspacing="0" style="width: 100%; padding-left: 1%; padding-right: 1%;">
 				<td><h1 style="color: white; margin: 0;">Mafia</h1></td>
@@ -75,7 +75,7 @@
 		<div id="privacy-modal" class="modal" style="text-align: left;">
 			<table cellpadding="0" cellspacing="0" style="width: 100%;">
 				<td class="header2" style="text-align: left;">Privacy Policy</td>
-				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closePrivacy()"></i></td>
+				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 			</table>
 			<p>We use cookies to store your name and the avatar you selected.</p>
 			<p>Details necessary to set up the game environment are stored in our database. All data stored is deleted shortly after the game ends.</p>
@@ -84,7 +84,7 @@
 		<div id="bug-modal" class="modal">
 			<table cellpadding="0" cellspacing="0" style="width: 100%;">
 				<td class="header2" style="text-align: left;">Report Bug</td>
-				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeBug()"></i></td>
+				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 			</table>
 			<form id="bug-report" style="margin: 10px;">
 				<textArea id="report" class="text-box" style="margin-bottom: 10px;" placeholder="Write a bug report..."></textArea>
@@ -97,7 +97,7 @@
 		<div id="about-modal" class="modal" style="text-align: left;">
 			<table cellpadding="0" cellspacing="0" style="width: 100%;">
 				<td class="header2" style="text-align: left;">About Us</td>
-				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAbout()"></i></td>
+				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 			</table>
 			<p>Made with love by a team of talented people from <b>BinaryStack</b>.</p>
 			<p>Built By: <b><a class="link2" href="https://instagram.com/abishek_devendran/">@AbishekDevendran</a></b> & <b><a class="link2" href="https://instagram.com/therealsujitk">@therealsujitk</a></b>.</p>
@@ -106,7 +106,7 @@
 		<div id="create-modal" class="modal">
 			<table cellpadding="0" cellspacing="0" style="width: 100%;">
 				<td class="header2" style="text-align: left;">Create a Town</td>
-				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeCreate()"></i></td>
+				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 			</table>
 			<form id="create" style="margin: 0;">
 				<table cellpadding="0" cellspacing="0" style="width: 100%;">
@@ -126,7 +126,7 @@
 		<div id="join-modal" class="modal">
 			<table cellpadding="0" cellspacing="0" style="width: 100%;">
 				<td class="header2" style="text-align: left;">Join a Town</td>
-				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeJoin()"></i></td>
+				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 			</table>
 			<form id="join" style="margin: 0;">
 				<table cellpadding="0" cellspacing="0" style="width: 100%;">
@@ -178,7 +178,7 @@
 						avatar: avatar
 					},
 					success: function () {
-						//do something
+						window.location.href = '/' + townID + '/';
 					},
 					error: function () {
 						//do something
@@ -236,6 +236,8 @@
 		
 			if(getCookie('avatar') != null)
 				document.getElementById('avatar').src = getCookie('avatar');
+				
+			//document.getElementById('splash').style.display = "none";
 		</script>
 	</body>	
 </html>

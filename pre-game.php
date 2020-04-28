@@ -16,7 +16,7 @@
 			//if (id != townID)
 				//window.location.replace('https://playmafia.cf');
 		</script>
-		<title>Mafia</title>
+		<title><?php session_start(); echo $_SESSION["town"]; ?> - Mafia</title>
 	</head>
 	<body>
 		<div id="header">
@@ -33,21 +33,11 @@
 		</div>
 		
 		<div id="town-players">
-			<h2><?php
-				session_start();
-				include('conn.php');
-				$townID = $_SESSION["townID"];
-				$query = "SELECT town_name FROM town_details WHERE town_id = '$townID';";
-				
-				if($result = mysqli_query($conn, $query))
-					echo mysqli_fetch_assoc($result)["town_name"];
-				
-				mysqli_close($conn);
-			?></h2>
+			<h2><?php session_start(); echo $_SESSION["town"]; ?></h2>
 			<table id="player-cards" cellpadding="0" cellspacing="0">
 				<?php
 					session_start();
-					$conn = mysqli_connect('sql300.epizy.com', 'epiz_25248784', 'oHooXKYBnmNP', 'epiz_25248784_mafia');
+					include('conn.php');
 					$query = "SELECT * FROM town_" . $_SESSION["townID"] . ";";
 					
 					if($result = mysqli_query($conn, $query))
@@ -71,7 +61,7 @@
 		<div id="privacy-modal" class="modal" style="text-align: left;">
 			<table cellpadding="0" cellspacing="0" style="width: 100%;">
 				<td class="header2" style="text-align: left;">Privacy Policy</td>
-				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closePrivacy()"></i></td>
+				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 			</table>
 			<p>We use cookies to store your name and the avatar you selected.</p>
 			<p>Details necessary to set up the game environment are stored in our database. All data stored is deleted shortly after the game ends.</p>
@@ -80,7 +70,7 @@
 		<div id="bug-modal" class="modal">
 			<table cellpadding="0" cellspacing="0" style="width: 100%;">
 				<td class="header2" style="text-align: left;">Report Bug</td>
-				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeBug()"></i></td>
+				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 			</table>
 			<form id="bug-report" style="margin: 10px;">
 				<textArea name="bug-report" class="text-box" style="margin-bottom: 10px;" placeholder="Write a bug report..."></textArea>
@@ -93,54 +83,22 @@
 		<div id="about-modal" class="modal" style="text-align: left;">
 			<table cellpadding="0" cellspacing="0" style="width: 100%;">
 				<td class="header2" style="text-align: left;">About Us</td>
-				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAbout()"></i></td>
+				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 			</table>
 			<p>Made with love by a team of talented people from <b>BinaryStack</b>.</p>
 			<p>Built By: <b><a class="link2" href="https://instagram.com/abishek_devendran/">@AbishekDevendran</a></b> & <b><a class="link2" href="https://instagram.com/therealsujitk">@therealsujitk</a></b>.</p>
 		</div>
 		
-		<div id="create-modal" class="modal">
-			<table cellpadding="0" cellspacing="0" style="width: 100%;">
-				<td class="header2" style="text-align: left;">Create a Town</td>
-				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeCreate()"></i></td>
-			</table>
-			<form action="initialize-town.php" method="POST" style="margin: 0;">
-				<table cellpadding="0" cellspacing="0" style="width: 100%;">
-					<tr>
-						<td style="padding-right: 1px;"><span>Town's name:</span></td>
-						<td style="padding-left: 1px;"><input id="town" class="text-box" type="text" autocomplete="off" spellcheck="false" placeholder="(optional)" name="town"></input></td>
-					</tr>
-					<tr>
-						<td style="padding-right: 1px;"><span>Mob's name:</span></td>
-						<td style="padding-left: 1px;"><input id="mob" class="text-box" type="text" autocomplete="off" spellcheck="false" placeholder="(optional)" name="mob"></input></td>
-					</tr>
-				</table>
-				<button class="btn" type="submit" style="margin: 10px;">Create Town</button></a>
-			</form>
-		</div>
-		
-		<div id="join-modal" class="modal">
-			<table cellpadding="0" cellspacing="0" style="width: 100%;">
-				<td class="header2" style="text-align: left;">Join a Town</td>
-				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeJoin()"></i></td>
-			</table>
-			<table cellpadding="0" cellspacing="0" style="width: 100%;">
-				<td style="padding-right: 1px;"><span>Town ID:</span></td>
-				<td style="padding-left: 1px;"><input id="id" class="text-box" type="text" autocomplete="off" spellcheck="false"></input></td>
-			</table>
-			<a href=""><input class="btn" type="button" value="Join Town"  style="margin: 10px;"></input></a>
-		</div>
-		
 		<script>
 			setInterval(function(){
-				$("#player-cards").load("https://playmafia.cf/pre-game.php" + " #player-cards > *" );
+				//$("#player-cards").load("https://playmafia.cf/pre-game.php" + " #player-cards > *" );
 			}, 1000);
 			
 			$('#start').on('click', function (event) {
 
 				$.ajax({
 					type: 'POST',
-					url: '../build-town.php',
+					url: 'build-town.php',
 					success: function () {
 						window.location.href = '../play/' + townID + '/';
 					},
