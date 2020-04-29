@@ -14,7 +14,7 @@ CREATE TABLE bug_reports (
 	report VARCHAR(2000) NOT NULL
 );
 ```
-- SQL Table **town_details**:
+- SQL table **town_details**:
 ```sql
 CREATE TABLE town_details (
 	town_id VARCHAR(15) PRIMARY KEY,
