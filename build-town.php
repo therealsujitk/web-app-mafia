@@ -175,7 +175,13 @@
 		}
 	}
 	
-	$query = "ALTER TABLE town_" . $_SESSION["townID"] ." ADD night_0 INT(1) NOT NULL DEFAULT 0;";
+	$query = "ALTER TABLE town_" . $_SESSION["townID"] . " ADD night_0 INT(1) NOT NULL DEFAULT 0;";
+	mysqli_query($conn, $query);
+	
+	$query = "CREATE TABLE chat_" . $_SESSION["townID"] . " (
+		name VARCHAR(15) NOT NULL,
+		message VARCHAR(2000) NOT NULL,
+	);";
 	mysqli_query($conn, $query);
 	
 	mysqli_close($conn);
