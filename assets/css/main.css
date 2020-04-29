@@ -4,7 +4,7 @@ body {
 	margin: 0;
 }
 
-h1, h2, h3 {
+h1, h2, h3, h4, h5 {
 	color: #fff;
 	margin: 0;
 }
@@ -105,6 +105,8 @@ span {
 
 img {
 	border-radius: 10px;
+	margin-left: 50%;
+	transform: translate(-50%, 0%);
 }
 
 .btn {
@@ -155,11 +157,20 @@ p {
 	display: none;
 }
 
+#modal-background2 {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background: #1f1414;
+	opacity: 0.9;
+	display: none;
+}
+
 .modal {
 	text-align: center;
 	position: absolute;
 	border-radius: 10px;
-	width: 32%;
+	width: 365px;
 	padding: 10px;
 	background: #1f1414;
 	margin-left: 50%;
@@ -255,7 +266,6 @@ figcaption {
 	border: none;
 	border-spacing: 10px;
 	width: 90%;
-	height: 70vh;
 	margin-left: 50%;
 	transform: translate(-50%, 0%);
 }
@@ -266,4 +276,49 @@ figcaption {
 	border-color: #936c6c;
 	vertical-align: top;
 	padding: 1.5%;
+}
+
+#chat-box {
+	margin: 1.5%;
+	margin-right: 0;
+	width: 97%;
+	font-size: 15px;
+	background: none;
+	color: #fff;
+	padding: 7px 10px 7px 10px;
+	border-style: solid;
+	border-color: #936c6c;
+	border-radius: 10px;
+	transition: border 0.5s;
+	outline: none;
+}
+
+#chat-box:focus {
+	border-color: #c80000;
+}
+
+.chat-l {
+	background: #222;
+	color: #fff;
+	display: inline-block;
+	max-width: 60%;
+	padding: 10px;
+	margin: 10px;
+	margin-top: 10px;
+	margin-bottom: 0px;
+	text-align: left;
+	border-radius: 7px;
+}
+
+.chat-r {
+	background: #fff;
+	color: #000;
+	display: inline-block;
+	max-width: 60%;
+	padding: 10px;
+	margin: 10px;
+	margin-top: 10px;
+	margin-bottom: 0px;
+	text-align: left;
+	border-radius: 7px;
 }

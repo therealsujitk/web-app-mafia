@@ -33,7 +33,7 @@
 			<table id="game-content">
 				<tr>
 					<th style="height: 5px; vertical-align: center;"><h3 id="game-index"></h3></th>
-					<th style="height: 5px; vertical-align: center;"><!--<i class="far fa-clock"></i> 53--></th>
+					<th style="height: 5px; vertical-align: center;"><button id="my-role" class="btn" onclick="openRole()">My Role</button></th>
 				</tr>
 				<tr>
 					<td id="game-content-l" style="width: 80%; padding: 0;">
@@ -41,7 +41,7 @@
 							<div id="news-bar" style="background: #000; width: 99.5%; border-radius: 20px 20px 0px 0px; padding: 0.25%;">
 								<p id="news">News from your town will show up here.</p>
 							</div>
-							<div id="game-display" style="height: 42vh; overflow-y: scroll; overflow-x: hidden;">
+							<div id="game-display" style="height: 35vh; overflow-y: scroll; overflow-x: hidden;">
 								<?php
 									session_start();
 									include('conn.php');
@@ -77,34 +77,22 @@
 									}
 									else {
 										//Day
-										$query = "SELECT user_id FROM town_" . $_SESSION["townID"] . " is_killed = 0 AND is_executed = 0;";
+										$query = "SELECT * FROM chat_" . $_SESSION["townID"] . ";";
 										if($result = mysqli_query($conn, $query)) {
 											while($row = mysqli_fetch_assoc($result)) {
-												if($row["user_id"] == $_SESSION["userID"]) {
-													$query = "SELECT * FROM chat_" . $_SESSION["townID"] . ";";
-													if($result = mysqli_query($conn, $query)) {
-														while($row = mysqli_fetch_assoc($result)) {
-															if($row["name"] == $_SESSION["name"])
-																echo '<div style="100%; text-align: right;"><div class="chat-r"><b>' . $row["name"] . ':</b> ' . $row["message"] . '</div></div>';
-															else
-																echo '<div style="100%; text-align: left;"><div class="chat-l"><b>' . $row["name"] . ':</b> ' . $row["message"] . '</div></div>';
-														}
-													}
-													break;
-												}
-												else {
-													//show image for dead
-												}
+												if($row["name"] == $_SESSION["name"])
+													echo '<div style="100%; text-align: right;"><div class="chat-r"><b>' . $row["name"] . ':</b> ' . $row["message"] . '</div></div>';
+												else
+													echo '<div style="100%; text-align: left;"><div class="chat-l"><b>' . $row["name"] . ':</b> ' . $row["message"] . '</div></div>';
 											}
 										}
-										
 									}
 									mysqli_close($conn);
 								?>
 							</div>
 							<table style="width: 100%;">
 								<td style="padding: 0;"><input id="chat-box" placeholder="Write a message..."></input></td>
-								<td style="padding: 0;"><button id="send" class="btn" style="margin-right: 1.5%; border-radius: 10px;">Send</button></td>
+								<td style="padding: 0; width: 190px;"><button id="send" class="btn" style="border-radius: 10px;">Send</button><button id="vote" class="btn" style="margin-left: 6%; margin-right: 1.5%; border-radius: 10px;">Vote</button></td>
 							</table>
 						</div>
 					</td>
@@ -152,7 +140,7 @@
 					</td>
 				</td>
 			</table>
-			<div id="day-night">
+			<div id="daily-update">
 				<?php
 					session_start();
 					include('conn.php');
@@ -178,9 +166,42 @@
 			
 						echo '<script>
 							document.getElementById("news").innerHTML = "";
-							let news = "Welcome, members of " + mob + ", below you can chat with the other mafia members on who is to be killed. Mr. Bean will then choose the victim by clicking the button at the top right.";
+							let news = "Welcome, members of *" + mob + "*, below you can chat with the other mafia members on who is to be killed. *Mr. Bean* will then choose the victim by clicking the *Kill* button at the bottom.";
 							displayNews(news, 0);
 						</script>';
+						
+						$query = "SELECT user_id FROM town_" . $_SESSION["townID"] . " WHERE is_mafia = 1";
+						if($result = mysqli_query($conn, $query)) {
+							while($row = mysqli_fetch_assoc($result)) {
+								if($row["user_id"] == $_SESSION["userID"]) {
+									echo '<script>document.getElementById("send").disabled = false;</script>';
+									echo '<script>document.getElementById("vote").disabled = false;</script>';
+									echo '<script>document.getElementById("vote").innerHTML = "Kill";</script>';
+									break;
+								}
+								else {
+									echo '<script>document.getElementById("send").disabled = true;</script>';
+									echo '<script>document.getElementById("vote").disabled = true;</script>';
+									echo '<script>document.getElementById("vote").innerHTML = "Vote";</script>';
+								}
+							}
+						}
+						
+						$query = "SELECT user_id FROM town_" . $_SESSION["townID"] . " WHERE is_medic = 1";
+						if($result = mysqli_query($conn, $query)) {
+							while($row = mysqli_fetch_assoc($result)) {
+								if($row["user_id"] == $_SESSION["userID"]) {
+									echo '<script>document.getElementById("vote").disabled = false;</script>';
+									echo '<script>document.getElementById("vote").innerHTML = "Heal";</script>';
+									break;
+								}
+								else {
+									echo '<script>document.getElementById("send").disabled = true;</script>';
+									echo '<script>document.getElementById("vote").disabled = true;</script>';
+									echo '<script>document.getElementById("vote").innerHTML = "Vote";</script>';
+								}
+							}
+						}
 					}
 					else {
 						//Day
@@ -189,17 +210,31 @@
 						echo '<script>document.getElementById("game-index").innerHTML = "Day ' . $day . '";</script>';
 						echo '<script>
 							document.getElementById("news").innerHTML = "";
-							let news = "Citizens of " + town + ", I\'m afraid I have some bad news. Last night " + mob + " struck again and killed Teddy. Below you can talk about who you suspect of this heinous crime. You can then secretly vote on who you think should be executed by clicking the button at the top right.";
+							let news = "Citizens of *" + town + "*, I\'m afraid I have some bad news. Last night *" + mob + "* struck again and killed *Teddy*. Below you can talk about who you suspect of this heinous crime. You can then secretly vote on who you think should be executed by clicking the *Vote* button at the bottom.";
 							displayNews(news, 0);
 						</script>';
+						echo '<script>document.getElementById("send").disabled = false;</script>';
+						echo '<script>document.getElementById("vote").disabled = false;</script>';
+						echo '<script>document.getElementById("vote").innerHTML = "Vote";</script>';
 					}
+					
+					$query = "SELECT user_id FROM town_" . $_SESSION["townID"] . " WHERE is_killed = 1 OR is_executed = 1;";
+					if($result = mysqli_query($conn, $query)) {
+						while($row = mysqli_fetch_assoc($result)) {
+							if($row["user_id"] == $_SESSION["userID"]) {
+								echo '<script>document.getElementById("send").disabled = true;</script>';
+								echo '<script>document.getElementById("vote").disabled = true;</script>';
+								break;
+							}
+						}
+					}
+					
 					mysqli_close($conn);
 				?>
 			</div>
 		</div>
 		
 		<div id="modal-background" onclick="closeAll()"></div>
-		<div id="modal-background2"></div>
 		
 		<div id="privacy-modal" class="modal" style="text-align: left;">
 			<table cellpadding="0" cellspacing="0" style="width: 100%;">
@@ -232,86 +267,76 @@
 			<p>Built By: <b><a class="link2" href="https://instagram.com/abishek_devendran/">@AbishekDevendran</a></b> & <b><a class="link2" href="https://instagram.com/therealsujitk">@therealsujitk</a></b>.</p>
 		</div>
 		
-		<?php
-			session_start();
-			include('conn.php');
-			$query = "SELECT * FROM town_" . $_SESSION["townID"] . " WHERE user_id = " . $_SESSION["userID"] . ";";
+		<div id="role-modal" class="modal" style="text-align: left;">
+			<?php
+				session_start();
+				include('conn.php');
+				$query = "SELECT * FROM town_" . $_SESSION["townID"] . " WHERE user_id = " . $_SESSION["userID"] . ";";
 			
-			if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_mafia"]) {
-				echo '<div id="role-modal" class="modal" style="text-align: left;">
-					<table cellpadding="0" cellspacing="0" style="width: 100%;">
+				if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_mafia"]) {
+					echo '<table cellpadding="0" cellspacing="0" style="width: 100%;">
 						<td class="header2" style="text-align: left;">Your Role</td>
 						<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 					</table>
 					<table cellpadding="0" cellspacing="0" style="width: 100%;">
 						<td><img src="assets/cards/mafia.png" style="height: 150px;"></img></td>
 						<td><h3>Mafia</h3><br><p style="padding: 0; margin: 0;">Your job is to take over <b>' . $_SESSION["town"] . '</b> with the help of the other mafia members by killing citizens every night.</p></td>
-					</table>
-				</div>';
-				
-				echo '<script>document.getElementById("role-modal").classList.add("show-modal"); document.getElementById("modal-background2").style.display = "block";</script>';
-			}
-			else if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_poser"]) {
-				echo '<div id="role-modal" class="modal" style="text-align: left;">
-					<table cellpadding="0" cellspacing="0" style="width: 100%;">
+					</table>';
+				}
+				else if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_poser"]) {
+					echo '<table cellpadding="0" cellspacing="0" style="width: 100%;">
 						<td class="header2" style="text-align: left;">Your Role</td>
 						<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 					</table>
 					<table cellpadding="0" cellspacing="0" style="width: 100%;">
 						<td><img src="assets/cards/poser.png" style="height: 150px;"></img></td>
 						<td><h3>Poser</h3><br><p style="padding: 0; margin: 0;">Your job is to help the' . $_SESSION["mob"] . ' mafia take over <b>' . $_SESSION["town"] . '</b> by making people think that you are a member of the mafia.</p></td>
-					</table>
-				</div>';
-				
-				echo '<script>document.getElementById("role-modal").classList.add("show-modal"); document.getElementById("modal-background2").style.display = "block";</script>';
-			}
-			else if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_medic"]) {
-				echo '<div id="role-modal" class="modal" style="text-align: left;">
-					<table cellpadding="0" cellspacing="0" style="width: 100%;">
+					</table>';
+				}
+				else if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_medic"]) {
+					echo '<table cellpadding="0" cellspacing="0" style="width: 100%;">
 						<td class="header2" style="text-align: left;">Your Role</td>
 						<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 					</table>
 					<table cellpadding="0" cellspacing="0" style="width: 100%;">
 						<td><img src="assets/cards/medic.png" style="height: 150px;"></img></td>
-						<td><h3>Medic</h3><br><p style="padding: 0; margin: 0;">You have the ability to save anyone you want, you can even save yourself. Note that you <b>can not</b> save the same person twice in a row.</p></td>
-					</table>
-				</div>';
-				
-				echo '<script>document.getElementById("role-modal").classList.add("show-modal"); document.getElementById("modal-background2").style.display = "block";</script>';
-			}
-			else if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_sherrif"]) {
-				echo '<div id="role-modal" class="modal" style="text-align: left;">
-					<table cellpadding="0" cellspacing="0" style="width: 100%;">
+						<td><h3>Medic</h3><br><p style="padding: 0; margin: 0;">You have the ability to heal anyone you want, you can even heal yourself. Note that you <b>can not</b> heal the same person twice in a row.</p></td>
+					</table>';
+				}
+				else if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_sherrif"]) {
+					echo '<table cellpadding="0" cellspacing="0" style="width: 100%;">
 						<td class="header2" style="text-align: left;">Your Role</td>
 						<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 					</table>
 					<table cellpadding="0" cellspacing="0" style="width: 100%;">
 						<td><img src="assets/cards/sherrif.png" style="height: 150px;"></img></td>
 						<td><h3>Sherrif</h3><br><p style="padding: 0; margin: 0;">You have the ability to find out whether a citizen is a mafia member or not. You can use this knowledge by convincing citizens to execute mafia members.</p></td>
-					</table>
-				</div>';
-				
-				echo '<script>document.getElementById("role-modal").classList.add("show-modal"); document.getElementById("modal-background2").style.display = "block";</script>';
-			}
-			else {
-				echo '<div id="role-modal" class="modal" style="text-align: left;">
-					<table cellpadding="0" cellspacing="0" style="width: 100%;">
+					</table>';
+				}
+				else {
+					echo '<table cellpadding="0" cellspacing="0" style="width: 100%;">
 						<td class="header2" style="text-align: left;">Your Role</td>
 						<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 					</table>
 					<table cellpadding="0" cellspacing="0" style="width: 100%;">
 						<td><img src="assets/cards/citizen.png" style="height: 150px;"></img></td>
 						<td><h3>Citizen</h3><br><p style="padding: 0; margin: 0;">Your job is to vote on who is to be executed every day, make sure you vote on mafia members or you may lose.</p></td>
-					</table>
-				</div>';
-				
-				echo '<script>document.getElementById("role-modal").classList.add("show-modal"); document.getElementById("modal-background2").style.display = "block";</script>';
-			}
-		?>
+					</table>';
+				}
+			?>
+		</div>
 		
 		<script>
-			$('#send').on('click', function (event) {
-				
+			document.getElementById("role-modal").classList.add("show-modal");
+			document.getElementById("modal-background").style.display = "block";
+		
+			$('#chat-box').on('keyup', function (event) {
+				if(event.keyCode == 13) {
+					document.getElementById('send').click();
+				}
+			});
+		
+			$('#send').on('click', function () {
 				let message = document.getElementById('chat-box').value;
 
 				$.ajax({
@@ -332,8 +357,7 @@
 			scrolled = false;
 			var elem = document.getElementById("game-display");
 			setInterval(function(){
-				//$("#player-cards").load("https://playmafia.cf/game.php" + " #player-cards > *" );
-				$("#game-display").load("http://binarystack.localhost/mafia/game.php" + " #game-display > *" );
+				$("#game-display").load(window.location.href + " #game-display > *" );
 				if(!scrolled) {
 					elem.scrollTop = elem.scrollHeight;
 				}
@@ -346,7 +370,7 @@
 			});
 			
 			setInterval(function(){
-				$("#game-content-r").load("http://binarystack.localhost/mafia/game.php" + " #game-content-r > *" );
+				$("#game-content-r").load(window.location.href + " #game-content-r > *" );
 			}, 10000);
 		</script>
 	</body>	

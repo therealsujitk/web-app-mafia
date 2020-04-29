@@ -91,7 +91,7 @@
 		
 		<script>
 			setInterval(function(){
-				//$("#player-cards").load("https://playmafia.cf/pre-game.php" + " #player-cards > *" );
+				$("#player-cards").load(window.location.href + " #player-cards > *" );
 			}, 1000);
 			
 			$('#start').on('click', function (event) {
