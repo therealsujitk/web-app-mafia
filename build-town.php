@@ -180,7 +180,7 @@
 	
 	$query = "CREATE TABLE chat_" . $_SESSION["townID"] . " (
 		name VARCHAR(15) NOT NULL,
-		message VARCHAR(2000) NOT NULL,
+		message VARCHAR(2000) NOT NULL
 	);";
 	mysqli_query($conn, $query);
 	
