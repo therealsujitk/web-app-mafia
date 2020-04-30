@@ -210,6 +210,7 @@ p {
 textArea {
 	background: none;
 	color: #fff;
+	margin-bottom: 10px;
 	border-style: solid;
 	border-color: #936c6c;
 	border-top: none;
