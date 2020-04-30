@@ -1,17 +1,33 @@
 <!DOCTYPE html public>
 <html>
 	<head>
-		<link rel="stylesheet" type="text/css" href="assets/css/main.css">
+		<link rel="stylesheet" type="text/css" href="/assets/css/main.css">
 		<link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet">
 		<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 		<meta content="utf-8" http-equiv="encoding">
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
 		<script src="http://code.jquery.com/jquery-3.5.0.js"></script>
-		<script src="assets/js/main.js"></script>
+		<script src="/assets/js/main.js"></script>
 		<script>
-			var townID = <?php session_start(); echo json_encode($_SESSION["townID"]); ?>;
-			var town = <?php session_start(); echo json_encode($_SESSION["town"]); ?>;
-			var mob = <?php session_start(); echo json_encode($_SESSION["mob"]); ?>;
+			<?php
+				include('conn.php');
+				session_start();
+				$townID = $_SESSION["townID"];
+				$userID = $_SESSION["userID"];
+				$town = $_SESSION["town"];
+				$mob = $_SESSION["mob"];
+				$query = "SELECT owner_id FROM town_details WHERE town_id = '$townID';";
+				$ownerID = mysqli_fetch_assoc(mysqli_query($conn, $query))["owner_id"];
+			?>
+		
+			var townID = <?php echo json_encode($townID); ?>;
+			var town = <?php echo json_encode($town); ?>;
+			var mob = <?php echo json_encode($mob); ?>;
+			//var id = window.location.href;
+			//id = id.replace('https://playmafia.cf/play/', '');
+			//id = id.split('/')[0];
+			//if (id != townID)
+				//window.location.replace('https://playmafia.cf/game.php');
 		</script>
 		<title>Mafia</title>
 	</head>
@@ -43,15 +59,9 @@
 							</div>
 							<div id="game-display" style="height: 35vh; overflow-y: scroll; overflow-x: hidden;">
 								<?php
-									session_start();
-									include('conn.php');
-									$townID = $_SESSION["townID"];
-									$query = "SELECT owner_id, game_index FROM town_details WHERE town_id = '$townID';";
-									$ownerID = mysqli_fetch_assoc(mysqli_query($conn, $query))["owner_id"];
+									$query = "SELECT game_index FROM town_details WHERE town_id = '$townID';";
 									$gameIndex = mysqli_fetch_assoc(mysqli_query($conn, $query))["game_index"];
-
-									$query = "SELECT * FROM town_" . $_SESSION["townID"] . ";";
-												
+										
 									if($gameIndex%2 == 0) {
 										//Night
 										$query = "SELECT user_id FROM town_" . $_SESSION["townID"] . " WHERE is_mafia = 1 AND is_killed = 0 AND is_executed = 0;";
@@ -87,7 +97,6 @@
 											}
 										}
 									}
-									mysqli_close($conn);
 								?>
 							</div>
 							<table style="width: 100%;">
@@ -97,83 +106,95 @@
 						</div>
 					</td>
 					<td id="game-content-r" style="width: 20%;">
-						<?php
-							session_start();
-							include('conn.php');
-							$query = "SELECT * FROM town_" . $_SESSION["townID"] . ";";
-					
-							if($result = mysqli_query($conn, $query)) {
-								while($row = mysqli_fetch_assoc($result)) {
-									$name = $row["name"];
-									if($_SESSION["userID"] == $row["user_id"])
-										$name = $name . " <b>(You)</b>";
+						<div id="players">
+							<?php
+								$query = "SELECT * FROM town_" . $_SESSION["townID"] . ";";
+								if($result = mysqli_query($conn, $query)) {
+									while($row = mysqli_fetch_assoc($result)) {
+										$name = $row["name"];
+										if($_SESSION["userID"] == $row["user_id"])
+											$name = $name . " <b>(You)</b>";
 								
-									if($row["is_mafia"] && $row["is_executed"])
-										$span = '<span style="color: #c80000; text-decoration: line-through;">';
-									else if($row["is_poser"] && $row["is_executed"])
-										$span = '<span style="color: #ffd300; text-decoration: line-through;">';
-									else if($row["is_medic"] && $row["is_executed"])
-										$span = '<span style="color: #fa691d; text-decoration: line-through;">';
-									else if($row["is_sherrif"] && $row["is_executed"])
-										$span = '<span style="color: #3895d3; text-decoration: line-through;">';
-									else if($row["is_executed"])
-										$span = '<span style="text-decoration: line-through;">';
-									else if($row["is_killed"])
-										$span = '<span style="text-decoration: line-through;">';
-									else
-										$span = '<span>';
+										if($row["is_mafia"] && $row["is_executed"])
+											$span = '<span style="font-weight: normal; color: #c80000; text-decoration: line-through;">';
+										else if($row["is_poser"] && $row["is_executed"])
+											$span = '<span style="font-weight: normal; color: #ffd300; text-decoration: line-through;">';
+										else if($row["is_medic"] && $row["is_executed"])
+											$span = '<span style="font-weight: normal; color: #fa691d; text-decoration: line-through;">';
+										else if($row["is_sherrif"] && $row["is_executed"])
+											$span = '<span style="font-weight: normal; color: #3895d3; text-decoration: line-through;">';
+										else if($row["is_executed"])
+											$span = '<span style="font-weight: normal; text-decoration: line-through;">';
+										else if($row["is_killed"])
+											$span = '<span style="font-weight: normal; text-decoration: line-through;">';
+										else
+											$span = '<span style="font-weight: normal;">';
 								
-									echo $span . $name . '</span><br>';
+										echo $span . $name . '</span><br>';
+									}
 								}
-
-								echo '<hr style="border-style: solid; border-color: #936c6c; margin-top: 20px; margin-bottom: 20px;">';
+							?>
+						</div>
 						
-								echo '<span>Population: ' . mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(user_id) FROM town_" . $_SESSION["townID"] . ";"))["COUNT(user_id)"] . '</span><br>';
-								echo '<span style="color: #c80000;">Mafia: ' . mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(user_id) FROM town_" . $_SESSION["townID"] . " WHERE is_mafia = 1;"))["COUNT(user_id)"] . '</span><br>';
-								echo '<span style="color: #ffd300;">Poser: ' . mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(user_id) FROM town_" . $_SESSION["townID"] . " WHERE is_poser = 1;"))["COUNT(user_id)"] . '</span><br>';
-								echo '<span style="color: #fa691d;">Medic: ' . mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(user_id) FROM town_" . $_SESSION["townID"] . " WHERE is_medic = 1;"))["COUNT(user_id)"] . '</span><br>';
-								echo '<span style="color: #3895d3;">Sherrif: ' . mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(user_id) FROM town_" . $_SESSION["townID"] . " WHERE is_sherrif = 1;"))["COUNT(user_id)"] . '</span><br>';
-							}
-						
-							mysqli_close($conn);
-						?>
+						<div id="town-details">
+							<?php
+								if($result = mysqli_query($conn, $query)) {
+									echo '<hr style="border-style: solid; border-color: #936c6c; margin-top: 20px; margin-bottom: 20px;">';
+									echo '<span>Population: ' . mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(user_id) FROM town_" . $_SESSION["townID"] . ";"))["COUNT(user_id)"] . '</span><br>';
+									echo '<span style="color: #c80000;">Mafia: ' . mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(user_id) FROM town_" . $_SESSION["townID"] . " WHERE is_mafia = 1;"))["COUNT(user_id)"] . '</span><br>';
+									echo '<span style="color: #ffd300;">Poser: ' . mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(user_id) FROM town_" . $_SESSION["townID"] . " WHERE is_poser = 1;"))["COUNT(user_id)"] . '</span><br>';
+									echo '<span style="color: #fa691d;">Medic: ' . mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(user_id) FROM town_" . $_SESSION["townID"] . " WHERE is_medic = 1;"))["COUNT(user_id)"] . '</span><br>';
+									echo '<span style="color: #3895d3;">Sherrif: ' . mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(user_id) FROM town_" . $_SESSION["townID"] . " WHERE is_sherrif = 1;"))["COUNT(user_id)"] . '</span><br>';
+								}
+							?>
+						</div>
 					</td>
 				</td>
 			</table>
 			<div id="daily-update">
 				<?php
-					session_start();
-					include('conn.php');
-					$townID = $_SESSION["townID"];
-					$query = "SELECT owner_id, game_index FROM town_details WHERE town_id = '$townID';";
-					$ownerID = mysqli_fetch_assoc(mysqli_query($conn, $query))["owner_id"];
-					$gameIndex = mysqli_fetch_assoc(mysqli_query($conn, $query))["game_index"];
-					$town = $_SESSION["town"];
-		
-					$query = "SELECT * FROM town_" . $_SESSION["townID"] . ";";									
 					if($gameIndex%2 == 0) {
 						//Night
 						$night = $gameIndex/2;
-			
 						if(!$night) {
 							echo '<script>document.getElementsByTagName("title")[0].innerHTML = "The First Night • ' . $town . ' - Mafia";</script>';
 							echo '<script>document.getElementById("game-index").innerHTML = "The First Night";</script>';
+							
+							$query = "SELECT user_id FROM town_" . $townID . " WHERE is_poser = 1;";
+							if($result = mysqli_query($conn, $query)) {
+								while($row = mysqli_fetch_assoc($result)) {
+									if($row["user_id"] == $userID) {
+										echo '<script>
+											document.getElementById("news").innerHTML = "";
+											let news = "Message for poser.";
+											displayNews(news, 0);
+										</script>';
+										echo '<script>document.getElementById("vote").disabled = false;</script>';
+										echo '<script>document.getElementById("vote").innerHTML = "Heal";</script>';
+										break;
+									}
+									else {
+										echo '<script>document.getElementById("send").disabled = true;</script>';
+										echo '<script>document.getElementById("vote").disabled = true;</script>';
+										echo '<script>document.getElementById("vote").innerHTML = "Vote";</script>';
+									}
+								}
+							}
 						}
 						else {
 							echo '<script>document.getElementsByTagName("title")[0].innerHTML = "Night ' . $night . ' • ' . $town . ' - Mafia";</script>';
 							echo '<script>document.getElementById("game-index").innerHTML = "Night ' . $night . '";</script>';
 						}
-			
-						echo '<script>
-							document.getElementById("news").innerHTML = "";
-							let news = "Welcome, members of *" + mob + "*, below you can chat with the other mafia members on who is to be killed. *Mr. Bean* will then choose the victim by clicking the *Kill* button at the bottom.";
-							displayNews(news, 0);
-						</script>';
-						
-						$query = "SELECT user_id FROM town_" . $_SESSION["townID"] . " WHERE is_mafia = 1";
+
+						$query = "SELECT user_id FROM town_" . $townID . " WHERE is_mafia = 1;";
 						if($result = mysqli_query($conn, $query)) {
 							while($row = mysqli_fetch_assoc($result)) {
-								if($row["user_id"] == $_SESSION["userID"]) {
+								if($row["user_id"] == $userID) {
+									echo '<script>
+										document.getElementById("news").innerHTML = "";
+										let news = "Welcome, members of *" + mob + "*, below you can chat with the other mafia members on who is to be killed. *Mr. Bean* will then choose the victim by clicking the *Kill* button at the bottom.";
+										displayNews(news, 0);
+									</script>';
 									echo '<script>document.getElementById("send").disabled = false;</script>';
 									echo '<script>document.getElementById("vote").disabled = false;</script>';
 									echo '<script>document.getElementById("vote").innerHTML = "Kill";</script>';
@@ -186,11 +207,16 @@
 								}
 							}
 						}
-						
-						$query = "SELECT user_id FROM town_" . $_SESSION["townID"] . " WHERE is_medic = 1";
+
+						$query = "SELECT user_id FROM town_" . $townID . " WHERE is_medic = 1;";
 						if($result = mysqli_query($conn, $query)) {
 							while($row = mysqli_fetch_assoc($result)) {
-								if($row["user_id"] == $_SESSION["userID"]) {
+								if($row["user_id"] == $userID) {
+									echo '<script>
+										document.getElementById("news").innerHTML = "";
+										let news = "Message for medic.";
+										displayNews(news, 0);
+									</script>';
 									echo '<script>document.getElementById("vote").disabled = false;</script>';
 									echo '<script>document.getElementById("vote").innerHTML = "Heal";</script>';
 									break;
@@ -218,18 +244,16 @@
 						echo '<script>document.getElementById("vote").innerHTML = "Vote";</script>';
 					}
 					
-					$query = "SELECT user_id FROM town_" . $_SESSION["townID"] . " WHERE is_killed = 1 OR is_executed = 1;";
+					$query = "SELECT user_id FROM town_" . $townID . " WHERE is_killed = 1 OR is_executed = 1;";
 					if($result = mysqli_query($conn, $query)) {
 						while($row = mysqli_fetch_assoc($result)) {
-							if($row["user_id"] == $_SESSION["userID"]) {
+							if($row["user_id"] == $userID) {
 								echo '<script>document.getElementById("send").disabled = true;</script>';
 								echo '<script>document.getElementById("vote").disabled = true;</script>';
 								break;
 							}
 						}
 					}
-					
-					mysqli_close($conn);
 				?>
 			</div>
 		</div>
@@ -269,17 +293,14 @@
 		
 		<div id="role-modal" class="modal" style="text-align: left;">
 			<?php
-				session_start();
-				include('conn.php');
-				$query = "SELECT * FROM town_" . $_SESSION["townID"] . " WHERE user_id = " . $_SESSION["userID"] . ";";
-			
+				$query = "SELECT * FROM town_" . $townID . " WHERE user_id = " . $userID . ";";
 				if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_mafia"]) {
 					echo '<table cellpadding="0" cellspacing="0" style="width: 100%;">
 						<td class="header2" style="text-align: left;">Your Role</td>
 						<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 					</table>
 					<table cellpadding="0" cellspacing="0" style="width: 100%;">
-						<td><img src="assets/cards/mafia.png" style="height: 150px;"></img></td>
+						<td><img src="/assets/cards/mafia.png" style="height: 150px;"></img></td>
 						<td><h3>Mafia</h3><br><p style="padding: 0; margin: 0;">Your job is to take over <b>' . $_SESSION["town"] . '</b> with the help of the other mafia members by killing citizens every night.</p></td>
 					</table>';
 				}
@@ -289,7 +310,7 @@
 						<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 					</table>
 					<table cellpadding="0" cellspacing="0" style="width: 100%;">
-						<td><img src="assets/cards/poser.png" style="height: 150px;"></img></td>
+						<td><img src="/assets/cards/poser.png" style="height: 150px;"></img></td>
 						<td><h3>Poser</h3><br><p style="padding: 0; margin: 0;">Your job is to help the' . $_SESSION["mob"] . ' mafia take over <b>' . $_SESSION["town"] . '</b> by making people think that you are a member of the mafia.</p></td>
 					</table>';
 				}
@@ -299,7 +320,7 @@
 						<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 					</table>
 					<table cellpadding="0" cellspacing="0" style="width: 100%;">
-						<td><img src="assets/cards/medic.png" style="height: 150px;"></img></td>
+						<td><img src="/assets/cards/medic.png" style="height: 150px;"></img></td>
 						<td><h3>Medic</h3><br><p style="padding: 0; margin: 0;">You have the ability to heal anyone you want, you can even heal yourself. Note that you <b>can not</b> heal the same person twice in a row.</p></td>
 					</table>';
 				}
@@ -309,7 +330,7 @@
 						<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 					</table>
 					<table cellpadding="0" cellspacing="0" style="width: 100%;">
-						<td><img src="assets/cards/sherrif.png" style="height: 150px;"></img></td>
+						<td><img src="/assets/cards/sherrif.png" style="height: 150px;"></img></td>
 						<td><h3>Sherrif</h3><br><p style="padding: 0; margin: 0;">You have the ability to find out whether a citizen is a mafia member or not. You can use this knowledge by convincing citizens to execute mafia members.</p></td>
 					</table>';
 				}
@@ -319,7 +340,7 @@
 						<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 					</table>
 					<table cellpadding="0" cellspacing="0" style="width: 100%;">
-						<td><img src="assets/cards/citizen.png" style="height: 150px;"></img></td>
+						<td><img src="/assets/cards/citizen.png" style="height: 150px;"></img></td>
 						<td><h3>Citizen</h3><br><p style="padding: 0; margin: 0;">Your job is to vote on who is to be executed every day, make sure you vote on mafia members or you may lose.</p></td>
 					</table>';
 				}
@@ -341,7 +362,7 @@
 
 				$.ajax({
 					type: 'POST',
-					url: 'send-message.php',
+					url: '/send-message.php',
 					data: {
 						message: message
 					},
@@ -357,7 +378,7 @@
 			scrolled = false;
 			var elem = document.getElementById("game-display");
 			setInterval(function(){
-				$("#game-display").load(window.location.href + " #game-display > *" );
+				$("#game-display").load("/game.php" + " #game-display > *" );
 				if(!scrolled) {
 					elem.scrollTop = elem.scrollHeight;
 				}
@@ -370,7 +391,7 @@
 			});
 			
 			setInterval(function(){
-				$("#game-content-r").load(window.location.href + " #game-content-r > *" );
+				$("#players").load("/game.php" + " #players > *" );
 			}, 10000);
 		</script>
 	</body>	
