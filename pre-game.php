@@ -8,6 +8,8 @@
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
 		<script src="http://code.jquery.com/jquery-3.5.0.js"></script>
 		<script src="/assets/js/main.js"></script>
+		<meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="viewport" content="width=device-width, initial-scale=0.7 maximum-scale=1.0, user-scalable=no">
 		<script>
 			<?php
 				include('conn.php');
