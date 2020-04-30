@@ -17,11 +17,7 @@
 			?>
 			
 			var townID = <?php echo json_encode($_SESSION["townID"]); ?>;
-			//var id = window.location.href;
-			//id = id.replace('https://playmafia.cf/', '');
-			//id = id.split('/')[0];
-			//if (id != townID)
-				//window.location.replace('https://playmafia.cf');
+			window.history.pushState('' , '','/' + townID + '/');
 		</script>
 		<title><?php echo $_SESSION["town"]; ?> - Mafia</title>
 	</head>
@@ -75,12 +71,12 @@
 				<td class="header2" style="text-align: left;">Report Bug</td>
 				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 			</table>
-			<form id="bug-report" style="margin: 10px;">
-				<textArea name="bug-report" class="text-box" style="margin-bottom: 10px;" placeholder="Write a bug report..."></textArea>
+			<div id="bug-report" style="margin: 10px;">
+				<textArea id="report" class="text-box" placeholder="Write a bug report..."></textArea>
 				<p id="success-bug" style="margin: 10px; margin-top: 0; margin-bottom: 0; color: #c80000; display: none;">Success! Your report has been submitted.</p>
 				<p id="error-bug" style="margin: 10px; margin-top: 0; margin-bottom: 0; color: #c80000; display: none;">Error! Please try again later.</p>
-				<button class="btn" type="submit" style="margin-top: 10px;">Submit Bug Report</button>
-			</form>
+				<input id="submit-report" class="btn" type="button" style="margin-top: 10px;" value="Submit Bug Report"></input>
+			</div>
 		</div>
 		
 		<div id="about-modal" class="modal" style="text-align: left;">
@@ -102,10 +98,28 @@
 					type: 'POST',
 					url: '/build-town.php',
 					success: function () {
-						window.location.href = '../play/' + townID + '/';
+						$("body").load("/game.php/");
 					},
 					error: function () {
 						//do something
+					}
+				});
+			});
+			
+			$('#submit-report').on('click', function () {
+				let report = document.getElementById('report').value;
+
+				$.ajax({
+					type: 'POST',
+					url: 'report-bug.php',
+					data: {
+						report: report
+					},
+					success: function () {
+						document.getElementById('success-bug').style.display = "block";
+					},
+					error: function () {
+						document.getElementById('error-bug').style.display = "block";
 					}
 				});
 			});

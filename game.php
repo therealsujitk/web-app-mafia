@@ -25,11 +25,7 @@
 			var townID = <?php echo json_encode($townID); ?>;
 			var town = <?php echo json_encode($town); ?>;
 			var mob = <?php echo json_encode($mob); ?>;
-			//var id = window.location.href;
-			//id = id.replace('https://playmafia.cf/play/', '');
-			//id = id.split('/')[0];
-			//if (id != townID)
-				//window.location.replace('https://playmafia.cf/game.php');
+			window.history.pushState('' , '','/play/' + townID + '/');
 		</script>
 		<title>Mafia</title>
 	</head>
@@ -51,7 +47,7 @@
 			<table id="game-content">
 				<tr>
 					<th style="height: 5px; vertical-align: center;"><h3 id="game-index"></h3></th>
-					<th style="height: 5px; vertical-align: center;"><button id="my-role" class="btn" onclick="openRole()">My Role</button></th>
+					<th style="height: 5px; vertical-align: center;"><input id="my-role" class="btn" type="button" value="My Role" onclick="openRole()"></input></th>
 				</tr>
 				<tr>
 					<td id="game-content-l" style="width: 80%; padding: 0;">
@@ -103,7 +99,7 @@
 							</div>
 							<table style="width: 100%;">
 								<td style="padding: 0;"><input id="chat-box" placeholder="Write a message..."></input></td>
-								<td style="padding: 0; width: 190px;"><button id="send" class="btn" style="border-radius: 10px;">Send</button><button id="vote" class="btn" style="margin-left: 6%; margin-right: 1.5%; border-radius: 10px;">Vote</button></td>
+								<td style="padding: 0; width: 190px;"><input id="send" class="btn" type="button" style="border-radius: 10px;" value="Send"></input><input id="vote" class="btn" type="button" style="margin-left: 6%; margin-right: 1.5%; border-radius: 10px;" value="Vote"></input></td>
 							</table>
 						</div>
 					</td>
@@ -276,12 +272,12 @@
 				<td class="header2" style="text-align: left;">Report Bug</td>
 				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 			</table>
-			<form id="bug-report" style="margin: 10px;">
-				<textArea name="bug-report" class="text-box" style="margin-bottom: 10px;" placeholder="Write a bug report..."></textArea>
+			<div id="bug-report" style="margin: 10px;">
+				<textArea id="report" class="text-box" placeholder="Write a bug report..."></textArea>
 				<p id="success-bug" style="margin: 10px; margin-top: 0; margin-bottom: 0; color: #c80000; display: none;">Success! Your report has been submitted.</p>
 				<p id="error-bug" style="margin: 10px; margin-top: 0; margin-bottom: 0; color: #c80000; display: none;">Error! Please try again later.</p>
-				<button class="btn" type="submit" style="margin-top: 10px;">Submit Bug Report</button>
-			</form>
+				<input id="submit-report" class="btn" type="button" style="margin-top: 10px;" value="Submit Bug Report"></input>
+			</div>
 		</div>
 		
 		<div id="about-modal" class="modal" style="text-align: left;">
@@ -376,7 +372,25 @@
 					}
 				});
 			});
-		
+			
+			$('#submit-report').on('click', function () {
+				let report = document.getElementById('report').value;
+
+				$.ajax({
+					type: 'POST',
+					url: 'report-bug.php',
+					data: {
+						report: report
+					},
+					success: function () {
+						document.getElementById('success-bug').style.display = "block";
+					},
+					error: function () {
+						document.getElementById('error-bug').style.display = "block";
+					}
+				});
+			});
+			
 			scrolled = false;
 			var elem = document.getElementById("game-display");
 			setInterval(function(){

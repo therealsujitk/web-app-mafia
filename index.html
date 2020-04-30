@@ -86,12 +86,12 @@
 				<td class="header2" style="text-align: left;">Report Bug</td>
 				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 			</table>
-			<form id="bug-report" style="margin: 10px;">
-				<textArea id="report" class="text-box" style="margin-bottom: 10px;" placeholder="Write a bug report..."></textArea>
+			<div id="bug-report" style="margin: 10px;">
+				<textArea id="report" class="text-box" placeholder="Write a bug report..."></textArea>
 				<p id="success-bug" style="margin: 10px; margin-top: 0; margin-bottom: 0; color: #c80000; display: none;">Success! Your report has been submitted.</p>
 				<p id="error-bug" style="margin: 10px; margin-top: 0; margin-bottom: 0; color: #c80000; display: none;">Error! Please try again later.</p>
-				<button class="btn" type="submit" style="margin-top: 10px;">Submit Bug Report</button>
-			</form>
+				<input id="submit-report" class="btn" type="button" style="margin-top: 10px;" value="Submit Bug Report"></input>
+			</div>
 		</div>
 		
 		<div id="about-modal" class="modal" style="text-align: left;">
@@ -108,19 +108,17 @@
 				<td class="header2" style="text-align: left;">Create a Town</td>
 				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 			</table>
-			<form id="create" style="margin: 0;">
-				<table cellpadding="0" cellspacing="0" style="width: 100%;">
-					<tr>
-						<td style="padding-right: 1px;"><span>Town's name:</span></td>
-						<td style="padding-left: 1px;"><input id="town" name="town" class="text-box" type="text" autocomplete="off" spellcheck="false" placeholder="(optional)" name="town"></input></td>
-					</tr>
-					<tr>
-						<td style="padding-right: 1px;"><span>Mob's name:</span></td>
-						<td style="padding-left: 1px;"><input id="mob" name="mob" class="text-box" type="text" autocomplete="off" spellcheck="false" placeholder="(optional)" name="mob"></input></td>
-					</tr>
-				</table>
-				<button class="btn" type="submit" style="margin: 10px;">Create Town</button>
-			</form>
+			<table cellpadding="0" cellspacing="0" style="width: 100%;">
+				<tr>
+					<td style="padding-right: 1px;"><span>Town's name:</span></td>
+					<td style="padding-left: 1px;"><input id="town" name="town" class="text-box" type="text" autocomplete="off" spellcheck="false" placeholder="(optional)" name="town"></input></td>
+				</tr>
+				<tr>
+					<td style="padding-right: 1px;"><span>Mob's name:</span></td>
+					<td style="padding-left: 1px;"><input id="mob" name="mob" class="text-box" type="text" autocomplete="off" spellcheck="false" placeholder="(optional)" name="mob"></input></td>
+				</tr>
+			</table>
+			<input id="create" class="btn" type="button" style="margin: 10px;" vulue="Create Town"></input>
 		</div>
 		
 		<div id="join-modal" class="modal">
@@ -128,20 +126,15 @@
 				<td class="header2" style="text-align: left;">Join a Town</td>
 				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 			</table>
-			<form id="join" style="margin: 0;">
-				<table cellpadding="0" cellspacing="0" style="width: 100%;">
-					<td style="padding-right: 1px;"><span>Town ID:</span></td>
-					<td style="padding-left: 1px;"><input id="town-id" class="text-box" type="text" autocomplete="off" spellcheck="false"></input></td>
-				</table>
-				<button class="btn" type="submit" style="margin: 10px;">Join Town</button>
-			</form>
+			<table cellpadding="0" cellspacing="0" style="width: 100%;">
+				<td style="padding-right: 1px;"><span>Town ID:</span></td>
+				<td style="padding-left: 1px;"><input id="town-id" class="text-box" type="text" autocomplete="off" spellcheck="false"></input></td>
+			</table>
+			<input id="join" class="btn" type="button" style="margin: 10px;" value="Join Town"></input>
 		</div>
 
 		<script>
-			$('#bug-report').on('submit', function (event) {
-				// using this page stop being refreshing 
-				event.preventDefault();
-				
+			$('#submit-report').on('click', function () {
 				let report = document.getElementById('report').value;
 
 				$.ajax({
@@ -159,10 +152,7 @@
 				});
 			});
 		
-			$('#create').on('submit', function (event) {
-				// using this page stop being refreshing 
-				event.preventDefault();
-				
+			$('#create').on('click', function () { 
 				let town = document.getElementById('town').value;
 				let mob = document.getElementById('mob').value;
 				let name = document.getElementById('name').value;
@@ -178,7 +168,7 @@
 						avatar: avatar
 					},
 					success: function () {
-						window.location.href = '/' + townID + '/';
+						$("body").load("/pre-game.php/");
 					},
 					error: function () {
 						//do something
@@ -186,10 +176,7 @@
 				});
 			});
 			
-			$('#join').on('submit', function (event) {
-				// using this page stop being refreshing 
-				event.preventDefault();
-				
+			$('#join').on('click', function () {
 				let townID = document.getElementById('town-id').value;
 				let name = document.getElementById('name').value;
 				let avatar = document.getElementById('avatar').src;
@@ -203,7 +190,7 @@
 						avatar: avatar
 					},
 					success: function () {
-						window.location.href = '/' + townID + '/';
+						$("body").load("/pre-game.php/");
 					},
 					error: function () {
 						//do something
@@ -212,22 +199,14 @@
 			});
 		
 			function getCookie(cname) {
-				// Split cookie string and get all individual name=value pairs in an array
 				var cookieArr = document.cookie.split(";");
-
-				// Loop through the array elements
 				for(var i = 0; i < cookieArr.length; i++) {
 					var cookiePair = cookieArr[i].split("=");
-
-					/* Removing whitespace at the beginning of the cookie name
-					and compare it with the given string */
 					if(cname == cookiePair[0].trim()) {
-						// Decode the cookie value and return
 						return decodeURIComponent(cookiePair[1]);
 					}
 				}
 
-				// Return null if not found
 				return null;
 			}
 		
@@ -236,8 +215,6 @@
 		
 			if(getCookie('avatar') != null)
 				document.getElementById('avatar').src = getCookie('avatar');
-				
-			//document.getElementById('splash').style.display = "none";
 		</script>
 	</body>	
 </html>
