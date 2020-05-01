@@ -4,13 +4,20 @@
 	$name = $_POST['name'];
 	$avatar = $_POST['avatar'];
 	
+	$name = str_replace("'", "\'", $name);
+	$name = trim($name);
+	
 	$query = "SELECT COUNT(user_id) FROM town_" . $townID . ";";
+	$query1 = "SELECT name FROM town_" . $townID . " WHERE name = '$name';";
 	
 	if(!mysqli_query($conn, $query)) {
-		//Error! Town does not exist
+		die("There are no towns having the Town ID <b>$townID</b>. Please recheck the Town ID you have entered.");
 	}
 	else if(mysqli_fetch_assoc(mysqli_query($conn, $query))["COUNT(user_id)"] == 10) {
-		//Error! Town is full
+		die("Sorry, this town is already full. Please try");
+	}
+	else if(mysqli_fetch_assoc(mysqli_query($conn, $query1))["name"] == $name) {
+		die("Sorry, that name has already been taken in this town. Please use a different name.");
 	}
 	else {
 		$query = "INSERT INTO town_".$townID." (name, avatar) VALUES('$name', '$avatar');";
@@ -32,4 +39,6 @@
 	$_SESSION["name"] = $name;
 	$_SESSION["town"] = $town;
 	$_SESSION["mob"] = $mob;
+	
+	echo 'Success!';
 ?>

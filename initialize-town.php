@@ -1,4 +1,26 @@
 <?php
+	$name = $_POST['name'];
+	$avatar = $_POST['avatar'];
+	$town = $_POST['town'];
+	$mob = $_POST['mob'];
+
+	$name = str_replace("'", "\'", $name);
+	$town = str_replace("'", "\'", $town);
+	$mob = str_replace("'", "\'", $mob);
+	
+	$name = trim($name);
+	$town = trim($town);
+	$mob = trim($mob);
+		
+	if($name == "")
+		die("Please enter a valid name.");
+		
+	if($town == "")
+		$town = 'Crystal Cove';
+	
+	if($mob == "")
+		$mob = 'Mystery Inc.';
+
 	function uniqueID() {
 		$arr = array('0', 'a', '1', 'b', '2','c', '3','d', '4','e', '5','f', '6','g', '7','h', '8','i', '9','j', 'k', 'l', 'm', 'n', 'o', 'p', 'q', 'r', 's', 't', 'u', 'v', 'w','x', 'y', 'z');
 		
@@ -11,8 +33,6 @@
 		return $ID;
 	}
 	
-	include('conn.php');
-	
 	while(true) {
 		$townID = uniqueID();
 		$query = "SELECT * FROM town_details WHERE town_id = " . $townID . ";";
@@ -20,11 +40,7 @@
 			break;
 	}
 	
-	$town = $_POST['town'];
-	$mob = $_POST['mob'];
-	
-	$town = str_replace("'", "\'", $town);
-	$mob = str_replace("'", "\'", $mob);
+	include('conn.php');
 	
 	$query = "INSERT INTO town_details (town_id, town_name, mob_name, owner_id) VALUES('$townID', '$town', '$mob', 1);";
 	mysqli_query($conn, $query);
@@ -35,11 +51,6 @@
 		avatar VARCHAR(255) NOT NULL
 	);";
 	mysqli_query($conn, $query);
-	
-	$name = $_POST['name'];
-	$avatar = $_POST['avatar'];
-	
-	$name = str_replace("'", "\'", $name);
 	
 	$query = "INSERT INTO town_" . $townID . " (name, avatar) VALUES('$name', '$avatar');";
 	mysqli_query($conn, $query);
@@ -52,4 +63,6 @@
 	$_SESSION["name"] = $name;
 	$_SESSION["town"] = $town;
 	$_SESSION["mob"] = $mob;
+	
+	echo 'Success!';
 ?>
