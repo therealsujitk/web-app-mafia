@@ -87,6 +87,10 @@ function closeAll() {
 		let x = document.getElementById('join-modal')
 		x.classList.remove("show-modal");
 	}
+	if(document.getElementById('error-modal')) {
+		let x = document.getElementById('error-modal')
+		x.classList.remove("show-modal");
+	}
 	if(document.getElementById('role-modal')) {
 		let x = document.getElementById('role-modal')
 		x.classList.remove("show-modal");
