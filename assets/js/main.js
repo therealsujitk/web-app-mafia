@@ -73,7 +73,6 @@ function closeAll() {
 		let x = document.getElementById('bug-modal')
 		x.classList.remove("show-modal");
 		document.getElementById('success-bug').style.display = "none";
-		document.getElementById('error-bug').style.display = "none";
 	}
 	if(document.getElementById('about-modal')) {
 		let x = document.getElementById('about-modal')
