@@ -2,10 +2,12 @@
 	<?php
 		include('conn.php');
 		session_start();
+		$userID = $_SESSION["userID"];
 		$townID = $_SESSION["townID"];
 		$town = $_SESSION["town"];
 	?>
 
+	var userID = <?php echo json_encode($userID); ?>;
 	var townID = <?php echo json_encode($townID); ?>;
 	var town = <?php echo json_encode($town); ?>;
 	document.getElementsByTagName('title')[0].innerHTML = town + ' - Mafia';
@@ -27,12 +29,12 @@
 	<h2><?php echo $town; ?></h2>
 	<table id="player-cards" cellpadding="0" cellspacing="0">
 		<?php
-			$query = "SELECT * FROM town_" . $_SESSION["townID"] . ";";
+			$query = "SELECT * FROM town_" . $townID . ";";
 		
 			if($result = mysqli_query($conn, $query))
 				while($row = mysqli_fetch_assoc($result)) {
 					$name = $row["name"];
-					if($_SESSION["userID"] == $row["user_id"])
+					if($userID == $row["user_id"])
 						$name = $name . " <b>(You)</b>";
 					echo '<td style="vertical-align: top; padding: 0;"><figure style="margin: 10px;"><img style="height: 150px;" src="'. $row["avatar"] .'"></img><figcaption>' . $name . '</figcaption></figure></td>';
 				}
@@ -73,7 +75,7 @@
 		<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 	</table>
 	<p>Made with love by a team of talented people from <b>BinaryStack</b>.</p>
-	<p>Built By: <b><a class="link2" href="https://instagram.com/abishek_devendran/">@AbishekDevendran</a></b> & <b><a class="link2" href="https://instagram.com/therealsujitk/">@therealsujitk</a></b>.</p>
+	<p>Built By: <b><a class="link2" href="https://instagram.com/abhinavtj/">@AbhinavTJ</a></b>, <b><a class="link2" href="https://instagram.com/abishek_devendran/">@AbishekDevendran</a></b> & <b><a class="link2" href="https://instagram.com/therealsujitk">@therealsujitk</a></b>.</p>
 </div>
 
 <script>
@@ -108,6 +110,17 @@
 			},
 			error: function () {
 				document.getElementById('error-bug').style.display = "block";
+			}
+		});
+	});
+	
+	$(window).bind('beforeunload', function(){
+		$.ajax({
+			type: 'POST',
+			url: 'leave-town.php',
+			data: {
+				townID: townID,
+				userID: userID
 			}
 		});
 	});
