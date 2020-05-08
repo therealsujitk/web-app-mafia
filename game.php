@@ -6,8 +6,8 @@
 		$userID = $_SESSION["userID"];
 		$town = $_SESSION["town"];
 		$mob = $_SESSION["mob"];
-		$query = "SELECT owner_id FROM town_details WHERE town_id = '$townID';";
-		$ownerID = mysqli_fetch_assoc(mysqli_query($conn, $query))["owner_id"];
+		$query = "SELECT daily_index FROM town_details WHERE town_id = '$townID';";
+		$dailyIndex = mysqli_fetch_assoc(mysqli_query($conn, $query))["daily_index"];
 	?>
 
 	var townID = <?php echo json_encode($townID); ?>;
@@ -41,11 +41,7 @@
 					</div>
 					<div id="game-display" style="height: 35vh; overflow-y: scroll; overflow-x: hidden;">
 						<?php
-							$query = "SELECT game_index FROM town_details WHERE town_id = '$townID';";
-							$gameIndex = mysqli_fetch_assoc(mysqli_query($conn, $query))["game_index"];
-								
-							if($gameIndex%2 == 0) {
-								//Night
+							if(!$dailyIndex%2) {
 								$query = "SELECT user_id FROM town_" . $_SESSION["townID"] . " WHERE is_mafia = 1 AND is_killed = 0 AND is_executed = 0;";
 								if($result = mysqli_query($conn, $query)) {
 									while($row = mysqli_fetch_assoc($result)) {
@@ -68,8 +64,7 @@
 								}
 							}
 							else {
-								//Day
-								$query = "SELECT * FROM chat_" . $_SESSION["townID"] . ";";
+								$query = "SELECT * FROM chat_" . $townID . ";";
 								if($result = mysqli_query($conn, $query)) {
 									while($row = mysqli_fetch_assoc($result)) {
 										if($row["name"] == $_SESSION["name"])
@@ -135,9 +130,8 @@
 	</table>
 	<div id="daily-update">
 		<?php
-			if($gameIndex%2 == 0) {
-				//Night
-				$night = $gameIndex/2;
+			if(!$dailyIndex%2) {
+				$night = $dailyIndex/2;
 				if(!$night) {
 					echo '<script>document.getElementsByTagName("title")[0].innerHTML = "The First Night • ' . $town . ' - Mafia";</script>';
 					echo '<script>document.getElementById("game-index").innerHTML = "The First Night";</script>';
@@ -212,8 +206,7 @@
 				}
 			}
 			else {
-				//Day
-				$day = $gameIndex/2 + 0.5;
+				$day = $dailyIndex/2 + 0.5;
 				echo '<script>document.getElementsByTagName("title")[0].innerHTML = "Day ' . $day . ' • ' . $town . ' - Mafia";</script>';
 				echo '<script>document.getElementById("game-index").innerHTML = "Day ' . $day . '";</script>';
 				echo '<script>
@@ -235,6 +228,82 @@
 						break;
 					}
 				}
+			}
+		?>
+	</div>
+	<div id="game-update">
+		<?php
+			$query = "SELECT daily_index FROM town_details WHERE town_id = '$townID';";
+			$tempIndex = mysqli_fetch_assoc(mysqli_query($conn, $query))["daily_index"];
+			
+			if($dailyIndex != $tempIndex) {
+				if(!$tempIndex%2) {
+					$prev = $dailyIndex/2 + 0.5;
+					$night = $tempIndex/2;
+				
+					$executed = '';
+					
+					$query = "SELECT COUNT(day_" . $prev . "), day_" . $prev . " FROM town_" . $townID . " WHERE day_" . $prev . " <> 0 GROUP BY day_" . $prev . ";";
+					if($result = mysqli_query($conn, $query)) {
+						while($row = mysqli_fetch_assoc($result)) {
+							if($row["COUNT(day_" . $day . ")"] >= $dayVote/2) {
+								$query = "SELECT name, day_" . $day . " FROM town_" . $townID . " WHERE day_" . $day . " = " . $row["day_" . $day] . ";";
+								$executed = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
+								break;
+							}
+						}
+					}
+				
+					if($executed != "") {
+						$query = "UPDATE town_" . $townID . " SET in_executed = 1 WHERE name = '$executed';";
+						mysqli_query($conn, $query);
+					}
+				
+					$query = "ALTER TABLE town_" . $townID . " ADD night_" . $night . " INT(1) NOT NULL DEFAULT 0;";
+					mysqli_query($conn, $query);
+
+					$query = "ALTER TABLE town_" . $townID . " ADD medic_" . $night . " INT(1) NOT NULL DEFAULT 0;";
+					mysqli_query($conn, $query);
+
+					$day = $night + 1;
+					$query = "ALTER TABLE town_" . $_SESSION["townID"] . " ADD day_" . $day . " INT(2) NOT NULL DEFAULT 0;";
+					mysqli_query($conn, $query);
+				
+					$query = "UPDATE town_details SET game_index = 0 WHERE town_id = '$townID';";
+					mysqli_query($conn, $query);
+				
+					$query = "SELECT COUNT(name) FROM town_" . $townID . " WHERE is_medic = 1 AND is_killed = 0 AND is_executed = 0;";
+					$max = mysqli_fetch_assoc(mysqli_query($conn, $query))["COUNT(name)"] * 2 + 1;
+					$query = "UPDATE town_details SET daily_max = " . $max . " WHERE town_id = '$townID';";
+					mysqli_query($conn, $query);
+					
+					$dailyIndex = $tempIndex;
+				}
+				else {
+					$prev = $dailyIndex/2;
+					$day = $tempIndex/2 + 0.5;
+					
+					$query = "SELECT name FROM town_" . $townID . " WHERE night_" . $prev . " <> 0;";
+					$killed = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
+					$query = "SELECT name FROM town_" . $townID . " WHERE medic_" . $prev . " <> 0;";
+					$healed = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
+				
+					if($killed != $healed) {
+						$query = "UPDATE town_" . $townID . " SET is_killed = 1 WHERE name = '$killed';";
+						mysqli_query($conn, $query);
+					}
+					
+					$query = "UPDATE town_details SET game_index = 0 WHERE town_id = '$townID';";
+					mysqli_query($conn, $query);
+					
+					$query = "SELECT COUNT(name) FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0;";
+					$max = mysqli_fetch_assoc(mysqli_query($conn, $query))["COUNT(name)"];
+					$query = "UPDATE town_details SET daily_max = " . $max . " WHERE town_id = '$townID';";
+					mysqli_query($conn, $query);
+					
+					$dailyIndex = $tempIndex;
+				}
+				
 			}
 		?>
 	</div>
@@ -273,6 +342,17 @@
 	<p>Credits: <b><a class="link2" href="https://instagram.com/abhinavtj/">@AbhinavTJ</a></b>, <b><a class="link2" href="https://instagram.com/abishek_devendran/">@AbishekDevendran</a></b> & <b><a class="link2" href="https://instagram.com/therealsujitk">@therealsujitk</a></b>.</p>
 </div>
 
+<div id="error-modal" class="modal">
+	<table cellpadding="0" cellspacing="0" style="width: 100%;">
+		<td class="header2" style="text-align: left;">Error!</td>
+		<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
+	</table>
+	<table cellpadding="0" cellspacing="0" style="width: 100%;">
+		<td><img src="/assets/images/error.png" style="height: 50px;"></img></td>
+		<td><p id="error-message" style="padding: 0; margin: 0;"></p></td>
+	</table>
+</div>
+
 <div id="role-modal" class="modal" style="text-align: left;">
 	<?php
 		$query = "SELECT * FROM town_" . $townID . " WHERE user_id = " . $userID . ";";
@@ -303,7 +383,7 @@
 			</table>
 			<table cellpadding="0" cellspacing="0" style="width: 100%;">
 				<td><img src="/assets/cards/medic.png" style="height: 150px;"></img></td>
-				<td><h3>Medic</h3><br><p style="padding: 0; margin: 0;">You have the ability to heal anyone you want, you can even heal yourself. Note that you <b>can not</b> heal the same person twice in a row.</p></td>
+				<td><h3>Medic</h3><br><p style="padding: 0; margin: 0;">You have the ability to heal anyone you want, you can even heal yourself. Note that you <b>can not</b> heal the same more than once in a game.</p></td>
 			</table>';
 		}
 		else if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_sherrif"]) {
@@ -339,6 +419,17 @@
 		}
 	});
 
+	function sendMessage(response) {
+		if(response === "Success!")
+			document.getElementById('chat-box').value = "";
+		else {
+			closeAll();
+			document.getElementById('error-message').innerHTML = response;
+			document.getElementById('error-modal').classList.add("show-modal");;
+			document.getElementById('modal-background').style.display = "block";
+		}
+	}
+
 	$('#send').on('click', function () {
 		let message = document.getElementById('chat-box').value;
 
@@ -347,16 +438,23 @@
 			url: '/send-message.php',
 			data: {
 				message: message
-			},
-			success: function () {
-				document.getElementById('chat-box').value = "";
-			},
-			error: function () {
-				//do something
 			}
-		});
+		}).then(response => sendMessage(response));
 	});
 	
+	function submitReport(response) {
+		if(response === "Success!") {
+			document.getElementById('success-bug').style.display = "block";
+			document.getElementById('report').value = "";
+		}
+		else {
+			closeAll();
+			document.getElementById('error-message').innerHTML = response;
+			document.getElementById('error-modal').classList.add("show-modal");;
+			document.getElementById('modal-background').style.display = "block";
+		}
+	}
+
 	$('#submit-report').on('click', function () {
 		let report = document.getElementById('report').value;
 
@@ -365,14 +463,8 @@
 			url: 'report-bug.php',
 			data: {
 				report: report
-			},
-			success: function () {
-				document.getElementById('success-bug').style.display = "block";
-			},
-			error: function () {
-				document.getElementById('error-bug').style.display = "block";
 			}
-		});
+		}).then(response => submitReport(response));
 	});
 	
 	scrolled = false;
@@ -382,6 +474,7 @@
 		if(!scrolled) {
 			elem.scrollTop = elem.scrollHeight;
 		}
+		$("#game-update").load("/game.php" + " #game-update > *" );
 	}, 1000);	
 	$("#game-display").on('scroll', function(){
 		if(elem.scrollTop + elem.clientHeight == elem.scrollHeight)

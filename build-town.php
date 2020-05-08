@@ -3,6 +3,9 @@
 	include('conn.php');
 	$query = "SELECT COUNT(user_id) FROM town_" . $_SESSION["townID"] . ";";
 	$population = mysqli_fetch_assoc(mysqli_query($conn, $query))["COUNT(user_id)"];
+
+	if($population < 6)
+		die('Sorry, you need at least <b>six</b> players to start the game.');
 	
 	$query = "ALTER TABLE town_" . $_SESSION["townID"] . " ADD is_mafia INT(1) NOT NULL DEFAULT 0;";
 	mysqli_query($conn, $query);
@@ -175,7 +178,16 @@
 		}
 	}
 	
+	$query = "ALTER TABLE town_" . $_SESSION["townID"] . " ADD saved INT(1) NOT NULL DEFAULT 0;";
+	mysqli_query($conn, $query);
+	
 	$query = "ALTER TABLE town_" . $_SESSION["townID"] . " ADD night_0 INT(1) NOT NULL DEFAULT 0;";
+	mysqli_query($conn, $query);
+	
+	$query = "ALTER TABLE town_" . $_SESSION["townID"] . " ADD medic_0 INT(1) NOT NULL DEFAULT 0;";
+	mysqli_query($conn, $query);
+	
+	$query = "ALTER TABLE town_" . $_SESSION["townID"] . " ADD day_1 INT(2) NOT NULL DEFAULT 0;";
 	mysqli_query($conn, $query);
 	
 	$query = "CREATE TABLE chat_" . $_SESSION["townID"] . " (
@@ -184,5 +196,18 @@
 	);";
 	mysqli_query($conn, $query);
 	
+	$townID = 	$_SESSION["townID"];
+	
+	$query = "CREATE TRIGGER game_trigger_" . $townID . " BEFORE UPDATE ON town_" . $townID . " FOR EACH ROW UPDATE town_details SET game_index = game_index + 1 WHERE town_id = '$townID';";
+	mysqli_query($conn, $query);
+	
+	$query = "CREATE TRIGGER daily_trigger_" . $townID . " AFTER UPDATE ON town_" . $townID . " FOR EACH ROW UPDATE town_details SET daily_index = daily_index + 1 WHERE town_id = '$townID' AND game_index = daily_max;";
+	mysqli_query($conn, $query);
+	
+	$query = "UPDATE town_details SET has_started = 1 WHERE town_id = '$townID';";
+	mysqli_query($conn, $query);
+	
 	mysqli_close($conn);
+	
+	echo 'Success!';
 ?>
