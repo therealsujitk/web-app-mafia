@@ -22,8 +22,10 @@ CREATE TABLE town_details (
 	town_name VARCHAR(50) NOT NULL,
 	mob_name VARCHAR(50) NOT NULL,
 	owner_id int(2) NOT NULL,
-	has_started INT (2) DEFAULT 0,
-	game_index INT(2) DEFAULT 0
+	has_started INT (2) DEFAULT 0 NOT NULL,
+	game_index INT(2) DEFAULT 0 NOT NULL,
+	daily_index INT(2) DEFAULT 0 NOT NULL,
+	daily_max INT(2) DEFAULT 3 NOT NULL
 );
 ```
 

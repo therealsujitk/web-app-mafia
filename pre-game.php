@@ -42,7 +42,13 @@
 	</table>
 
 	<p id="share">Your Town ID is <b><?php echo $townID; ?></b>. <span class="link3" onclick="copyInvite(townID);">Click here</span> to copy.</p>
-	<input id="start" class="btn" type="button" value="Start Game"></input>
+	<?php
+		$query = "SELECT owner_id FROM town_details WHERE town_id = '$townID';";
+		$ownerID = mysqli_fetch_assoc(mysqli_query($conn, $query))["owner_id"];
+		
+		if($ownerID === $userID)
+			echo '<input id="start" class="btn" type="button" value="Start Game"></input>';
+	?>
 </div>
 
 <div id="modal-background" onclick="closeAll()"></div>
@@ -64,7 +70,6 @@
 	<div id="bug-report" style="margin: 10px;">
 		<textArea id="report" class="text-box" placeholder="Write a bug report..."></textArea>
 		<p id="success-bug" style="margin: 10px; margin-top: 0; margin-bottom: 0; color: #c80000; display: none;">Success! Your report has been submitted.</p>
-		<p id="error-bug" style="margin: 10px; margin-top: 0; margin-bottom: 0; color: #c80000; display: none;">Error! Please try again later.</p>
 		<input id="submit-report" class="btn" type="button" style="margin-top: 10px;" value="Submit Bug Report"></input>
 	</div>
 </div>
@@ -78,23 +83,51 @@
 	<p>Built By: <b><a class="link2" href="https://instagram.com/abhinavtj/">@AbhinavTJ</a></b>, <b><a class="link2" href="https://instagram.com/abishek_devendran/">@AbishekDevendran</a></b> & <b><a class="link2" href="https://instagram.com/therealsujitk">@therealsujitk</a></b>.</p>
 </div>
 
+<div id="error-modal" class="modal">
+	<table cellpadding="0" cellspacing="0" style="width: 100%;">
+		<td class="header2" style="text-align: left;">Error!</td>
+		<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
+	</table>
+	<table cellpadding="0" cellspacing="0" style="width: 100%;">
+		<td><img src="/assets/images/error.png" style="height: 50px;"></img></td>
+		<td><p id="error-message" style="padding: 0; margin: 0;"></p></td>
+	</table>
+</div>
 <script>
+	function buildTown(response) {
+		if(response === "Success!")
+			$("body").load("/game.php");
+		else {
+			closeAll();
+			document.getElementById('error-message').innerHTML = response;
+			document.getElementById('error-modal').classList.add("show-modal");;
+			document.getElementById('modal-background').style.display = "block";
+		}
+	}
+	
+	$('#start').on('click', function (event) {
+		$.ajax({
+			type: 'POST',
+			url: '/build-town.php'
+		}).then(response => buildTown(response));
+	});
+
 	setInterval(function(){
 		$("#player-cards").load("/pre-game.php" + " #player-cards > *" );
 	}, 1000);
 
-	$('#start').on('click', function (event) {
-		$.ajax({
-			type: 'POST',
-			url: '/build-town.php',
-			success: function () {
-				$("body").load("/game.php");
-			},
-			error: function () {
-				//do something
-			}
-		});
-	});
+	function submitReport(response) {
+		if(response === "Success!") {
+			document.getElementById('success-bug').style.display = "block";
+			document.getElementById('report').value = "";
+		}
+		else {
+			closeAll();
+			document.getElementById('error-message').innerHTML = response;
+			document.getElementById('error-modal').classList.add("show-modal");;
+			document.getElementById('modal-background').style.display = "block";
+		}
+	}
 
 	$('#submit-report').on('click', function () {
 		let report = document.getElementById('report').value;
@@ -104,24 +137,7 @@
 			url: 'report-bug.php',
 			data: {
 				report: report
-			},
-			success: function () {
-				document.getElementById('success-bug').style.display = "block";
-			},
-			error: function () {
-				document.getElementById('error-bug').style.display = "block";
 			}
-		});
-	});
-	
-	$(window).bind('beforeunload', function(){
-		$.ajax({
-			type: 'POST',
-			url: 'leave-town.php',
-			data: {
-				townID: townID,
-				userID: userID
-			}
-		});
+		}).then(response => submitReport(response));
 	});
 </script>

@@ -59,7 +59,7 @@
 	
 	session_start();
 	$_SESSION["townID"] = $townID;
-	$_SESSION["userID"] = 1;
+	$_SESSION["userID"] = '1';
 	$_SESSION["name"] = $name;
 	$_SESSION["town"] = $town;
 	$_SESSION["mob"] = $mob;
