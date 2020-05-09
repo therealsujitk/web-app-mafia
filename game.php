@@ -6,8 +6,7 @@
 		$userID = $_SESSION["userID"];
 		$town = $_SESSION["town"];
 		$mob = $_SESSION["mob"];
-		$query = "SELECT daily_index FROM town_details WHERE town_id = '$townID';";
-		$dailyIndex = mysqli_fetch_assoc(mysqli_query($conn, $query))["daily_index"];
+		$dailyIndex = '0';
 	?>
 
 	var townID = <?php echo json_encode($townID); ?>;
@@ -238,7 +237,7 @@
 			
 			if($dailyIndex != $tempIndex) {
 				if(!$tempIndex%2) {
-					$prev = $dailyIndex/2 + 0.5;
+					$prev = $tempIndex/2;
 					$night = $tempIndex/2;
 				
 					$executed = '';
@@ -280,16 +279,16 @@
 					$dailyIndex = $tempIndex;
 				}
 				else {
-					$prev = $dailyIndex/2;
+					$prev = $tempIndex/2 - 0.5;
 					$day = $tempIndex/2 + 0.5;
 					
-					$query = "SELECT name FROM town_" . $townID . " WHERE night_" . $prev . " <> 0;";
-					$killed = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
-					$query = "SELECT name FROM town_" . $townID . " WHERE medic_" . $prev . " <> 0;";
-					$healed = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
+					$query = "SELECT user_id FROM town_" . $townID . " WHERE night_" . $prev . " <> 0;";
+					$killed = mysqli_fetch_assoc(mysqli_query($conn, $query))["user_id"];
+					$query = "SELECT user_id FROM town_" . $townID . " WHERE medic_" . $prev . " <> 0;";
+					$healed = mysqli_fetch_assoc(mysqli_query($conn, $query))["user_id"];
 				
 					if($killed != $healed) {
-						$query = "UPDATE town_" . $townID . " SET is_killed = 1 WHERE name = '$killed';";
+						$query = "UPDATE town_" . $townID . " SET is_killed = 1 WHERE user_id = " . $killed . ";";
 						mysqli_query($conn, $query);
 					}
 					
