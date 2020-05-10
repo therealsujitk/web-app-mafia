@@ -29,7 +29,22 @@
 <div id="game">
 	<table id="game-content">
 		<tr>
-			<th style="height: 5px; vertical-align: center;"><h3 id="game-index"></h3></th>
+			<th id="game-index" style="height: 5px; vertical-align: center;"><h3>
+				<?php
+					if($_SESSION["dailyIndex"]%2 == 0) {
+						if($_SESSION["dailyIndex"] == 0)
+							echo 'The First Night';
+						else {
+							$night = $_SESSION["dailyIndex"] / 2;
+							echo 'Night ' . $night;
+						}
+					}
+					else {
+						$day = $_SESSION["dailyIndex"]/2 + 0.5;
+						echo 'Day ' . $day;
+					}
+				?>
+			</h3></th>
 			<th style="height: 5px; vertical-align: center;"><input id="my-role" class="btn" type="button" value="My Role" onclick="openRole()"></input></th>
 		</tr>
 		<tr>
@@ -57,19 +72,30 @@
 											break;
 										}
 										else {
-											//show image for non-mafia
+											//non-mafia citizens (dead or alive) will see a blank screen
 										}
 									}
 								}
 							}
 							else {
-								$query = "SELECT * FROM chat_" . $townID . ";";
+								$query = "SELECT user_id FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0;";
 								if($result = mysqli_query($conn, $query)) {
 									while($row = mysqli_fetch_assoc($result)) {
-										if($row["name"] == $name)
-											echo '<div style="100%; text-align: right;"><div class="chat-r"><b>' . $row["name"] . ':</b> ' . $row["message"] . '</div></div>';
-										else
-											echo '<div style="100%; text-align: left;"><div class="chat-l"><b>' . $row["name"] . ':</b> ' . $row["message"] . '</div></div>';
+										if($row["user_id"] == $userID) {
+											$query = "SELECT * FROM chat_" . $townID . ";";
+											if($result = mysqli_query($conn, $query)) {
+												while($row = mysqli_fetch_assoc($result)) {
+													if($row["name"] == $name)
+														echo '<div style="100%; text-align: right;"><div class="chat-r"><b>' . $row["name"] . ':</b> ' . $row["message"] . '</div></div>';
+													else
+														echo '<div style="100%; text-align: left;"><div class="chat-l"><b>' . $row["name"] . ':</b> ' . $row["message"] . '</div></div>';
+												}
+											}
+											break;
+										}
+										else {
+											//citizens no longer alive will see a blank screen
+										}
 									}
 								}
 							}
@@ -127,110 +153,7 @@
 			</td>
 		</td>
 	</table>
-	<div id="daily-update">
-		<?php
-			if($_SESSION["dailyIndex"]%2 == 0) {
-				$night = $_SESSION["dailyIndex"]/2;
-				if($night == 0) {
-					echo '<script>document.getElementsByTagName("title")[0].innerHTML = "The First Night • ' . $town . ' - Mafia";</script>';
-					echo '<script>document.getElementById("game-index").innerHTML = "The First Night";</script>';
-					
-					$query = "SELECT user_id FROM town_" . $townID . " WHERE is_poser = 1;";
-					if($result = mysqli_query($conn, $query)) {
-						while($row = mysqli_fetch_assoc($result)) {
-							if($row["user_id"] == $userID) {
-								echo '<script>
-									document.getElementById("news").innerHTML = "";
-									let news = "Message for poser.";
-									displayNews(news, 0);
-								</script>';
-								echo '<script>document.getElementById("vote").disabled = false;</script>';
-								echo '<script>document.getElementById("vote").innerHTML = "Heal";</script>';
-								break;
-							}
-							else {
-								echo '<script>document.getElementById("send").disabled = true;</script>';
-								echo '<script>document.getElementById("vote").disabled = true;</script>';
-								echo '<script>document.getElementById("vote").innerHTML = "Vote";</script>';
-							}
-						}
-					}
-				}
-				else {
-					echo '<script>document.getElementsByTagName("title")[0].innerHTML = "Night ' . $night . ' • ' . $town . ' - Mafia";</script>';
-					echo '<script>document.getElementById("game-index").innerHTML = "Night ' . $night . '";</script>';
-				}
-
-				$query = "SELECT user_id FROM town_" . $townID . " WHERE is_mafia = 1;";
-				if($result = mysqli_query($conn, $query)) {
-					while($row = mysqli_fetch_assoc($result)) {
-						if($row["user_id"] == $userID) {
-							echo '<script>
-								document.getElementById("news").innerHTML = "";
-								let news = "Welcome, members of *" + mob + "*, below you can chat with the other mafia members on who is to be killed. *Mr. Bean* will then choose the victim by clicking the *Kill* button at the bottom.";
-								displayNews(news, 0);
-							</script>';
-							echo '<script>document.getElementById("send").disabled = false;</script>';
-							echo '<script>document.getElementById("vote").disabled = false;</script>';
-							echo '<script>document.getElementById("vote").innerHTML = "Kill";</script>';
-							break;
-						}
-						else {
-							echo '<script>document.getElementById("send").disabled = true;</script>';
-							echo '<script>document.getElementById("vote").disabled = true;</script>';
-							echo '<script>document.getElementById("vote").innerHTML = "Vote";</script>';
-						}
-					}
-				}
-
-				$query = "SELECT user_id FROM town_" . $townID . " WHERE is_medic = 1;";
-				if($result = mysqli_query($conn, $query)) {
-					while($row = mysqli_fetch_assoc($result)) {
-						if($row["user_id"] == $userID) {
-							echo '<script>
-								document.getElementById("news").innerHTML = "";
-								let news = "Message for medic.";
-								displayNews(news, 0);
-							</script>';
-							echo '<script>document.getElementById("vote").disabled = false;</script>';
-							echo '<script>document.getElementById("vote").innerHTML = "Heal";</script>';
-							break;
-						}
-						else {
-							echo '<script>document.getElementById("send").disabled = true;</script>';
-							echo '<script>document.getElementById("vote").disabled = true;</script>';
-							echo '<script>document.getElementById("vote").innerHTML = "Vote";</script>';
-						}
-					}
-				}
-			}
-			else {
-				$day = $_SESSION["dailyIndex"]/2 + 0.5;
-				echo '<script>document.getElementsByTagName("title")[0].innerHTML = "Day ' . $day . ' • ' . $town . ' - Mafia";</script>';
-				echo '<script>document.getElementById("game-index").innerHTML = "Day ' . $day . '";</script>';
-				echo '<script>
-					document.getElementById("news").innerHTML = "";
-					let news = "Citizens of *" + town + "*, I\'m afraid I have some bad news. Last night *" + mob + "* struck again and killed *Teddy*. Below you can talk about who you suspect of this heinous crime. You can then secretly vote on who you think should be executed by clicking the *Vote* button at the bottom.";
-					displayNews(news, 0);
-				</script>';
-				echo '<script>document.getElementById("send").disabled = false;</script>';
-				echo '<script>document.getElementById("vote").disabled = false;</script>';
-				echo '<script>document.getElementById("vote").innerHTML = "Vote";</script>';
-			}
-			
-			$query = "SELECT user_id FROM town_" . $townID . " WHERE is_killed = 1 OR is_executed = 1;";
-			if($result = mysqli_query($conn, $query)) {
-				while($row = mysqli_fetch_assoc($result)) {
-					if($row["user_id"] == $userID) {
-						echo '<script>document.getElementById("send").disabled = true;</script>';
-						echo '<script>document.getElementById("vote").disabled = true;</script>';
-						break;
-					}
-				}
-			}
-		?>
-	</div>
-	<div id="game-update">
+	<div id="game-update" style="display: none;">
 		<?php
 			$query = "SELECT daily_index FROM town_details WHERE town_id = '$townID';";
 			$tempIndex = mysqli_fetch_assoc(mysqli_query($conn, $query))["daily_index"];
@@ -258,6 +181,20 @@
 					if($executed != "") {
 						$query = "UPDATE town_" . $townID . " SET is_executed = 1 WHERE user_id = " . $executed . ";";
 						mysqli_query($conn, $query);
+						
+						$query = "SELECT name, is_mafia, is_poser, is_medic, is_sherrif FROM town_" . $townID . " WHERE user_id = " . $executed . ";";
+						$executed = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
+						
+						if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_mafia"])
+							$role = 'a *Mafia* member';
+						else if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_poser"])
+							$role = 'the *Poser*';
+						else if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_sherrif"])
+							$role = 'the towns *Sherrif*';
+						else if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_medic"])
+							$role = 'the towns *Medic*';
+						else
+							$role = 'just a *Citizen*';
 					}
 				
 					$query = "ALTER TABLE town_" . $townID . " ADD night_" . $night . " INT(1) NOT NULL DEFAULT 0;";
@@ -279,18 +216,68 @@
 					mysqli_query($conn, $query);
 					
 					$_SESSION["dailyIndex"] = $tempIndex;
+					
+					$message = '<span>You are in the underworld. There is no way to contact anyone from here.</span>';
+					
+					$query = "SELECT user_id FROM town_" . $townID . " WHERE is_mafia = 1 AND is_killed = 0 AND is_executed = 0;";
+					if($result = mysqli_query($conn, $query)) {
+						while($row = mysqli_fetch_assoc($result)) {
+							if($row["user_id"] == $userID) {
+								if($executed != '')
+									$postMessage = 'Discuss below with the other mafia members on who is to be executed, after that click the *Kill* button to choose your next victim.';
+								break;
+							}
+						}
+					}
+					
+					$query = "SELECT user_id FROM town_" . $townID . " WHERE is_medic = 1 AND is_killed = 0 AND is_executed = 0;";
+					if($result = mysqli_query($conn, $query)) {
+						while($row = mysqli_fetch_assoc($result)) {
+							if($row["user_id"] == $userID) {
+								if($executed != '')
+									$postMessage = 'Click the *Heal* button to choose who you\'d like to heal tonight.';
+								break;
+							}
+						}
+					}
+					
+					$query = "SELECT user_id FROM town_" . $townID . " WHERE is_sherrif = 1 AND is_killed = 0 AND is_executed = 0;";
+					if($result = mysqli_query($conn, $query)) {
+						while($row = mysqli_fetch_assoc($result)) {
+							if($row["user_id"] == $userID) {
+								if($executed != '')
+									$postMessage = 'Click the *Reveal* button to find out more about the citizens of *' .$town . '*.';
+								break;
+							}
+						}
+					}
+					
+					$query = "SELECT user_id FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0;";
+					if($result = mysqli_query($conn, $query)) {
+						while($row = mysqli_fetch_assoc($result)) {
+							if($row["user_id"] == $userID) {
+								if($executed != '')
+									$message = '<span>Citizens of *' . $town . '*, after the execution it was discovered that *' . $executed . '* was ' . $role . '. ' . $postMessage . '</span>';
+								else
+									$message = '<span>Citizens of *' . $town . '*, yesterday no one was executed. ' . $postMessage . '</span>';
+								break;
+							}
+						}
+					}
+					
+					echo $message;
 				}
 				else {
 					$prev = $tempIndex/2 - 0.5;
 					$day = $tempIndex/2 + 0.5;
 					
-					$query = "SELECT user_id FROM town_" . $townID . " WHERE night_" . $prev . " <> 0;";
-					$killed = mysqli_fetch_assoc(mysqli_query($conn, $query))["user_id"];
-					$query = "SELECT user_id FROM town_" . $townID . " WHERE medic_" . $prev . " <> 0;";
-					$healed = mysqli_fetch_assoc(mysqli_query($conn, $query))["user_id"];
+					$query = "SELECT name FROM town_" . $townID . " WHERE night_" . $prev . " <> 0;";
+					$killed = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
+					$query = "SELECT name FROM town_" . $townID . " WHERE medic_" . $prev . " <> 0;";
+					$healed = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
 				
 					if($killed != $healed) {
-						$query = "UPDATE town_" . $townID . " SET is_killed = 1 WHERE user_id = " . $killed . ";";
+						$query = "UPDATE town_" . $townID . " SET is_killed = 1 WHERE name = '$killed';";
 						mysqli_query($conn, $query);
 					}
 					
@@ -303,8 +290,69 @@
 					mysqli_query($conn, $query);
 					
 					$_SESSION["dailyIndex"] = $tempIndex;
+					
+					$message = '<span>You are in the underworld. There is no way to contact anyone from here.</span>';
+					
+					$query = "SELECT user_id FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0;";
+					if($result = mysqli_query($conn, $query)) {
+						while($row = mysqli_fetch_assoc($result)) {
+							if($row["user_id"] == $userID) {
+								if($killed != $healed) {
+									$message = '<span>Citizens of *' . $town . '*, I\'m afraid I have some bad news. Last night *' . $mob . '* struck again and murdered *' . $killed . '*. If this continues, the mafia will soon take over our beloved town. Discuss with other citizens on who you think should be executed for the henious crime, after that click the *Vote* button below.</span>';
+								}
+								else {
+									$messgae = '<span>Citizens of *' . $town . '*, Last night our medic saved the day, there were no casualities. However, this town is still not free from the mafia. Discuss with other citizens on who you think the mafia members might be, after that click the *Vote* button below.</span>';
+								}
+							}
+						}
+					}
+					
+					echo $message;
 				}
 				
+			}
+			else if($_SESSION["dailyIndex"] == 0) {
+				$query = "SELECT user_id FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0;";
+				if($result = mysqli_query($conn, $query)) {
+					while($row = mysqli_fetch_assoc($result)) {
+						if($row["user_id"] == $userID) {
+							$message = '<span>The citizens of *' . $town . '* are sleeping. Zzz</span>';
+							break;
+						}
+					}
+				}
+			
+				$query = "SELECT user_id FROM town_" . $townID . " WHERE is_mafia = 1 AND is_killed = 0 AND is_executed = 0;";
+				if($result = mysqli_query($conn, $query)) {
+					while($row = mysqli_fetch_assoc($result)) {
+						if($row["user_id"] == $userID) {
+							$message = '<span>Welcome members of *' . $mob . '*, discuss below on who you would like to kill, after that click the *Kill* button to choose your first victim.</span>';
+							break;
+						}
+					}
+				}
+				
+				$query = "SELECT user_id FROM town_" . $townID . " WHERE is_medic = 1 AND is_killed = 0 AND is_executed = 0;";
+				if($result = mysqli_query($conn, $query)) {
+					while($row = mysqli_fetch_assoc($result)) {
+						if($row["user_id"] == $userID) {
+							$message = '<span>Hello there! You probably already know this but, you are the towns medic. Click the *Heal* button below to use your amazing abilities. :)</span>';
+							break;
+						}
+					}
+				}
+				
+				$query = "SELECT user_id FROM town_" . $townID . " WHERE is_sherrif = 1 AND is_killed = 0 AND is_executed = 0;";
+				if($result = mysqli_query($conn, $query)) {
+					while($row = mysqli_fetch_assoc($result)) {
+						if($row["user_id"] == $userID) {
+							$message = '<span>Hello there! You probably already know this but, you are the towns sherrif. Click the *Reveal* button below to check whether a citizen is a mafia member.</span>';
+							break;
+						}
+					}
+				}
+				
+				echo $message;
 			}
 		?>
 	</div>
@@ -475,14 +523,29 @@
 		if(!scrolled) {
 			elem.scrollTop = elem.scrollHeight;
 		}
-		$("#game-update").load("/game.php" + " #game-update > *" );
-	}, 1000);	
+	}, 500);	
 	$("#game-display").on('scroll', function(){
 		if(elem.scrollTop + elem.clientHeight == elem.scrollHeight)
 			scrolled=false;
 		else
 			scrolled = true;
 	});
+	
+	setInterval(function(){
+		let x = document.getElementById('game-update');
+		if(x.innerHTML != '') {
+			document.getElementById('news').innerHTML = '';
+			let message = x.innerHTML;
+			message = message.trim();
+			message = message.slice(6, -7);
+			displayNews(message, 0);
+			x.innerHTML = '';
+		}
+		else {
+			$("#game-update").load("/game.php" + " #game-update > *" );
+		}
+		$("#game-index").load("/game.php" + " #game-index > *" );
+	}, 10000);
 	
 	setInterval(function(){
 		$("#players").load("/game.php" + " #players > *" );
