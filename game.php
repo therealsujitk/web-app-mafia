@@ -6,7 +6,7 @@
 		$userID = $_SESSION["userID"];
 		$town = $_SESSION["town"];
 		$mob = $_SESSION["mob"];
-		$dailyIndex = '0';
+		$name = $_SESSION["name"];
 	?>
 
 	var townID = <?php echo json_encode($townID); ?>;
@@ -40,15 +40,15 @@
 					</div>
 					<div id="game-display" style="height: 35vh; overflow-y: scroll; overflow-x: hidden;">
 						<?php
-							if(!$dailyIndex%2) {
-								$query = "SELECT user_id FROM town_" . $_SESSION["townID"] . " WHERE is_mafia = 1 AND is_killed = 0 AND is_executed = 0;";
+							if($_SESSION["dailyIndex"]%2 == 0) {
+								$query = "SELECT user_id FROM town_" . $townID . " WHERE is_mafia = 1 AND is_killed = 0 AND is_executed = 0;";
 								if($result = mysqli_query($conn, $query)) {
 									while($row = mysqli_fetch_assoc($result)) {
-										if($row["user_id"] == $_SESSION["userID"]) {
-											$query = "SELECT * FROM chat_" . $_SESSION["townID"] . ";";
+										if($row["user_id"] == $userID) {
+											$query = "SELECT * FROM chat_" . $townID . ";";
 											if($result = mysqli_query($conn, $query)) {
 												while($row = mysqli_fetch_assoc($result)) {
-													if($row["name"] == $_SESSION["name"])
+													if($row["name"] == $name)
 														echo '<div style="100%; text-align: right;"><div class="chat-r"><b>' . $row["name"] . ':</b> ' . $row["message"] . '</div></div>';
 													else
 														echo '<div style="100%; text-align: left;"><div class="chat-l"><b>' . $row["name"] . ':</b> ' . $row["message"] . '</div></div>';
@@ -66,7 +66,7 @@
 								$query = "SELECT * FROM chat_" . $townID . ";";
 								if($result = mysqli_query($conn, $query)) {
 									while($row = mysqli_fetch_assoc($result)) {
-										if($row["name"] == $_SESSION["name"])
+										if($row["name"] == $name)
 											echo '<div style="100%; text-align: right;"><div class="chat-r"><b>' . $row["name"] . ':</b> ' . $row["message"] . '</div></div>';
 										else
 											echo '<div style="100%; text-align: left;"><div class="chat-l"><b>' . $row["name"] . ':</b> ' . $row["message"] . '</div></div>';
@@ -84,11 +84,11 @@
 			<td id="game-content-r" style="width: 20%;">
 				<div id="players">
 					<?php
-						$query = "SELECT * FROM town_" . $_SESSION["townID"] . ";";
+						$query = "SELECT * FROM town_" . $townID . ";";
 						if($result = mysqli_query($conn, $query)) {
 							while($row = mysqli_fetch_assoc($result)) {
 								$name = $row["name"];
-								if($_SESSION["userID"] == $row["user_id"])
+								if($userID == $row["user_id"])
 									$name = $name . " <b>(You)</b>";
 						
 								if($row["is_mafia"] && $row["is_executed"])
@@ -129,9 +129,9 @@
 	</table>
 	<div id="daily-update">
 		<?php
-			if(!$dailyIndex%2) {
-				$night = $dailyIndex/2;
-				if(!$night) {
+			if($_SESSION["dailyIndex"]%2 == 0) {
+				$night = $_SESSION["dailyIndex"]/2;
+				if($night == 0) {
 					echo '<script>document.getElementsByTagName("title")[0].innerHTML = "The First Night • ' . $town . ' - Mafia";</script>';
 					echo '<script>document.getElementById("game-index").innerHTML = "The First Night";</script>';
 					
@@ -205,7 +205,7 @@
 				}
 			}
 			else {
-				$day = $dailyIndex/2 + 0.5;
+				$day = $_SESSION["dailyIndex"]/2 + 0.5;
 				echo '<script>document.getElementsByTagName("title")[0].innerHTML = "Day ' . $day . ' • ' . $town . ' - Mafia";</script>';
 				echo '<script>document.getElementById("game-index").innerHTML = "Day ' . $day . '";</script>';
 				echo '<script>
@@ -235,26 +235,28 @@
 			$query = "SELECT daily_index FROM town_details WHERE town_id = '$townID';";
 			$tempIndex = mysqli_fetch_assoc(mysqli_query($conn, $query))["daily_index"];
 			
-			if($dailyIndex != $tempIndex) {
-				if(!$tempIndex%2) {
+			if($_SESSION["dailyIndex"] != $tempIndex) {
+				if($tempIndex%2 == 0) {
 					$prev = $tempIndex/2;
 					$night = $tempIndex/2;
+					
+					$query = "SELECT COUNT(name) FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0;";
+					$dayVote = mysqli_fetch_assoc(mysqli_query($conn, $query))["COUNT(name)"];
 				
 					$executed = '';
 					
 					$query = "SELECT COUNT(day_" . $prev . "), day_" . $prev . " FROM town_" . $townID . " WHERE day_" . $prev . " <> 0 GROUP BY day_" . $prev . ";";
 					if($result = mysqli_query($conn, $query)) {
 						while($row = mysqli_fetch_assoc($result)) {
-							if($row["COUNT(day_" . $day . ")"] >= $dayVote/2) {
-								$query = "SELECT name, day_" . $day . " FROM town_" . $townID . " WHERE day_" . $day . " = " . $row["day_" . $day] . ";";
-								$executed = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
+							if($row["COUNT(day_" . $prev . ")"] >= $dayVote/2) {
+								$executed = $row["day_" . $prev];
 								break;
 							}
 						}
 					}
 				
 					if($executed != "") {
-						$query = "UPDATE town_" . $townID . " SET in_executed = 1 WHERE name = '$executed';";
+						$query = "UPDATE town_" . $townID . " SET is_executed = 1 WHERE user_id = " . $executed . ";";
 						mysqli_query($conn, $query);
 					}
 				
@@ -264,8 +266,8 @@
 					$query = "ALTER TABLE town_" . $townID . " ADD medic_" . $night . " INT(1) NOT NULL DEFAULT 0;";
 					mysqli_query($conn, $query);
 
-					$day = $night + 1;
-					$query = "ALTER TABLE town_" . $_SESSION["townID"] . " ADD day_" . $day . " INT(2) NOT NULL DEFAULT 0;";
+					$next = $night + 1;
+					$query = "ALTER TABLE town_" . $townID . " ADD day_" . $next . " INT(2) NOT NULL DEFAULT 0;";
 					mysqli_query($conn, $query);
 				
 					$query = "UPDATE town_details SET game_index = 0 WHERE town_id = '$townID';";
@@ -276,7 +278,7 @@
 					$query = "UPDATE town_details SET daily_max = " . $max . " WHERE town_id = '$townID';";
 					mysqli_query($conn, $query);
 					
-					$dailyIndex = $tempIndex;
+					$_SESSION["dailyIndex"] = $tempIndex;
 				}
 				else {
 					$prev = $tempIndex/2 - 0.5;
@@ -300,7 +302,7 @@
 					$query = "UPDATE town_details SET daily_max = " . $max . " WHERE town_id = '$townID';";
 					mysqli_query($conn, $query);
 					
-					$dailyIndex = $tempIndex;
+					$_SESSION["dailyIndex"] = $tempIndex;
 				}
 				
 			}
@@ -362,7 +364,7 @@
 			</table>
 			<table cellpadding="0" cellspacing="0" style="width: 100%;">
 				<td><img src="/assets/cards/mafia.png" style="height: 150px;"></img></td>
-				<td><h3>Mafia</h3><br><p style="padding: 0; margin: 0;">Your job is to take over <b>' . $_SESSION["town"] . '</b> with the help of the other mafia members by killing citizens every night.</p></td>
+				<td><h3>Mafia</h3><br><p style="padding: 0; margin: 0;">Your job is to take over <b>' . $town . '</b> with the help of the other mafia members by killing citizens every night.</p></td>
 			</table>';
 		}
 		else if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_poser"]) {
@@ -372,7 +374,7 @@
 			</table>
 			<table cellpadding="0" cellspacing="0" style="width: 100%;">
 				<td><img src="/assets/cards/poser.png" style="height: 150px;"></img></td>
-				<td><h3>Poser</h3><br><p style="padding: 0; margin: 0;">Your job is to help the' . $_SESSION["mob"] . ' mafia take over <b>' . $_SESSION["town"] . '</b> by making people think that you are a member of the mafia.</p></td>
+				<td><h3>Poser</h3><br><p style="padding: 0; margin: 0;">Your job is to help the' . $mob . ' mafia take over <b>' . $town . '</b> by making people think that you are a member of the mafia.</p></td>
 			</table>';
 		}
 		else if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_medic"]) {
@@ -382,7 +384,7 @@
 			</table>
 			<table cellpadding="0" cellspacing="0" style="width: 100%;">
 				<td><img src="/assets/cards/medic.png" style="height: 150px;"></img></td>
-				<td><h3>Medic</h3><br><p style="padding: 0; margin: 0;">You have the ability to heal anyone you want, you can even heal yourself. Note that you <b>can not</b> heal the same more than once in a game.</p></td>
+				<td><h3>Medic</h3><br><p style="padding: 0; margin: 0;">You have the ability to heal anyone you want, you can even heal yourself. Note that you <b>can not</b> heal the same person more than once in a game.</p></td>
 			</table>';
 		}
 		else if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_sherrif"]) {

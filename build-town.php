@@ -209,5 +209,7 @@
 	
 	mysqli_close($conn);
 	
+	$_SESSION["dailyIndex"] = '0';
+	
 	echo 'Success!';
 ?>
