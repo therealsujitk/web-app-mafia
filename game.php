@@ -103,7 +103,104 @@
 					</div>
 					<table style="width: 100%;">
 						<td style="padding: 0;"><input id="chat-box" placeholder="Write a message..."></input></td>
-						<td style="padding: 0; width: 190px;"><input id="send" class="btn" type="button" style="border-radius: 10px;" value="Send"></input><input id="vote" class="btn" type="button" style="margin-left: 6%; margin-right: 1.5%; border-radius: 10px;" value="Vote"></input></td>
+						<td style="padding: 0;">
+							<input id="send" class="btn" type="button" style="border-radius: 10px;" value="Send" <?php
+								$ability = 'disabled';
+							
+								if($_SESSION["dailyIndex"]%2 == 0) {
+									$query = "SELECT user_id FROM town_" . $townID . " WHERE is_mafia = 1;";
+									if($result = mysqli_query($conn, $query))
+										while($row = mysqli_fetch_assoc($result))
+											if($row["user_id"] == $userID) {
+												$ability = 'enabled';
+												break;
+											}
+								}
+								else {
+									$query = "SELECT user_id FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0;";
+									if($result = mysqli_query($conn, $query))
+										while($row = mysqli_fetch_assoc($result))
+											if($row["user_id"] == $userID) {
+												$ability = 'enabled';
+												break;
+											}
+								}
+								
+								echo $ability;
+							?>></input>
+						</td>
+						<td id="vote" style="padding: 0;">
+							<input id="vote" class="btn" type="button" style="margin-left: 6%; margin-right: 1.5%; border-radius: 10px;" value="<?php
+								$value = 'Vote';
+							
+								if($_SESSION["dailyIndex"]%2 == 0) {
+									$query = "SELECT user_id FROM town_" . $townID . " WHERE is_mafia = 1;";
+									if($result = mysqli_query($conn, $query))
+										while($row = mysqli_fetch_assoc($result))
+											if($row["user_id"] == $userID) {
+												$value = 'Kill';
+												break;
+											}
+								
+									$query = "SELECT user_id FROM town_" . $townID . " WHERE is_medic = 1;";
+									if($result = mysqli_query($conn, $query))
+										while($row = mysqli_fetch_assoc($result))
+											if($row["user_id"] == $userID) {
+												$value = 'Heal';
+												break;
+											}
+								
+									$query = "SELECT user_id FROM town_" . $townID . " WHERE is_sherrif = 1;";
+									if($result = mysqli_query($conn, $query))
+										while($row = mysqli_fetch_assoc($result))
+											if($row["user_id"] == $userID) {
+												$value = 'Reveal';
+												break;
+											}
+								}
+							
+								echo $value;
+							?>" <?php
+								$ability = 'disabled';
+							
+								if($_SESSION["dailyIndex"]%2 == 0) {
+									$query = "SELECT user_id FROM town_" . $townID . " WHERE is_mafia = 1;";
+									if($result = mysqli_query($conn, $query))
+										while($row = mysqli_fetch_assoc($result))
+											if($row["user_id"] == $userID) {
+												$ability = 'enabled';
+												break;
+											}
+							
+									$query = "SELECT user_id FROM town_" . $townID . " WHERE is_medic = 1;";
+									if($result = mysqli_query($conn, $query))
+										while($row = mysqli_fetch_assoc($result))
+											if($row["user_id"] == $userID) {
+												$ability = 'enabled';
+												break;
+											}
+							
+									$query = "SELECT user_id FROM town_" . $townID . " WHERE is_sherrif = 1;";
+									if($result = mysqli_query($conn, $query))
+										while($row = mysqli_fetch_assoc($result))
+											if($row["user_id"] == $userID) {
+												$ability = 'enabled';
+												break;
+											}
+								}
+								else {
+									$query = "SELECT user_id FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0;";
+									if($result = mysqli_query($conn, $query))
+										while($row = mysqli_fetch_assoc($result))
+											if($row["user_id"] == $userID) {
+												$ability = 'enabled';
+												break;
+											}
+								}
+								
+								echo $ability;
+							?>></input>
+						</td>
 					</table>
 				</div>
 			</td>
@@ -550,6 +647,10 @@
 	setInterval(function(){
 		$("#players").load("/game.php" + " #players > *" );
 	}, 10000);
+	
+	setInterval(function(){
+		$("#vote").load("/game.php" + " #vote > *" );
+	}, 1000);
 	
 	window.onbeforeunload = function() {
 		return "Dude, are you sure about this? If you do this, there\'s no coming back.";
