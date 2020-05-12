@@ -105,8 +105,6 @@ span {
 
 img {
 	border-radius: 10px;
-	margin-left: 50%;
-	transform: translate(-50%, 0%);
 }
 
 .btn {
@@ -229,23 +227,25 @@ textArea:focus {
 	border-color: #c80000;
 }
 
-#share {
-	color: #936c6c;
-	width: 100%;
-	margin-top: 5%;
-}
-
 #town-players {
 	position: absolute;
 	text-align: center;
 	margin-left: 50%;
 	margin-top: 15vh;
+	max-width: 90%;
 	transform: translate(-50%, 0%);
 }
 
 #player-cards {
-	margin-left: 50%;
-	transform: translate(-50%, 0%);
+	max-width: 100%;
+	display: inline-flex;
+	overflow-x: auto;
+}
+
+#share {
+	color: #936c6c;
+	width: 100%;
+	margin-top: 1.5%;
 }
 
 figcaption {

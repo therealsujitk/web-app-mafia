@@ -27,19 +27,19 @@
 
 <div id="town-players">
 	<h2><?php echo $town; ?></h2>
-	<table id="player-cards" cellpadding="0" cellspacing="0">
+	<div id="player-cards">
 		<?php
-			$query = "SELECT * FROM town_" . $townID . ";";
+			$query = "SELECT user_id, name, avatar FROM town_" . $townID . ";";
 		
 			if($result = mysqli_query($conn, $query))
 				while($row = mysqli_fetch_assoc($result)) {
 					$name = $row["name"];
 					if($userID == $row["user_id"])
 						$name = $name . " <b>(You)</b>";
-					echo '<td style="vertical-align: top; padding: 0;"><figure style="margin: 10px;"><img style="height: 150px;" src="'. $row["avatar"] .'"></img><figcaption>' . $name . '</figcaption></figure></td>';
+					echo '<figure style="margin: 10px; display: inline-block;"><img style="height: 150px;" src="'. $row["avatar"] .'"></img><figcaption>' . $name . '</figcaption></figure>';
 				}
 		?>
-	</table>
+	</div>
 
 	<p id="share">Your Town ID is <b><?php echo $townID; ?></b>. <span class="link3" onclick="copyInvite(townID);">Click here</span> to copy.</p>
 	<?php
