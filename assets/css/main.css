@@ -323,3 +323,44 @@ figcaption {
 	text-align: left;
 	border-radius: 7px;
 }
+
+#candidates {
+	max-width: 100%;
+	display: inline-flex;
+	overflow-x: auto;
+}
+
+.candidate {
+	cursor: pointer;
+	transition: transform 0.5s;
+}
+
+.candidate:hover {
+	transform: scale(1.1);
+	box-shadow: 0 7px 15px #000;
+}
+
+.candidate-mafia {
+
+}
+
+.candidate-medic:hover {
+
+}
+
+
+.candidate-medic {
+
+}
+
+.candidate-medic:hover {
+
+}
+
+.candidate-sherrif {
+
+}
+
+.candidate-sherrif:hover {
+
+}
