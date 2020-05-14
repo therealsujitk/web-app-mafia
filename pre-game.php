@@ -43,8 +43,8 @@
 
 	<p id="share">Your Town ID is <b><?php echo $townID; ?></b>. <span class="link3" onclick="copyInvite(townID);">Click here</span> to copy.</p>
 	<?php
-		$query = "SELECT owner_id FROM town_details WHERE town_id = '$townID';";
-		$ownerID = mysqli_fetch_assoc(mysqli_query($conn, $query))["owner_id"];
+		$query = "SELECT user_id FROM town_" . $townID . ";";
+		$ownerID = mysqli_fetch_assoc(mysqli_query($conn, $query))["user_id"];
 		
 		if($ownerID === $userID)
 			echo '<input id="start" class="btn" type="button" value="Start Game"></input>';
@@ -93,6 +93,14 @@
 		<td><p id="error-message" style="padding: 0; margin: 0;"></p></td>
 	</table>
 </div>
+
+<div id="has-started" style="display: none;">
+	<?php
+		$query = "SELECT has_started FROM town_details WHERE town_id = '$townID';";
+		if(mysqli_fetch_assoc(mysqli_query($conn, $query))["has_started"])
+			echo '<span>Let the games begin!</span>';
+	?>
+</div>
 <script>
 	function buildTown(response) {
 		if(response === "Success!")
@@ -114,6 +122,11 @@
 
 	setInterval(function(){
 		$("#player-cards").load("/pre-game.php" + " #player-cards > *" );
+		$("#has-started").load("/pre-game.php" + " #has-started > *" );
+		
+		var x = document.getElementById('has-started').innerHTML.trim();
+		if(x != '')
+			$("body").load("/game.php");
 	}, 1000);
 
 	function submitReport(response) {

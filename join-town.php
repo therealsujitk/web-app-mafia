@@ -16,7 +16,7 @@
 	else if(mysqli_fetch_assoc(mysqli_query($conn, $query))["COUNT(user_id)"] == 10) {
 		die("Sorry, this town is already full. Please try");
 	}
-	else if(mysqli_fetch_assoc(mysqli_query($conn, $query1))["name"] == $name) {
+	else if(mysqli_fetch_assoc(mysqli_query($conn, $query1))) {
 		die("Sorry, that name has already been taken in this town. Please use a different name.");
 	}
 	else {
@@ -39,6 +39,7 @@
 	$_SESSION["name"] = $name;
 	$_SESSION["town"] = $town;
 	$_SESSION["mob"] = $mob;
+	$_SESSION["dailyIndex"] = '0';
 	
 	echo 'Success!';
 ?>

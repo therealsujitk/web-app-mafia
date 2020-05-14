@@ -551,26 +551,44 @@
 			if($result = mysqli_query($conn, $query)) {
 				while($row = mysqli_fetch_assoc($result))
 					if($row["user_id"] == $userID) {
-						echo '<table cellpadding="0" cellspacing="0" style="width: 100%;">
-							<td class="header2" style="text-align: left;">Choose a victim</td>
-							<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
-						</table>';
+						$night = $_SESSION["dailyIndex"] / 2;
+						$query1 = "SELECT user_id name, avatar FROM town_" . $townID . " WHERE night_" . $night . " = 1;";
+						if(!mysqli_fetch_assoc(mysqli_query($conn, $query1))) {
+							echo '<table cellpadding="0" cellspacing="0" style="width: 100%;">
+								<td class="header2" style="text-align: left;">Choose a victim</td>
+								<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
+							</table>';
 						
-						echo '<div style="margin: 10px;"><div id="candidates">';
-						$query = "SELECT user_id, name, avatar, is_mafia FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0;";
-						if($result = mysqli_query($conn, $query))
-							while($row = mysqli_fetch_assoc($result)) {
-								$name = $row["name"];
-								if($userID == $row["user_id"])
-									$name = $name . ' <b>(You)</b>';
-								if($row["is_mafia"])
-									$color = '#c80000';
-								else
-									$color = '#fff';
-								echo '<figure style="margin: 10px; display: inline-block;"><img class="candidate candidate-mafia" style="height: 100px;" src="'. $row["avatar"] .'" onclick="registerVote(`mafia`, `' . $row["user_id"] . '`);"></img><figcaption style="color: ' . $color . ';">' . $name . '</figcaption></figure>';
-							}
-						echo '</div></div>';
-						break;
+							echo '<div style="margin: 10px;"><div id="candidates">';
+							$query = "SELECT user_id, name, avatar, is_mafia FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0;";
+							if($result = mysqli_query($conn, $query))
+								while($row = mysqli_fetch_assoc($result)) {
+									$name = $row["name"];
+									if($userID == $row["user_id"])
+										$name = $name . ' <b>(You)</b>';
+									if($row["is_mafia"])
+										$color = '#c80000';
+									else
+										$color = '#fff';
+									echo '<figure style="margin: 10px; display: inline-block;"><img class="candidate candidate-mafia" style="height: 100px;" src="'. $row["avatar"] .'" onclick="registerVote(`mafia`, `' . $row["user_id"] . '`);"></img><figcaption style="color: ' . $color . ';">' . $name . '</figcaption></figure>';
+								}
+							echo '</div></div>';
+							break;
+						}
+						else {
+							$name = mysqli_fetch_assoc(mysqli_query($conn, $query1))["name"];
+							$avatar = mysqli_fetch_assoc(mysqli_query($conn, $query1))["avatar"];
+							
+							echo '<table cellpadding="0" cellspacing="0" style="width: 100%;">
+								<td class="header2" style="text-align: left;">Victim chosen</td>
+								<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
+							</table>
+							<table cellpadding="0" cellspacing="0" style="width: 100%;">
+								<td><img src="' . $avatar . '" style="height: 150px;"></img></td>
+								<td><h3>' . $name . '</h3><br><p style="padding: 0; margin: 0;">You have already selected <b>' . $name . '</b> as your victim. You can only kill <b>one</b> citizen per night.</p></td>
+							</table>';
+							break;
+						}
 					}
 			}
 		
@@ -578,22 +596,40 @@
 			if($result = mysqli_query($conn, $query))
 				while($row = mysqli_fetch_assoc($result))
 					if($row["user_id"] == $userID) {
-						echo '<table cellpadding="0" cellspacing="0" style="width: 100%;">
-							<td class="header2" style="text-align: left;">Select a citizen</td>
-							<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
-						</table>';
+						$night = $_SESSION["dailyIndex"] / 2;
+						$query1 = "SELECT name, avatar FROM town_" . $townID . " WHERE medic_" . $night . " = 1;";
+						if(!mysqli_fetch_assoc(mysqli_query($conn, $query1))) {
+							echo '<table cellpadding="0" cellspacing="0" style="width: 100%;">
+								<td class="header2" style="text-align: left;">Select a citizen</td>
+								<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
+							</table>';
 						
-						echo '<div style="margin: 10px;"><div id="candidates">';
-								$query = "SELECT user_id, name, avatar FROM town_" . $townID . " WHERE saved = 0 AND is_killed = 0 AND is_executed = 0;";
-								if($result = mysqli_query($conn, $query))
-									while($row = mysqli_fetch_assoc($result)) {
-										$name = $row["name"];
-										if($userID == $row["user_id"])
-											$name = $name . ' <b>(You)</b>';
-										echo '<figure style="margin: 10px; display: inline-block;"><img class="candidate candidate-mafia" style="height: 100px;" src="'. $row["avatar"] .'" onclick="registerVote(`medic`, `' . $row["user_id"] . '`);"></img><figcaption style="color: ' . $color . ';">' . $name . '</figcaption></figure>';
-									}
-						echo '</div></div>';
-						break;
+							echo '<div style="margin: 10px;"><div id="candidates">';
+							$query = "SELECT user_id, name, avatar FROM town_" . $townID . " WHERE saved = 0 AND is_killed = 0 AND is_executed = 0;";
+							if($result = mysqli_query($conn, $query))
+								while($row = mysqli_fetch_assoc($result)) {
+									$name = $row["name"];
+									if($userID == $row["user_id"])
+										$name = $name . ' <b>(You)</b>';
+									echo '<figure style="margin: 10px; display: inline-block;"><img class="candidate candidate-mafia" style="height: 100px;" src="'. $row["avatar"] .'" onclick="registerVote(`medic`, `' . $row["user_id"] . '`);"></img><figcaption style="color: ' . $color . ';">' . $name . '</figcaption></figure>';
+								}
+							echo '</div></div>';
+							break;
+						}
+						else {
+							$name = mysqli_fetch_assoc(mysqli_query($conn, $query1))["name"];
+							$avatar = mysqli_fetch_assoc(mysqli_query($conn, $query1))["avatar"];
+							
+							echo '<table cellpadding="0" cellspacing="0" style="width: 100%;">
+								<td class="header2" style="text-align: left;">Citizen saved</td>
+								<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
+							</table>
+							<table cellpadding="0" cellspacing="0" style="width: 100%;">
+								<td><img src="' . $avatar . '" style="height: 150px;"></img></td>
+								<td><h3>' . $name . '</h3><br><p style="padding: 0; margin: 0;">You have already saved <b>' . $name . '</b> tonight. You can only save <b>one</b> citizen per night.</p></td>
+							</table>';
+							break;
+						}
 					}
 		
 			$query = "SELECT user_id FROM town_" . $townID . " WHERE is_sherrif = 1 AND is_killed = 0 AND is_executed = 0;";
@@ -612,7 +648,7 @@
 								$name = $row["name"];
 								if($userID == $row["user_id"])
 									continue;
-								echo '<figure style="margin: 10px; display: inline-block;"><img class="candidate candidate-mafia" style="height: 100px;" src="'. $row["avatar"] .'"></img><figcaption style="color: ' . $color . ';">' . $name . '</figcaption></figure>';
+								echo '<figure style="margin: 10px; display: inline-block;"><img class="candidate candidate-mafia" style="height: 100px;" src="'. $row["avatar"] .'" onclick="checkMafia(`' . $row["user_id"] . '`);"></img><figcaption style="color: ' . $color . ';">' . $name . '</figcaption></figure>';
 							}
 						echo '</div></div>';
 						break;
@@ -623,22 +659,43 @@
 			if($result = mysqli_query($conn, $query)) {
 				while($row = mysqli_fetch_assoc($result))
 					if($row["user_id"] == $userID) {
-						echo '<table cellpadding="0" cellspacing="0" style="width: 100%;">
-							<td class="header2" style="text-align: left;">Select a citizen</td>
-							<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
-						</table>';
+						$day = $_SESSION["dailyIndex"]/2 + 0.5;
+						$query1 = "SELECT day_" . $day . " FROM town_" . $townID . " WHERE user_id = " . $userID . " AND day_" . $day . " <> 0;";
+						if(!mysqli_fetch_assoc(mysqli_query($conn, $query1))) {
+							echo '<table cellpadding="0" cellspacing="0" style="width: 100%;">
+								<td class="header2" style="text-align: left;">Select a citizen</td>
+								<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
+							</table>';
 						
-						echo '<div style="margin: 10px;"><div id="candidates">';
-						$query = "SELECT user_id, name, avatar, is_mafia FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0;";
-						if($result = mysqli_query($conn, $query))
-							while($row = mysqli_fetch_assoc($result)) {
-								$name = $row["name"];
-								if($userID == $row["user_id"])
-									$name = $name . ' <b>(You)</b>';
-								echo '<figure style="margin: 10px; display: inline-block;"><img class="candidate candidate-mafia" style="height: 100px;" src="'. $row["avatar"] .'" onclick="registerVote(`citizen`, `' . $row["user_id"] . '`);"></img><figcaption style="color: ' . $color . ';">' . $name . '</figcaption></figure>';
-							}
-						echo '</div></div>';
-						break;
+							echo '<div style="margin: 10px;"><div id="candidates">';
+							$query = "SELECT user_id, name, avatar, is_mafia FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0;";
+							if($result = mysqli_query($conn, $query))
+								while($row = mysqli_fetch_assoc($result)) {
+									$name = $row["name"];
+									if($userID == $row["user_id"])
+										$name = $name . ' <b>(You)</b>';
+									echo '<figure style="margin: 10px; display: inline-block;"><img class="candidate candidate-mafia" style="height: 100px;" src="'. $row["avatar"] .'" onclick="registerVote(`citizen`, `' . $row["user_id"] . '`);"></img><figcaption style="color: ' . $color . ';">' . $name . '</figcaption></figure>';
+								}
+							echo '</div></div>';
+							break;
+						}
+						else {
+							$vote = mysqli_fetch_assoc(mysqli_query($conn, $query1))["day_" . $day];
+							$query = "SELECT name, avatar FROM town_" . $townID . " WHERE user_id = " . $vote . ";";
+							
+							$name = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
+							$avatar = mysqli_fetch_assoc(mysqli_query($conn, $query))["avatar"];
+							
+							echo '<table cellpadding="0" cellspacing="0" style="width: 100%;">
+								<td class="header2" style="text-align: left;">Your vote</td>
+								<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
+							</table>
+							<table cellpadding="0" cellspacing="0" style="width: 100%;">
+								<td><img src="' . $avatar . '" style="height: 150px;"></img></td>
+								<td><h3>' . $name . '</h3><br><p style="padding: 0; margin: 0;">You have already voted for <b>' . $name . '</b> today. You can only vote for <b>one</b> citizen per day.</p></td>
+							</table>';
+							break;
+						}
 					}
 			}
 		}
@@ -679,7 +736,15 @@
 	});
 	
 	function regVote(response) {
-		//do something
+		if(response === "Success!") {
+			$("#vote-modal").load("/game.php" + " #vote-modal > *" );
+		}
+		else {
+			closeAll();
+			document.getElementById('error-message').innerHTML = response;
+			document.getElementById('error-modal').classList.add("show-modal");;
+			document.getElementById('modal-background').style.display = "block";
+		}
 	}
 	
 	function registerVote(role, vote) {
@@ -692,6 +757,20 @@
 				vote: vote
 			}
 		}).then(response => regVote(response));
+	}
+	
+	function chkMafia(response) {
+		document.getElementById('vote-modal').innerHTML = response;
+	}
+	
+	function checkMafia(selected) {
+		$.ajax({
+			type: 'POST',
+			url: '/check-mafia.php',
+			data: {
+				selected: selected
+			}
+		}).then(response => chkMafia(response));
 	}
 	
 	function submitReport(response) {
