@@ -21,7 +21,6 @@ CREATE TABLE town_details (
 	time_stamp TIMESTAMP NOT NULL,
 	town_name VARCHAR(50) NOT NULL,
 	mob_name VARCHAR(50) NOT NULL,
-	owner_id int(2) NOT NULL,
 	has_started INT (2) DEFAULT 0 NOT NULL,
 	game_index INT(2) DEFAULT 0 NOT NULL,
 	daily_index INT(2) DEFAULT 0 NOT NULL,
@@ -40,6 +39,5 @@ To play the game visit: [`https://playmafia.cf`](https://playmafia.cf)
 
 ### Built by
 
-- [Abhinav TJ](https://github.com/deltarager) (Developer)
 - [Abishek Devendran](https://github.com/abishekdevendran) (Graphic Designer)
 - [Sujit Kumar](https://github.com/therealsujitk) (Lead Developer)
