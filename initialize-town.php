@@ -42,7 +42,7 @@
 	
 	include('conn.php');
 	
-	$query = "INSERT INTO town_details (town_id, town_name, mob_name, owner_id) VALUES('$townID', '$town', '$mob', 1);";
+	$query = "INSERT INTO town_details (town_id, town_name, mob_name) VALUES('$townID', '$town', '$mob');";
 	mysqli_query($conn, $query);
 	
 	$query = "CREATE TABLE town_" . $townID . " (

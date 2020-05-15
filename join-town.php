@@ -10,7 +10,10 @@
 	$query = "SELECT COUNT(user_id) FROM town_" . $townID . ";";
 	$query1 = "SELECT name FROM town_" . $townID . " WHERE name = '$name';";
 	
-	if(!mysqli_query($conn, $query)) {
+	if($name == '') {
+		die("Please enter a valid name.");
+	}
+	else if(!mysqli_query($conn, $query)) {
 		die("There are no towns having the Town ID <b>$townID</b>. Please recheck the Town ID you have entered.");
 	}
 	else if(mysqli_fetch_assoc(mysqli_query($conn, $query))["COUNT(user_id)"] == 10) {

@@ -4,6 +4,9 @@
 	
 	$selected = $_POST["selected"];
 	
+	if($selected == '')
+		die('Sorry, something went terribly wrong.');
+	
 	$query = "SELECT name, avatar, is_mafia, is_poser, is_medic, is_sherrif FROM town_" . $_SESSION["townID"] . " WHERE user_id = " . $selected . ";";
 	
 	$name = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
