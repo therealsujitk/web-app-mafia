@@ -102,8 +102,8 @@
 						?>
 					</div>
 					<table style="width: 100%;">
-						<td style="padding: 0;"><input id="chat-box" placeholder="Write a message..."></input></td>
-						<td id="daily-buttons" style="padding: 0;">
+						<td style="width: 100%;"><input id="chat-box" placeholder="Write a message..."></input></td>
+						<td style="padding: 0;">
 							<input id="send" class="btn" type="button" style="border-radius: 10px;" value="Send" <?php
 								$ability = 'disabled';
 							
@@ -128,7 +128,9 @@
 								
 								echo $ability;
 							?>></input>
-							<input id="vote" class="btn" type="button" style="margin-left: 6%; margin-right: 1.5%; border-radius: 10px;" onclick="openVote();" value="<?php
+						</td>
+						<td>
+							<input id="vote" class="btn" type="button" style="border-radius: 10px;" onclick="openVote();" value="<?php
 								$value = 'Vote';
 							
 								if($_SESSION["dailyIndex"]%2 == 0) {

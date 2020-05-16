@@ -280,9 +280,7 @@ figcaption {
 }
 
 #chat-box {
-	margin: 1.5%;
-	margin-right: 0;
-	width: 97%;
+	width: 100%;
 	font-size: 15px;
 	background: none;
 	color: #fff;
