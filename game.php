@@ -790,7 +790,8 @@
 		if(message != news.innerHTML) {
 			news.innerHTML = message;
 			$("#game-index").load("/game.php" + " #game-index > *" );
-			$("#daily-buttons").load("/game.php" + " #daily-buttons > *" );
+			$("#send").load("/game.php" + " #send > *" );
+			$("#vote").load("/game.php" + " #vote > *" );
 			$("#vote-modal").load("/game.php" + " #vote-modal > *" );
 			$("#players").load("/game.php" + " #players > *" );
 		}
