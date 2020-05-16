@@ -2,8 +2,8 @@
 	session_start();
 	include('conn.php');
 	
-	$name = $_SESSION['name'];
-	$message = $_POST['message'];
+	$name = $_SESSION["name"];
+	$message = $_POST["message"];
 	$message = str_replace("'", "\'", $message);
 	$message = trim($message);
 	

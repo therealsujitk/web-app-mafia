@@ -103,9 +103,7 @@
 </div>
 <script>
 	function buildTown(response) {
-		if(response === "Success!")
-			$("body").load("/game.php");
-		else {
+		if(response != "Success!") {
 			closeAll();
 			document.getElementById('error-message').innerHTML = response;
 			document.getElementById('error-modal').classList.add("show-modal");;
@@ -120,13 +118,15 @@
 		}).then(response => buildTown(response));
 	});
 
-	setInterval(function(){
+	var preGame = setInterval(function(){
 		$("#player-cards").load("/pre-game.php" + " #player-cards > *" );
 		$("#has-started").load("/pre-game.php" + " #has-started > *" );
 		
 		var x = document.getElementById('has-started').innerHTML.trim();
-		if(x != '')
+		if(x != '') {
+			clearInterval(preGame);
 			$("body").load("/game.php");
+		}
 	}, 1000);
 
 	function submitReport(response) {
