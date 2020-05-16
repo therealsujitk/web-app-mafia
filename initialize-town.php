@@ -55,8 +55,6 @@
 	$query = "INSERT INTO town_" . $townID . " (name, avatar) VALUES('$name', '$avatar');";
 	mysqli_query($conn, $query);
 	
-	mysqli_close($conn);
-	
 	session_start();
 	$_SESSION["townID"] = $townID;
 	$_SESSION["userID"] = '1';
@@ -64,6 +62,42 @@
 	$_SESSION["town"] = $town;
 	$_SESSION["mob"] = $mob;
 	$_SESSION["dailyIndex"] = '0';
+	
+	$message = '<span>The citizens of <b>' . $town . '</b> are sleeping. Zzz</span>';
+			
+	$query = "SELECT user_id FROM town_" . $townID . " WHERE is_mafia = 1;";
+	if($result = mysqli_query($conn, $query)) {
+		while($row = mysqli_fetch_assoc($result)) {
+			if($row["user_id"] == $userID) {
+				$message = '<span>Welcome members of <b>' . $mob . '</b>, discuss below on who you would like to kill, after that click the <b>Kill</b> button to choose your first victim.</span>';
+				break;
+			}
+		}
+	}
+
+	$query = "SELECT user_id FROM town_" . $townID . " WHERE is_medic = 1;";
+	if($result = mysqli_query($conn, $query)) {
+		while($row = mysqli_fetch_assoc($result)) {
+			if($row["user_id"] == $userID) {
+				$message = '</span>Hello there! You probably already know this but, you are the towns medic. Click the <b>Heal</b> button below to use your amazing abilities. :)</span>';
+				break;
+			}
+		}
+	}
+
+	$query = "SELECT user_id FROM town_" . $townID . " WHERE is_sherrif = 1;";
+	if($result = mysqli_query($conn, $query)) {
+		while($row = mysqli_fetch_assoc($result)) {
+			if($row["user_id"] == $userID) {
+				$message = '<span>Hello there! You probably already know this but, you are the towns sherrif. Click the <b>Reveal</b> button below to check whether a citizen is a mafia member.</span>';
+				break;
+			}
+		}
+	}
+	
+	$_SESSION["message"] = $message;
+	
+	mysqli_close($conn);
 	
 	echo 'Success!';
 ?>

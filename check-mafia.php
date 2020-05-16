@@ -11,6 +11,7 @@
 	
 	$name = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
 	$avatar = mysqli_fetch_assoc(mysqli_query($conn, $query))["avatar"];
+	$mob = $_SESSION["mob"];
 	
 	if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_mafia"])
 		echo '<table cellpadding="0" cellspacing="0" style="width: 100%;">
@@ -19,7 +20,7 @@
 		</table>
 		<table cellpadding="0" cellspacing="0" style="width: 100%;">
 			<td><img src="' . $avatar . '" style="height: 150px;"></img></td>
-			<td><h3>Mafia</h3><br><p style="padding: 0; margin: 0;">You hit the jackpot! <b>' . $name . '</b> is a mafia member!!</p></td>
+			<td><h3>Mafia</h3><br><p style="padding: 0; margin: 0;">You hit the jackpot! <b>' . $name . '</b> is a member of ' . $mob . '!!</p></td>
 		</table>';
 	else
 		echo '<table cellpadding="0" cellspacing="0" style="width: 100%;">
@@ -28,7 +29,7 @@
 		</table>
 		<table cellpadding="0" cellspacing="0" style="width: 100%;">
 			<td><img src="' . $avatar . '" style="height: 150px;"></img></td>
-			<td><h3>Not Mafia</h3><br><p style="padding: 0; margin: 0;">Sorry, turns out <b>' . $name . '</b> is not a mafia member.</p></td>
+			<td><h3>Not Mafia</h3><br><p style="padding: 0; margin: 0;">Sorry, turns out <b>' . $name . '</b> is not a member of ' . $mob . '.</p></td>
 		</table>';
 	
 	mysqli_close($conn);
