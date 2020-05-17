@@ -3,6 +3,7 @@
 
 	$report = $_POST['report'];
 	$report = str_replace("'", "\'", $report);
+	$report = trim($report);
 
 	if($report == '')
 		die('Success!');

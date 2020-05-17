@@ -61,7 +61,7 @@
 										if($row["user_id"] == $userID) {
 											$query = "SELECT name FROM town_" . $townID . " WHERE is_mafia = 1;";
 											$killer = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
-											$message = 'Welcome members of <b>' . $mob . '</b>, discuss below on who you would like to kill, after that ' . $killer . ' has to click the <b>Kill</b> button to choose the first victim.';
+											$message = 'Welcome members of <b>' . $mob . '</b>, discuss below on who you would like to kill, after that <b>' . $killer . '</b> has to click the <b>Kill</b> button to choose the first victim.';
 											break;
 										}
 									}
@@ -94,7 +94,7 @@
 					<div id="game-display" style="height: 35vh; overflow-y: auto;">
 						<?php
 							if($_SESSION["dailyIndex"]%2 == 0) {
-								$query = "SELECT user_id FROM town_" . $townID . " WHERE is_mafia = 1 AND is_killed = 0 AND is_executed = 0;";
+								$query = "SELECT user_id FROM town_" . $townID . " WHERE is_mafia = 1;";
 								if($result = mysqli_query($conn, $query)) {
 									while($row = mysqli_fetch_assoc($result)) {
 										if($row["user_id"] == $userID) {
@@ -116,33 +116,22 @@
 								}
 							}
 							else {
-								$query = "SELECT user_id FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0;";
+								$query = "SELECT * FROM chat_" . $townID . ";";
 								if($result = mysqli_query($conn, $query)) {
 									while($row = mysqli_fetch_assoc($result)) {
-										if($row["user_id"] == $userID) {
-											$query = "SELECT * FROM chat_" . $townID . ";";
-											if($result = mysqli_query($conn, $query)) {
-												while($row = mysqli_fetch_assoc($result)) {
-													if($row["name"] == $name)
-														echo '<div style="100%; text-align: right;"><div class="chat-r"><b>' . $row["name"] . ':</b> ' . $row["message"] . '</div></div>';
-													else
-														echo '<div style="100%; text-align: left;"><div class="chat-l"><b>' . $row["name"] . ':</b> ' . $row["message"] . '</div></div>';
-												}
-											}
-											break;
-										}
-										else {
-											//citizens no longer alive will see a blank screen
-										}
+										if($row["name"] == $name)
+											echo '<div style="100%; text-align: right;"><div class="chat-r"><b>' . $row["name"] . ':</b> ' . $row["message"] . '</div></div>';
+										else
+											echo '<div style="100%; text-align: left;"><div class="chat-l"><b>' . $row["name"] . ':</b> ' . $row["message"] . '</div></div>';
 									}
 								}
 							}
 						?>
 					</div>
 					<table id="game-footer" style="width: 100%;">
-						<td style="width: 100%;"><input id="chat-box" placeholder="Write a message..."></input></td>
+						<td style="width: 100%;"><input id="chat-box" placeholder="Write a message..." onkeyup="enterMessage(event)"></input></td>
 						<td style="padding: 0;">
-							<input id="send" class="btn" type="button" style="border-radius: 10px;" value="Send" <?php
+							<input id="send" class="btn" type="button" style="border-radius: 10px;" onclick="sendMessage()" value="Send" <?php
 								$ability = 'disabled';
 							
 								if($_SESSION["dailyIndex"]%2 == 0) {
@@ -168,7 +157,7 @@
 							?>></input>
 						</td>
 						<td>
-							<input id="vote" class="btn" type="button" style="border-radius: 10px;" onclick="openVote();" value="<?php
+							<input id="vote" class="btn" type="button" style="border-radius: 10px;" onclick="openVote()" value="<?php
 								$value = 'Vote';
 							
 								if($_SESSION["dailyIndex"]%2 == 0) {
@@ -307,7 +296,7 @@
 				
 					$executed = '';
 					
-					$query = "SELECT COUNT(day_" . $prev . "), day_" . $prev . " FROM town_" . $townID . " WHERE day_" . $prev . " <> 0 GROUP BY day_" . $prev . " ORDER BY day_" . $prev . " DESC;";
+					$query = "SELECT COUNT(day_" . $prev . "), day_" . $prev . " FROM town_" . $townID . " WHERE day_" . $prev . " <> 0 GROUP BY day_" . $prev . " ORDER BY COUNT(day_" . $prev . ") DESC;";
 					$row = mysqli_fetch_assoc(mysqli_query($conn, $query));
 					if($row["COUNT(day_" . $prev . ")"] > $dayVoteMajority) {
 						$query = "SELECT name FROM town_" . $townID . " WHERE user_id = " . $row["day_" . $prev] . ";";
@@ -434,7 +423,7 @@
 								if($killed != $healed)
 									$message = '<span>Citizens of <b>' . $town . '</b>, I\'m afraid I have some bad news. Last night <b>' . $mob . '</b> struck again and murdered <b>' . $killed . '</b>. Discuss with other citizens on who you think should be executed for the henious crime, after that click the <b>Vote</b> button below.</span>';
 								else
-									$messgae = '<span>Citizens of <b>' . $town . '</b>, Last night our medic saved the day, there were no casualities. However, this town is still not free from the mafia. Discuss with other citizens on who you think the mafia members might be, after that click the <b>Vote</b> button below.</span>';
+									$message = '<span>Citizens of <b>' . $town . '</b>, Last night our medic saved the day, there were no casualities. However, this town is still not free from the mafia. Discuss with other citizens on who you think the mafia members might be, after that click the <b>Vote</b> button below.</span>';
 								break;
 							}
 					
@@ -599,11 +588,11 @@
 						}
 						else {
 							echo '<table cellpadding="0" cellspacing="0" style="width: 100%;">
-								<td class="header2" style="text-align: left;">Error!</td>
+								<td class="header2" style="text-align: left;">Choose a victim</td>
 								<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 							</table>
 							<table cellpadding="0" cellspacing="0" style="width: 100%;">
-								<td><img src="/assets/images/error.png" style="height: 50px;"></img></td>
+								<td><img src="/assets/images/warning.png" style="height: 50px;"></img></td>
 								<td><p style="padding: 0; margin: 0;">Your accomplice will be taking care of the dirty work for tonight.</p></td>
 							</table>';
 							break;
@@ -682,7 +671,7 @@
 						$query1 = "SELECT day_" . $day . " FROM town_" . $townID . " WHERE user_id = " . $userID . " AND day_" . $day . " <> 0;";
 						if(!mysqli_fetch_assoc(mysqli_query($conn, $query1))) {
 							echo '<table cellpadding="0" cellspacing="0" style="width: 100%;">
-								<td class="header2" style="text-align: left;">Select a citizen</td>
+								<td class="header2" style="text-align: left;">Vote for execution</td>
 								<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 							</table>';
 						
@@ -728,7 +717,7 @@
 		<td class="header2" style="text-align: center;">Game Over</td>
 	</table>
 	<table cellpadding="0" cellspacing="0" style="width: 100%;">
-		<td id="results" style="padding: 0;"><p>
+		<td id="results" style="padding: 0; padding-bottom: 10px;"><p>
 			<?php
 				$query = "SELECT COUNT(user_id) FROM town_" . $townID . " WHERE is_mafia = 1 AND is_killed = 0 AND is_executed = 0";
 				$mafiaPopulation = mysqli_fetch_assoc(mysqli_query($conn, $query))["COUNT(user_id)"];
@@ -750,13 +739,7 @@
 	document.getElementById("role-modal").classList.add("show-modal");
 	document.getElementById("modal-background").style.display = "block";
 
-	$('#chat-box').on('keyup', function (event) {
-		if(event.keyCode == 13) {
-			document.getElementById('send').click();
-		}
-	});
-
-	function sendMessage(response) {
+	function sendMsg(response, message) {
 		if(response === "Success!")
 			document.getElementById('chat-box').value = "";
 		else {
@@ -764,11 +747,14 @@
 			document.getElementById('error-message').innerHTML = response;
 			document.getElementById('error-modal').classList.add("show-modal");;
 			document.getElementById('modal-background').style.display = "block";
+			
+			document.getElementById('chat-box').value = message;
 		}
 	}
 
-	$('#send').on('click', function () {
-		let message = document.getElementById('chat-box').value;
+	function sendMessage() {
+		var message = document.getElementById('chat-box').value;
+		document.getElementById('chat-box').value = "";
 
 		$.ajax({
 			type: 'POST',
@@ -776,8 +762,14 @@
 			data: {
 				message: message
 			}
-		}).then(response => sendMessage(response));
-	});
+		}).then(response => sendMsg(response, message));
+	}
+	
+	function enterMessage(event) {
+		if(event.keyCode == 13) {
+			sendMessage();
+		}
+	}
 	
 	function regVote(response) {
 		if(response === "Success!") {
@@ -827,10 +819,16 @@
 			document.getElementById('error-message').innerHTML = response;
 			document.getElementById('error-modal').classList.add("show-modal");;
 			document.getElementById('modal-background').style.display = "block";
+			
+			$('#submit-report').prop('disabled', false);
+			$('#submit-report').val('Submit Bug Report');
 		}
 	}
 
 	$('#submit-report').on('click', function () {
+		$('#submit-report').prop('disabled', true);
+		$('#submit-report').val('Please wait...');
+	
 		let report = document.getElementById('report').value;
 
 		$.ajax({
@@ -866,6 +864,7 @@
 		
 		if(message != news.innerHTML && message != '') {
 			news.innerHTML = message;
+			closeAll();
 			$("#game-index").load("/game.php" + " #game-index > *" );
 			$("#game-footer").load("/game.php" + " #game-footer > *" );
 			$("#vote-modal").load("/game.php" + " #vote-modal > *" );
@@ -873,11 +872,12 @@
 			$("#results").load("/game.php" + " #results > *" );
 		}
 		
-		var results = document.getElementById('win-modal').innerHTML;
-		results = results.slice(3, -4);
+		var results = document.getElementById('results').innerHTML;
+		results = results.slice(3, -4).trim();
 		
-		if(results.trim() != '') {
-			results.classList.add("show-modal");
+		if(results != '') {
+			closeAll();
+			document.getElementById('win-modal').classList.add("show-modal");
 			document.getElementById('modal-background2').style.display = "block";
 			clearInterval(game);
 			clearInterval(chat);

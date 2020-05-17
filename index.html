@@ -26,8 +26,6 @@
 		<meta name="twitter:title" content="Mafia - Free multiplayer social deduction game">
 		<meta name="twitter:description" content="Mafia is a free multiplayer social deduction game. The game models a conflict between two groups: an informed minority, and an uninformed majority. At the start of the game, each player is secretly assigned a role affiliated with one of these teams.">
 		<meta name="twitter:image" content="https://playmafia.cf/assets/images/thumbnail.png">
-		<script>
-		</script>
 		<title>Mafia</title>
 	</head>
 	<body>
@@ -150,16 +148,25 @@
 				if(response === "Success!") {
 					document.getElementById('success-bug').style.display = "block";
 					document.getElementById('report').value = "";
+					
+					$('#submit-report').prop('disabled', false);
+					$('#submit-report').val('Submit Bug Report');
 				}
 				else {
 					closeAll();
 					document.getElementById('error-message').innerHTML = response;
 					document.getElementById('error-modal').classList.add("show-modal");;
 					document.getElementById('modal-background').style.display = "block";
+			
+					$('#submit-report').prop('disabled', false);
+					$('#submit-report').val('Submit Bug Report');
 				}
 			}
-		
+
 			$('#submit-report').on('click', function () {
+				$('#submit-report').prop('disabled', true);
+				$('#submit-report').val('Please wait...');
+	
 				let report = document.getElementById('report').value;
 
 				$.ajax({
@@ -179,10 +186,16 @@
 					document.getElementById('error-message').innerHTML = response;
 					document.getElementById('error-modal').classList.add("show-modal");;
 					document.getElementById('modal-background').style.display = "block";
+					
+					$('#create').prop('disabled', false);
+					$('#create').val('Create Town');
 				}
 			}
 		
-			$('#create').on('click', function () { 
+			$('#create').on('click', function () {
+				$('#create').prop('disabled', true);
+				$('#create').val('Please wait...');
+			
 				let town = document.getElementById('town').value;
 				let mob = document.getElementById('mob').value;
 				let name = document.getElementById('name').value;
@@ -209,10 +222,16 @@
 					document.getElementById('error-modal').classList.add("show-modal");;
 					document.getElementById('modal-background').style.display = "block";
 					document.getElementById('town-id').value = "";
+					
+					$('#join').prop('disabled', false);
+					$('#join').val('Join Town');
 				}
 			}
 			
 			$('#join').on('click', function () {
+				$('#join').prop('disabled', true);
+				$('#join').val('Please wait...');
+			
 				let townID = document.getElementById('town-id').value;
 				let name = document.getElementById('name').value;
 				let avatar = document.getElementById('avatar').src;

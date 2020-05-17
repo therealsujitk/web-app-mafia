@@ -108,10 +108,16 @@
 			document.getElementById('error-message').innerHTML = response;
 			document.getElementById('error-modal').classList.add("show-modal");;
 			document.getElementById('modal-background').style.display = "block";
+			
+			$('#start').prop('disabled', false);
+			$('#start').val('Start Game');
 		}
 	}
 	
 	$('#start').on('click', function (event) {
+		$('#start').prop('disabled', true);
+		$('#start').val('Please wait...');
+	
 		$.ajax({
 			type: 'POST',
 			url: '/build-town.php'
@@ -139,10 +145,16 @@
 			document.getElementById('error-message').innerHTML = response;
 			document.getElementById('error-modal').classList.add("show-modal");;
 			document.getElementById('modal-background').style.display = "block";
+			
+			$('#submit-report').prop('disabled', false);
+			$('#submit-report').val('Submit Bug Report');
 		}
 	}
 
 	$('#submit-report').on('click', function () {
+		$('#submit-report').prop('disabled', true);
+		$('#submit-report').val('Please wait...');
+	
 		let report = document.getElementById('report').value;
 
 		$.ajax({
