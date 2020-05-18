@@ -34,9 +34,10 @@
 			session_start();
 			$townID = $_SESSION["townID"];
 			if($townID) {
-				$query = "SELECT has_started FROM town_details WHERE town_id = '$townID';";
-				if($result = mysqli_query($conn, $query)) {
-					if(mysqli_fetch_assoc($result)["has_started"]) {
+				$query = "SELECT user_id FROM town_" . $townID . ";";
+				if(mysqli_query($conn, $query)) {
+					$query = "SELECT has_started FROM town_details WHERE town_id = '$townID';";
+					if(mysqli_fetch_assoc(mysqli_query($conn, $query))["has_started"]) {
 						echo '<script>$("body").load("/game.php");</script>';
 					}
 					else {

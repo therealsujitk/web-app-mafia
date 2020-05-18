@@ -234,7 +234,7 @@
 			<td id="game-content-r" style="width: 20%;">
 				<div id="players">
 					<?php
-						$query = "SELECT * FROM town_" . $townID . ";";
+						$query = "SELECT user_id, name, is_mafia, is_poser, is_medic, is_sherrif, is_executed, is_killed FROM town_" . $townID . ";";
 						if($result = mysqli_query($conn, $query)) {
 							while($row = mysqli_fetch_assoc($result)) {
 								$name = $row["name"];
