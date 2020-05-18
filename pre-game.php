@@ -2,12 +2,12 @@
 	<?php
 		include('conn.php');
 		session_start();
+	
 		$userID = $_SESSION["userID"];
 		$townID = $_SESSION["townID"];
 		$town = $_SESSION["town"];
 	?>
 
-	var userID = <?php echo json_encode($userID); ?>;
 	var townID = <?php echo json_encode($townID); ?>;
 	var town = <?php echo json_encode($town); ?>;
 	document.getElementsByTagName('title')[0].innerHTML = town + ' - Mafia';
@@ -99,6 +99,7 @@
 		$query = "SELECT has_started FROM town_details WHERE town_id = '$townID';";
 		if(mysqli_fetch_assoc(mysqli_query($conn, $query))["has_started"])
 			echo '<span>Let the games begin!</span>';
+			mysqli_close($conn);
 	?>
 </div>
 <script>

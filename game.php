@@ -2,6 +2,7 @@
 	<?php
 		include('conn.php');
 		session_start();
+	
 		$townID = $_SESSION["townID"];
 		$userID = $_SESSION["userID"];
 		$town = $_SESSION["town"];
@@ -9,9 +10,7 @@
 		$name = $_SESSION["name"];
 	?>
 
-	var townID = <?php echo json_encode($townID); ?>;
 	var town = <?php echo json_encode($town); ?>;
-	var mob = <?php echo json_encode($mob); ?>;
 </script>
 <div id="header">
 	<table cellpadding="0" cellspacing="0" style="width: 100%; padding-left: 1%; padding-right: 1%;">
@@ -725,10 +724,16 @@
 				$nonMafiaPopulation = mysqli_fetch_assoc(mysqli_query($conn, $query))["COUNT(user_id)"];
 			
 				if($mafiaPopulation == 0) {
-				echo '<b>Citizens Win!</b> Our town is free from the members of <b>' . $mob . '</b>. All of them are dead.';
+					echo '<b>Citizens Win!</b> Our town is free from the members of <b>' . $mob . '</b>. All of them are dead.';
+					session_unset();
+					session_destroy();
+					mysqli_close($conn);
 				}
 				else if(($mafiaPopulation == $nonMafiaPopulation)) {
 					echo '<b>Mafia Wins!</b> <b>' . $mob . '</b> has taken over our town. The game ends here because after the mafia kills one of the citizens tonight, there will never be a majority on who is to be executed.';
+					session_unset();
+					session_destroy();
+					mysqli_close($conn);
 				}
 			?>
 		</p></td>
@@ -738,6 +743,9 @@
 <script>
 	document.getElementById("role-modal").classList.add("show-modal");
 	document.getElementById("modal-background").style.display = "block";
+	
+	let gameIndex = document.getElementById('game-index').innerHTML.slice(4, -5).trim();
+	document.getElementsByTagName('title')[0].innerHTML = gameIndex + ' • ' + town + ' - Mafia';
 
 	function sendMsg(response, message) {
 		if(response === "Success!")
@@ -870,6 +878,8 @@
 			$("#vote-modal").load("/game.php" + " #vote-modal > *" );
 			$("#players").load("/game.php" + " #players > *" );
 			$("#results").load("/game.php" + " #results > *" );
+			let gameIndex = document.getElementById('game-index').innerHTML.slice(4, -5).trim();
+			document.getElementsByTagName('title')[0].innerHTML = gameIndex + ' • ' + town + ' - Mafia';
 		}
 		
 		var results = document.getElementById('results').innerHTML;

@@ -29,6 +29,22 @@
 		<title>Mafia</title>
 	</head>
 	<body>
+		<?php
+			include('conn.php');
+			session_start();
+			$townID = $_SESSION["townID"];
+			if($townID) {
+				$query = "SELECT has_started FROM town_details WHERE town_id = '$townID';";
+				if($result = mysqli_query($conn, $query)) {
+					if(mysqli_fetch_assoc($result)["has_started"]) {
+						echo '<script>$("body").load("/game.php");</script>';
+					}
+					else {
+						echo '<script>$("body").load("/pre-game.php");</script>';
+					}
+				}
+			}
+		?>
 		<div id="header">
 			<table cellpadding="0" cellspacing="0" style="width: 100%; padding-left: 1%; padding-right: 1%;">
 				<td><h1 style="color: white; margin: 0;">Mafia</h1></td>
