@@ -20,6 +20,7 @@
 				<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Privacy Policy" onclick="openPrivacy()"></input>
 				<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Report Bug" onclick="openBug()"></input>
 				<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="About Us" onclick="openAbout()"></input>
+				<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Leave Game" onclick="openEnd()"></input>
 			</nav>
 		</td>
 	</table>
@@ -94,6 +95,21 @@
 	</table>
 </div>
 
+<div id="end-modal" class="modal">
+	<table cellpadding="0" cellspacing="0" style="width: 100%;">
+		<td class="header2" style="text-align: left;">Warning!</td>
+		<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
+	</table>
+	<table cellpadding="0" cellspacing="0" style="width: 100%;">
+		<td><img src="/assets/images/warning.png" style="height: 50px;"></img></td>
+		<td><p style="padding: 0; margin: 0;">Are you sure you want to leave this game? You can always join back using the <b>Town ID</b>.</p></td>
+	</table>
+	<table align="right">
+		<td style="text-align: right; padding-right: 2.5px;"><input id="cancel-end" class="btn3" type="button" value="Cancel" onclick="closeAll()"></td>
+		<td style="text-align: right; padding-left: 2.5px;"><input id="end-life" class="btn" type="button" value="Yes, I'm sure"></td>
+	</table>
+</div>
+
 <div id="has-started" style="display: none;">
 	<?php
 		$query = "SELECT has_started FROM town_details WHERE town_id = '$townID';";
@@ -165,5 +181,30 @@
 				report: report
 			}
 		}).then(response => submitReport(response));
+	});
+	
+	function leaveGame(response) {
+		if(response === "Success!") {
+			$("body").load("/index.php");
+		}
+		else {
+			closeAll();
+			document.getElementById('error-message').innerHTML = response;
+			document.getElementById('error-modal').classList.add("show-modal");;
+			document.getElementById('modal-background').style.display = "block";
+			
+			$('#end-life').prop('disabled', false);
+			$('#end-life').val("Yes, I'm sure");
+		}
+	}
+
+	$('#end-life').on('click', function () {
+		$('#end-life').prop('disabled', true);
+		$('#end-life').val('Please wait...');
+	
+		$.ajax({
+			type: 'POST',
+			url: 'leave-game.php'
+		}).then(response => leaveGame(response));
 	});
 </script>

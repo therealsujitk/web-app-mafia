@@ -20,6 +20,7 @@
 				<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Privacy Policy" onclick="openPrivacy()"></input>
 				<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Report Bug" onclick="openBug()"></input>
 				<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="About Us" onclick="openAbout()"></input>
+				<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="End Life" onclick="openEnd()"></input>
 			</nav>
 		</td>
 	</table>
@@ -709,6 +710,21 @@
 	?>
 </div>
 
+<div id="end-modal" class="modal">
+	<table cellpadding="0" cellspacing="0" style="width: 100%;">
+		<td class="header2" style="text-align: left;">Warning!</td>
+		<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
+	</table>
+	<table cellpadding="0" cellspacing="0" style="width: 100%;">
+		<td><img src="/assets/images/warning.png" style="height: 50px;"></img></td>
+		<td><p style="padding: 0; margin: 0;">Are you sure you want to end your life? Doing so will not allow other players to continue playing.</p></td>
+	</table>
+	<table align="right">
+		<td style="text-align: right; padding-right: 2.5px;"><input id="cancel-end" class="btn3" type="button" value="Cancel" onclick="closeAll()"></td>
+		<td style="text-align: right; padding-left: 2.5px;"><input id="end-life" class="btn" type="button" value="Yes, I'm sure"></td>
+	</table>
+</div>
+
 <div id="modal-background2"></div>
 
 <div id="win-modal" class="modal">
@@ -774,7 +790,8 @@
 	}
 	
 	function enterMessage(event) {
-		if(event.keyCode == 13) {
+		let sendAbility = document.getElementById('send').disabled;
+		if(event.keyCode == 13 && !sendAbility) {
 			sendMessage();
 		}
 	}
@@ -846,6 +863,31 @@
 				report: report
 			}
 		}).then(response => submitReport(response));
+	});
+	
+	function leaveGame(response) {
+		if(response === "Success!") {
+			$("body").load("/index.php");
+		}
+		else {
+			closeAll();
+			document.getElementById('error-message').innerHTML = response;
+			document.getElementById('error-modal').classList.add("show-modal");;
+			document.getElementById('modal-background').style.display = "block";
+			
+			$('#end-life').prop('disabled', false);
+			$('#end-life').val("Yes, I'm sure");
+		}
+	}
+
+	$('#end-life').on('click', function () {
+		$('#end-life').prop('disabled', true);
+		$('#end-life').val('Please wait...');
+	
+		$.ajax({
+			type: 'POST',
+			url: 'leave-game.php'
+		}).then(response => leaveGame(response));
 	});
 	
 	scrolled = false;

@@ -70,6 +70,14 @@ function openVote() {
 	y.style.display = "block";
 }
 
+function openEnd() {
+	let x = document.getElementById('end-modal');
+	let y = document.getElementById('modal-background');
+	
+	x.classList.add("show-modal");
+	y.style.display = "block";
+}
+
 function closeAll() {
 	let a = document.getElementById('modal-background');
 	
@@ -105,6 +113,11 @@ function closeAll() {
 	
 	if(document.getElementById('vote-modal')) {
 		let x = document.getElementById('vote-modal')
+		x.classList.remove("show-modal");
+	}
+	
+	if(document.getElementById('end-modal')) {
+		let x = document.getElementById('end-modal')
 		x.classList.remove("show-modal");
 	}
 	
