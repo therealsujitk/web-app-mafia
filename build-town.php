@@ -207,6 +207,12 @@
 	$query = "UPDATE town_details SET has_started = 1 WHERE town_id = '$townID';";
 	mysqli_query($conn, $query);
 	
+	$query = "UPDATE statistics SET players_joined = players_joined + " . $population . " WHERE id = 1;";
+	mysqli_query($conn, $query);
+	
+	$query = "UPDATE statistics SET games_played = games_played + 1 WHERE id = 1;";
+	mysqli_query($conn, $query);
+	
 	mysqli_close($conn);
 	
 	echo 'Success!';

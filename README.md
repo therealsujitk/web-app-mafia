@@ -27,6 +27,18 @@ CREATE TABLE town_details (
 	daily_max INT(2) DEFAULT 3 NOT NULL
 );
 ```
+- SQL table **statistics**:
+```sql
+CREATE TABLE statistics (
+	id INT(1) DEFAULT 1 NOT NULL,
+	players_joined INT(255) DEFAULT 0 NOT NULL,
+	games_played INT(255) DEFAULT 0 NOT NULL
+);
+```
+- SQL insert into **statistics**
+```sql
+INSERT INTO statistics (id, players_joined, games_played) VALUES ('1', '0', '0');
+```
 
 ### Usage
 

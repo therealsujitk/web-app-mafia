@@ -186,6 +186,7 @@
 	function leaveGame(response) {
 		if(response === "Success!") {
 			$("body").load("/index.php");
+			document.getElementsByTagName('title')[0].innerHTML = 'Mafia';
 		}
 		else {
 			closeAll();

@@ -6,11 +6,7 @@
 	$userID = $_SESSION["userID"];
 	$query = "SELECT has_started FROM town_details WHERE town_id = '$townID';";
 	
-	if(mysqli_fetch_assoc(mysqli_query($conn, $query))["has_started"] == 1) {
-		$query = "UPDATE town_" . $townID . " SET is_executed = 1 WHERE user_id = " . $userID . ";";
-		mysqli_query($conn, $query);
-	}
-	else {
+	if(mysqli_fetch_assoc(mysqli_query($conn, $query))["has_started"] != 1) {
 		$query = "DELETE FROM town_" . $townID . " WHERE user_id = " . $userID . ";";
 		mysqli_query($conn, $query);
 	}
