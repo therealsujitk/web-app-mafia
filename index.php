@@ -69,7 +69,7 @@
 			<table id="user-details">
 				<tr>
 					<td>
-						<img id="avatar" src="./assets/avatars/avatar_01.png">
+						<img id="avatar" src="">
 					</td>
 					<td>
 						<table cellpadding="0" cellspacing="0" width="100%">
@@ -168,6 +168,12 @@
 		</div>
 		
 		<script>
+			let avatarID = Math.round(Math.random() * 12);
+			if(avatarID < 10)
+				document.getElementById('avatar').src = '/assets/avatars/avatar_0' + avatarID + '.png';
+			else
+				document.getElementById('avatar').src = '/assets/avatars/avatar_' + avatarID + '.png';
+		
 			function submitReport(response) {
 				if(response === "Success!") {
 					document.getElementById('success-bug').style.display = "block";
