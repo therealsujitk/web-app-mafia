@@ -70,8 +70,8 @@ function openVote() {
 	y.style.display = "block";
 }
 
-function openEnd() {
-	let x = document.getElementById('end-modal');
+function openLeave() {
+	let x = document.getElementById('leave-modal');
 	let y = document.getElementById('modal-background');
 	
 	x.classList.add("show-modal");
@@ -116,8 +116,8 @@ function closeAll() {
 		x.classList.remove("show-modal");
 	}
 	
-	if(document.getElementById('end-modal')) {
-		let x = document.getElementById('end-modal')
+	if(document.getElementById('leave-modal')) {
+		let x = document.getElementById('leave-modal')
 		x.classList.remove("show-modal");
 	}
 	
