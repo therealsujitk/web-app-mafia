@@ -319,6 +319,7 @@ figcaption {
 	margin-top: 10px;
 	margin-bottom: 0px;
 	text-align: left;
+	word-break: break-all;
 	border-radius: 7px;
 }
 
@@ -332,6 +333,7 @@ figcaption {
 	margin-top: 10px;
 	margin-bottom: 0px;
 	text-align: left;
+	word-break: break-all;
 	border-radius: 7px;
 }
 
