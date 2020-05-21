@@ -1,7 +1,7 @@
 <?php
 	include('conn.php');
 	$townID = $_POST['townID'];
-	$name = $_POST['name'];
+	$name = strip_tags(substr($_POST['name'], 0, 10));
 	$avatar = $_POST['avatar'];
 	
 	$name = str_replace("'", "\'", $name);

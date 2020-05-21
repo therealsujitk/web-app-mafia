@@ -85,7 +85,7 @@
 					<td>
 						<table cellpadding="0" cellspacing="0" width="100%">
 							<td style="padding-right: 1px;"><span>Name:</span></td>
-							<td style="padding-left: 1px;"><input id="name" class="text-box" type="text" autocomplete="off" spellcheck="false"></input></td>
+							<td style="padding-left: 1px;"><input id="name" class="text-box" type="text" autocomplete="off" spellcheck="false" maxlength = "10"></input></td>
 						</table>
 						<span id="name-error" style="padding-left: 10px; color: #c80000; display: none;">Error! Please enter a valid name.</span>
 						<table cellpadding="0" cellspacing="0">
@@ -145,11 +145,11 @@
 			<table cellpadding="0" cellspacing="0" style="width: 100%;">
 				<tr>
 					<td style="padding-right: 1px;"><span>Town's name:</span></td>
-					<td style="padding-left: 1px;"><input id="town" name="town" class="text-box" type="text" autocomplete="off" spellcheck="false" placeholder="(optional)" name="town"></input></td>
+					<td style="padding-left: 1px;"><input id="town" name="town" class="text-box" type="text" autocomplete="off" spellcheck="false" placeholder="(optional)" name="town" maxlength = "20"></input></td>
 				</tr>
 				<tr>
 					<td style="padding-right: 1px;"><span>Mob's name:</span></td>
-					<td style="padding-left: 1px;"><input id="mob" name="mob" class="text-box" type="text" autocomplete="off" spellcheck="false" placeholder="(optional)" name="mob"></input></td>
+					<td style="padding-left: 1px;"><input id="mob" name="mob" class="text-box" type="text" autocomplete="off" spellcheck="false" placeholder="(optional)" name="mob" maxlength = "20"></input></td>
 				</tr>
 			</table>
 			<input id="create" class="btn" type="button" style="margin: 10px;" value="Create Town"></input>

@@ -1,8 +1,8 @@
 <?php
-	$name = $_POST['name'];
+	$name = strip_tags(substr($_POST['name'], 0, 10));
 	$avatar = $_POST['avatar'];
-	$town = $_POST['town'];
-	$mob = $_POST['mob'];
+	$town = strip_tags(substr($_POST['town'], 0, 20));
+	$mob = strip_tags(substr($_POST['mob'], 0, 20));
 
 	$name = str_replace("'", "\'", $name);
 	$town = str_replace("'", "\'", $town);
