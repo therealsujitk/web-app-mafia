@@ -4,6 +4,11 @@
 	
 	$townID = $_SESSION["townID"];
 	$userID = $_SESSION["userID"];
+	$check = $_POST["check"];
+	
+	if($check != 'true')
+		die('Sorry, something went terribly wrong');
+	
 	$query = "SELECT has_started FROM town_details WHERE town_id = '$townID';";
 	
 	if(mysqli_fetch_assoc(mysqli_query($conn, $query))["has_started"] != 1) {

@@ -36,23 +36,6 @@
 		<title>Mafia</title>
 	</head>
 	<body>
-		<?php
-			include('conn.php');
-			session_start();
-			$townID = $_SESSION["townID"];
-			if($townID) {
-				$query = "SELECT user_id FROM town_" . $townID . ";";
-				if(mysqli_query($conn, $query)) {
-					$query = "SELECT has_started FROM town_details WHERE town_id = '$townID';";
-					if(mysqli_fetch_assoc(mysqli_query($conn, $query))["has_started"]) {
-						echo '<script>$("body").load("/game.php");</script>';
-					}
-					else {
-						echo '<script>$("body").load("/pre-game.php");</script>';
-					}
-				}
-			}
-		?>
 		<div id="header">
 			<table cellpadding="0" cellspacing="0" style="width: 100%; padding-left: 1%; padding-right: 1%;">
 				<td><h1 style="color: white; margin: 0;">Mafia</h1></td>
@@ -61,6 +44,34 @@
 						<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Privacy Policy" onclick="openPrivacy()"></input>
 						<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Report Bug" onclick="openBug()"></input>
 						<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="About Us" onclick="openAbout()"></input>
+						<?php
+							include('conn.php');
+							session_start();
+							$townID = $_SESSION["townID"];
+							
+							if($townID) {
+								echo '<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Continue Playing" onclick="continuePlaying()"></input>';
+							
+								$query = "SELECT user_id FROM town_" . $townID . ";";
+								if(mysqli_query($conn, $query)) {
+									$query = "SELECT has_started FROM town_details WHERE town_id = '$townID';";
+									if(mysqli_fetch_assoc(mysqli_query($conn, $query))["has_started"]) {
+										echo '<script>
+											function continuePlaying() {
+												$("body").load("/game.php");
+											}
+										</script>';
+									}
+									else {
+										echo '<script>
+											function continuePlaying() {
+												$("body").load("/pre-game.php");
+											}
+										</script>';
+									}
+								}
+							}
+						?>
 					</nav>
 				</td>
 			</table>
@@ -168,7 +179,7 @@
 		</div>
 		
 		<script>
-			let avatarID = Math.round(Math.random() * 12);
+			let avatarID = Math.round(Math.random() * 11) + 1;
 			if(avatarID < 10)
 				document.getElementById('avatar').src = '/assets/avatars/avatar_0' + avatarID + '.png';
 			else

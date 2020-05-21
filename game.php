@@ -20,7 +20,6 @@
 				<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Privacy Policy" onclick="openPrivacy()"></input>
 				<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Report Bug" onclick="openBug()"></input>
 				<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="About Us" onclick="openAbout()"></input>
-				<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Leave Game" onclick="openLeave()"></input>
 			</nav>
 		</td>
 	</table>
@@ -291,6 +290,9 @@
 					$prev = $tempIndex/2;
 					$night = $tempIndex/2;
 					
+					$query = "UPDATE town_details SET daily_max = 99 WHERE town_id = '$townID';";
+					mysqli_query($conn, $query);
+					
 					$query = "SELECT COUNT(name) FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0;";
 					$dayVoteMajority = mysqli_fetch_assoc(mysqli_query($conn, $query))["COUNT(name)"] / 2;
 				
@@ -393,6 +395,9 @@
 				}
 				else {
 					$prev = $tempIndex/2 - 0.5;
+					
+					$query = "UPDATE town_details SET daily_max = 99 WHERE town_id = '$townID';";
+					mysqli_query($conn, $query);
 					
 					$query = "SELECT name FROM town_" . $townID . " WHERE night_" . $prev . " <> 0;";
 					$killed = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
@@ -710,21 +715,6 @@
 	?>
 </div>
 
-<div id="leave-modal" class="modal">
-	<table cellpadding="0" cellspacing="0" style="width: 100%;">
-		<td class="header2" style="text-align: left;">Warning!</td>
-		<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
-	</table>
-	<table cellpadding="0" cellspacing="0" style="width: 100%;">
-		<td><img src="/assets/images/warning.png" style="height: 50px;"></img></td>
-		<td><p style="padding: 0; margin: 0;">Are you sure you want to leave? Doing so will not allow other players to continue playing.</p></td>
-	</table>
-	<table align="right">
-		<td style="text-align: right; padding-right: 2.5px;"><input id="cancel-end" class="btn3" type="button" value="Cancel" onclick="closeAll()"></td>
-		<td style="text-align: right; padding-left: 2.5px;"><input id="leave-game" class="btn" type="button" value="Yes, I'm sure"></td>
-	</table>
-</div>
-
 <div id="modal-background2"></div>
 
 <div id="win-modal" class="modal">
@@ -861,31 +851,15 @@
 		}).then(response => submitReport(response));
 	});
 	
-	function leaveGame(response) {
+	function clearSession(response) {
 		if(response === "Success!") {
-			$("body").load("/index.php");
-			document.getElementsByTagName('title')[0].innerHTML = 'Mafia';
+			window.location.href = window.location.href;
 		}
 		else {
-			closeAll();
-			document.getElementById('error-message').innerHTML = response;
-			document.getElementById('error-modal').classList.add("show-modal");;
-			document.getElementById('modal-background').style.display = "block";
-			
-			$('#leave-game').prop('disabled', false);
-			$('#leave-game').val("Yes, I'm sure");
+			$('#home').prop('disabled', false);
+			$('#home').val("Go Home");
 		}
 	}
-
-	$('#leave-game').on('click', function () {
-		$('#leave-game').prop('disabled', true);
-		$('#leave-game').val('Please wait...');
-	
-		$.ajax({
-			type: 'POST',
-			url: 'leave-game.php'
-		}).then(response => leaveGame(response));
-	});
 
 	function goHome() {
 		$('#home').prop('disabled', true);
@@ -893,8 +867,11 @@
 	
 		$.ajax({
 			type: 'POST',
-			url: 'leave-game.php'
-		}).then(response => leaveGame(response));
+			url: 'leave-game.php',
+			data: {
+				check: 'true'
+			}
+		}).then(response => clearSession(response));
 	}
 	
 	scrolled = false;

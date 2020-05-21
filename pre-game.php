@@ -20,7 +20,7 @@
 				<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Privacy Policy" onclick="openPrivacy()"></input>
 				<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Report Bug" onclick="openBug()"></input>
 				<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="About Us" onclick="openAbout()"></input>
-				<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Leave Game" onclick="openEnd()"></input>
+				<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Leave Game" onclick="openLeave()"></input>
 			</nav>
 		</td>
 	</table>
@@ -95,7 +95,7 @@
 	</table>
 </div>
 
-<div id="end-modal" class="modal">
+<div id="leave-modal" class="modal">
 	<table cellpadding="0" cellspacing="0" style="width: 100%;">
 		<td class="header2" style="text-align: left;">Warning!</td>
 		<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
@@ -105,8 +105,8 @@
 		<td><p style="padding: 0; margin: 0;">Are you sure you want to leave this game? You can always join back using the <b>Town ID</b>.</p></td>
 	</table>
 	<table align="right">
-		<td style="text-align: right; padding-right: 2.5px;"><input id="cancel-end" class="btn3" type="button" value="Cancel" onclick="closeAll()"></td>
-		<td style="text-align: right; padding-left: 2.5px;"><input id="end-life" class="btn" type="button" value="Yes, I'm sure"></td>
+		<td style="text-align: right; padding-right: 2.5px;"><input class="btn3" type="button" value="Cancel" onclick="closeAll()"></td>
+		<td style="text-align: right; padding-left: 2.5px;"><input id="leave-game" class="btn" type="button" value="Yes, I'm sure"></td>
 	</table>
 </div>
 
@@ -185,8 +185,7 @@
 	
 	function leaveGame(response) {
 		if(response === "Success!") {
-			$("body").load("/index.php");
-			document.getElementsByTagName('title')[0].innerHTML = 'Mafia';
+			window.location.href = window.location.href;
 		}
 		else {
 			closeAll();
@@ -194,18 +193,21 @@
 			document.getElementById('error-modal').classList.add("show-modal");;
 			document.getElementById('modal-background').style.display = "block";
 			
-			$('#end-life').prop('disabled', false);
-			$('#end-life').val("Yes, I'm sure");
+			$('#leave-game').prop('disabled', false);
+			$('#leave-game').val("Yes, I'm sure");
 		}
 	}
 
-	$('#end-life').on('click', function () {
-		$('#end-life').prop('disabled', true);
-		$('#end-life').val('Please wait...');
+	$('#leave-game').on('click', function () {
+		$('#leave-game').prop('disabled', true);
+		$('#leave-game').val('Please wait...');
 	
 		$.ajax({
 			type: 'POST',
-			url: 'leave-game.php'
+			url: 'leave-game.php',
+			data: {
+				check: 'true'
+			}
 		}).then(response => leaveGame(response));
 	});
 </script>
