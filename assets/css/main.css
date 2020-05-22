@@ -309,9 +309,7 @@ figcaption {
 	border-color: #c80000;
 }
 
-.chat-l {
-	background: #222;
-	color: #fff;
+.message {
 	display: inline-block;
 	max-width: 60%;
 	padding: 10px;
@@ -319,21 +317,7 @@ figcaption {
 	margin-top: 10px;
 	margin-bottom: 0px;
 	text-align: left;
-	word-break: break-all;
-	border-radius: 7px;
-}
-
-.chat-r {
-	background: #fff;
-	color: #000;
-	display: inline-block;
-	max-width: 60%;
-	padding: 10px;
-	margin: 10px;
-	margin-top: 10px;
-	margin-bottom: 0px;
-	text-align: left;
-	word-break: break-all;
+	word-break: break-word;
 	border-radius: 7px;
 }
 
