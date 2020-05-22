@@ -14,7 +14,7 @@
 		<link rel="manifest" href="/assets/favicon/site.webmanifest">
 		<link rel="mask-icon" href="/assets/favicon/safari-pinned-tab.svg" color="#5bbad5">
 		<meta name="msapplication-TileColor" content="#ffffff">
-		<meta name="theme-color" content="#1f1414">
+		<meta name="theme-color" content="#936c6c">
 		<meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="user-scalable=no">
 		<meta name="description" content="Mafia is a free multiplayer social deduction game. The game models a conflict between two groups: an informed minority, and an uninformed majority. At the start of the game, each player is secretly assigned a role affiliated with one of these teams.">

@@ -1,5 +1,6 @@
 <?php
 	include('conn.php');
+	session_start();
 	$townID = $_POST['townID'];
 	$name = strip_tags(substr($_POST['name'], 0, 10));
 	$avatar = $_POST['avatar'];
@@ -12,6 +13,9 @@
 	
 	if($name == '') {
 		die("Please enter a valid name.");
+	}
+	else if($townID == $_SESSION["townID"]) {
+		die("You are already in this town. Click <b>Continue Playing</b> at the top right corner to get back to your game.");
 	}
 	else if(!mysqli_query($conn, $query)) {
 		die("There are no towns having the Town ID <b>$townID</b>. Please recheck the Town ID you have entered.");
@@ -36,14 +40,12 @@
 	
 	mysqli_close($conn);
 	
-	session_start();
 	$_SESSION["townID"] = $townID;
 	$_SESSION["userID"] = $userID;
 	$_SESSION["name"] = $name;
 	$_SESSION["town"] = $town;
 	$_SESSION["mob"] = $mob;
 	$_SESSION["dailyIndex"] = '0';
-	$_SESSION["message"] = 'nostring';
 	
 	echo 'Success!';
 ?>

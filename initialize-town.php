@@ -64,7 +64,6 @@
 	$_SESSION["town"] = $town;
 	$_SESSION["mob"] = $mob;
 	$_SESSION["dailyIndex"] = '0';
-	$_SESSION["message"] = 'nostring';
 	
 	echo 'Success!';
 ?>

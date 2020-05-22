@@ -31,19 +31,19 @@
 		$i = 0;
 	
 		while($row = mysqli_fetch_assoc($result)) {
-			if($i < 2) {
+			if($i < 1) {
 				$userID = $row["user_id"];
 				$query = "UPDATE town_" . $_SESSION["townID"] . " SET is_mafia = 1 WHERE user_id = " . $userID . ";";
 				mysqli_query($conn, $query);
 				++$i;
 			}
-			else if($i < 3) {
+			else if($i < 2) {
 				$userID = $row["user_id"];
 				$query = "UPDATE town_" . $_SESSION["townID"] . " SET is_medic = 1 WHERE user_id = " . $userID . ";";
 				mysqli_query($conn, $query);
 				++$i;
 			}
-			else if($i < 4) {
+			else if($i < 3) {
 				$userID = $row["user_id"];
 				$query = "UPDATE town_" . $_SESSION["townID"] . " SET is_sherrif = 1 WHERE user_id = " . $userID . ";";
 				mysqli_query($conn, $query);
@@ -59,19 +59,19 @@
 		$i = 0;
 	
 		while($row = mysqli_fetch_assoc($result)) {
-			if($i < 2) {
+			if($i < 1) {
 				$userID = $row["user_id"];
 				$query = "UPDATE town_" . $_SESSION["townID"] . " SET is_mafia = 1 WHERE user_id = " . $userID . ";";
 				mysqli_query($conn, $query);
 				++$i;
 			}
-			else if($i < 3) {
+			else if($i < 2) {
 				$userID = $row["user_id"];
 				$query = "UPDATE town_" . $_SESSION["townID"] . " SET is_medic = 1 WHERE user_id = " . $userID . ";";
 				mysqli_query($conn, $query);
 				++$i;
 			}
-			else if($i < 4) {
+			else if($i < 3) {
 				$userID = $row["user_id"];
 				$query = "UPDATE town_" . $_SESSION["townID"] . " SET is_sherrif = 1 WHERE user_id = " . $userID . ";";
 				mysqli_query($conn, $query);
@@ -115,25 +115,25 @@
 		$i = 0;
 	
 		while($row = mysqli_fetch_assoc($result)) {
-			if($i < 3) {
+			if($i < 2) {
 				$userID = $row["user_id"];
 				$query = "UPDATE town_" . $_SESSION["townID"] . " SET is_mafia = 1 WHERE user_id = " . $userID . ";";
 				mysqli_query($conn, $query);
 				++$i;
 			}
-			else if($i < 4) {
+			else if($i < 3) {
 				$userID = $row["user_id"];
 				$query = "UPDATE town_" . $_SESSION["townID"] . " SET is_medic = 1 WHERE user_id = " . $userID . ";";
 				mysqli_query($conn, $query);
 				++$i;
 			}
-			else if($i < 5) {
+			else if($i < 4) {
 				$userID = $row["user_id"];
 				$query = "UPDATE town_" . $_SESSION["townID"] . " SET is_sherrif = 1 WHERE user_id = " . $userID . ";";
 				mysqli_query($conn, $query);
 				++$i;
 			}
-			else if($i < 6) {
+			else if($i < 5) {
 				$userID = $row["user_id"];
 				$query = "UPDATE town_" . $_SESSION["townID"] . " SET is_poser = 1 WHERE user_id = " . $userID . ";";
 				mysqli_query($conn, $query);
@@ -149,25 +149,25 @@
 		$i = 0;
 	
 		while($row = mysqli_fetch_assoc($result)) {
-			if($i < 3) {
+			if($i < 2) {
 				$userID = $row["user_id"];
 				$query = "UPDATE town_" . $_SESSION["townID"] . " SET is_mafia = 1 WHERE user_id = " . $userID . ";";
 				mysqli_query($conn, $query);
 				++$i;
 			}
-			else if($i < 4) {
+			else if($i < 3) {
 				$userID = $row["user_id"];
 				$query = "UPDATE town_" . $_SESSION["townID"] . " SET is_medic = 1 WHERE user_id = " . $userID . ";";
 				mysqli_query($conn, $query);
 				++$i;
 			}
-			else if($i < 5) {
+			else if($i < 4) {
 				$userID = $row["user_id"];
 				$query = "UPDATE town_" . $_SESSION["townID"] . " SET is_sherrif = 1 WHERE user_id = " . $userID . ";";
 				mysqli_query($conn, $query);
 				++$i;
 			}
-			else if($i < 6) {
+			else if($i < 5) {
 				$userID = $row["user_id"];
 				$query = "UPDATE town_" . $_SESSION["townID"] . " SET is_poser = 1 WHERE user_id = " . $userID . ";";
 				mysqli_query($conn, $query);
@@ -176,6 +176,9 @@
 			else
 				break;
 		}
+	}
+	else if($population > 10) {
+		die('Sorry, you have exceeded the maximum number of players. We do not accept more than <b>ten</b> players.');
 	}
 	
 	$query = "ALTER TABLE town_" . $_SESSION["townID"] . " ADD saved INT(1) NOT NULL DEFAULT 0;";

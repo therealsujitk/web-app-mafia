@@ -128,7 +128,7 @@
 						?>
 					</div>
 					<table id="game-footer" style="width: 100%;">
-						<td style="width: 100%;"><input id="chat-box" placeholder="Write a message..." onkeyup="enterMessage(event)"></input></td>
+						<td style="width: 100%;"><input id="chat-box" placeholder="Write a message..." autocomplete="off" onkeyup="enterMessage(event)"></input></td>
 						<td style="padding: 0;">
 							<input id="send" class="btn" type="button" style="border-radius: 10px;" onclick="sendMessage()" value="Send" <?php
 								$ability = 'disabled';
@@ -287,59 +287,95 @@
 				mysqli_query($conn, $query);
 				
 				if($tempIndex%2 == 0) {
-					$prev = $tempIndex/2;
-					$night = $tempIndex/2;
+					$query = "SELECT game_index, daily_max FROM town_details WHERE town_id = '$townID'";
+					$gameIndex = mysqli_fetch_assoc(mysqli_query($conn, $query))["game_index"];
+					$dailyMax = mysqli_fetch_assoc(mysqli_query($conn, $query))["daily_max"];
 					
-					$query = "UPDATE town_details SET daily_max = 99 WHERE town_id = '$townID';";
-					mysqli_query($conn, $query);
+					if($gameIndex == $dailyMax) {
+						$prev = $tempIndex/2;
+						$night = $tempIndex/2;
 					
-					$query = "SELECT COUNT(name) FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0;";
-					$dayVoteMajority = mysqli_fetch_assoc(mysqli_query($conn, $query))["COUNT(name)"] / 2;
-				
-					$executed = '';
-					
-					$query = "SELECT COUNT(day_" . $prev . "), day_" . $prev . " FROM town_" . $townID . " WHERE day_" . $prev . " <> 0 GROUP BY day_" . $prev . " ORDER BY COUNT(day_" . $prev . ") DESC;";
-					$row = mysqli_fetch_assoc(mysqli_query($conn, $query));
-					if($row["COUNT(day_" . $prev . ")"] > $dayVoteMajority) {
-						$query = "SELECT name FROM town_" . $townID . " WHERE user_id = " . $row["day_" . $prev] . ";";
-						$executed = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
-					}
-				
-					if($executed != '') {
-						$query = "UPDATE town_" . $townID . " SET is_executed = 1 WHERE name = '$executed';";
+						$query = "UPDATE town_details SET daily_max = 99 WHERE town_id = '$townID';";
 						mysqli_query($conn, $query);
+					
+						$query = "SELECT COUNT(name) FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0;";
+						$dayVoteMajority = mysqli_fetch_assoc(mysqli_query($conn, $query))["COUNT(name)"] / 2;
+				
+						$executed = '';
+					
+						$query = "SELECT COUNT(day_" . $prev . "), day_" . $prev . " FROM town_" . $townID . " WHERE day_" . $prev . " <> 0 GROUP BY day_" . $prev . " ORDER BY COUNT(day_" . $prev . ") DESC;";
+						$row = mysqli_fetch_assoc(mysqli_query($conn, $query));
+						if($row["COUNT(day_" . $prev . ")"] > $dayVoteMajority) {
+							$query = "SELECT name FROM town_" . $townID . " WHERE user_id = " . $row["day_" . $prev] . ";";
+							$executed = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
+						}
+				
+						if($executed != '') {
+							$query = "UPDATE town_" . $townID . " SET is_executed = 1 WHERE name = '$executed';";
+							mysqli_query($conn, $query);
 						
-						$query = "SELECT is_mafia, is_poser, is_medic, is_sherrif FROM town_" . $townID . " WHERE name = '$executed';";
+							$query = "SELECT is_mafia, is_poser, is_medic, is_sherrif FROM town_" . $townID . " WHERE name = '$executed';";
 						
-						if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_mafia"])
-							$role = 'a <b>Mafia</b> member';
-						else if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_poser"])
-							$role = 'the <b>Poser</b>';
-						else if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_sherrif"])
-							$role = 'the towns <b>Sherrif</b>';
-						else if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_medic"])
-							$role = 'the towns <b>Medic</b>';
-						else
-							$role = 'just a <b>Citizen</b>';
+							if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_mafia"])
+								$role = 'a <b>Mafia</b> member';
+							else if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_poser"])
+								$role = 'the <b>Poser</b>';
+							else if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_sherrif"])
+								$role = 'the towns <b>Sherrif</b>';
+							else if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_medic"])
+								$role = 'the towns <b>Medic</b>';
+							else
+								$role = 'just a <b>Citizen</b>';
+						}
+				
+						$query = "ALTER TABLE town_" . $townID . " ADD night_" . $night . " INT(1) NOT NULL DEFAULT 0;";
+						mysqli_query($conn, $query);
+
+						$query = "ALTER TABLE town_" . $townID . " ADD medic_" . $night . " INT(1) NOT NULL DEFAULT 0;";
+						mysqli_query($conn, $query);
+
+						$next = $night + 1;
+						$query = "ALTER TABLE town_" . $townID . " ADD day_" . $next . " INT(2) NOT NULL DEFAULT 0;";
+						mysqli_query($conn, $query);
+				
+						$query = "UPDATE town_details SET game_index = 0 WHERE town_id = '$townID';";
+						mysqli_query($conn, $query);
+				
+						$query = "SELECT COUNT(name) FROM town_" . $townID . " WHERE is_medic = 1 AND is_killed = 0 AND is_executed = 0;";
+						$max = mysqli_fetch_assoc(mysqli_query($conn, $query))["COUNT(name)"] * 2 + 1;
+						$query = "UPDATE town_details SET daily_max = " . $max . " WHERE town_id = '$townID';";
+						mysqli_query($conn, $query);
 					}
+					else {
+						$prev = $tempIndex/2;
+					
+						$query = "SELECT COUNT(name) FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0;";
+						$dayVoteMajority = mysqli_fetch_assoc(mysqli_query($conn, $query))["COUNT(name)"] / 2;
 				
-					$query = "ALTER TABLE town_" . $townID . " ADD night_" . $night . " INT(1) NOT NULL DEFAULT 0;";
-					mysqli_query($conn, $query);
-
-					$query = "ALTER TABLE town_" . $townID . " ADD medic_" . $night . " INT(1) NOT NULL DEFAULT 0;";
-					mysqli_query($conn, $query);
-
-					$next = $night + 1;
-					$query = "ALTER TABLE town_" . $townID . " ADD day_" . $next . " INT(2) NOT NULL DEFAULT 0;";
-					mysqli_query($conn, $query);
+						$executed = '';
+					
+						$query = "SELECT COUNT(day_" . $prev . "), day_" . $prev . " FROM town_" . $townID . " WHERE day_" . $prev . " <> 0 GROUP BY day_" . $prev . " ORDER BY COUNT(day_" . $prev . ") DESC;";
+						$row = mysqli_fetch_assoc(mysqli_query($conn, $query));
+						if($row["COUNT(day_" . $prev . ")"] > $dayVoteMajority) {
+							$query = "SELECT name FROM town_" . $townID . " WHERE user_id = " . $row["day_" . $prev] . ";";
+							$executed = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
+						}
 				
-					$query = "UPDATE town_details SET game_index = 0 WHERE town_id = '$townID';";
-					mysqli_query($conn, $query);
-				
-					$query = "SELECT COUNT(name) FROM town_" . $townID . " WHERE is_medic = 1 AND is_killed = 0 AND is_executed = 0;";
-					$max = mysqli_fetch_assoc(mysqli_query($conn, $query))["COUNT(name)"] * 2 + 1;
-					$query = "UPDATE town_details SET daily_max = " . $max . " WHERE town_id = '$townID';";
-					mysqli_query($conn, $query);
+						if($executed != '') {
+							$query = "SELECT is_mafia, is_poser, is_medic, is_sherrif FROM town_" . $townID . " WHERE name = '$executed';";
+						
+							if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_mafia"])
+								$role = 'a <b>Mafia</b> member';
+							else if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_poser"])
+								$role = 'the <b>Poser</b>';
+							else if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_sherrif"])
+								$role = 'the towns <b>Sherrif</b>';
+							else if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_medic"])
+								$role = 'the towns <b>Medic</b>';
+							else
+								$role = 'just a <b>Citizen</b>';
+						}
+					}
 					
 					$_SESSION["dailyIndex"] = $tempIndex;
 					
@@ -394,28 +430,40 @@
 					$_SESSION["message"] = $message;
 				}
 				else {
-					$prev = $tempIndex/2 - 0.5;
+					$query = "SELECT game_index, daily_max FROM town_details WHERE town_id = '$townID'";
+					$gameIndex = mysqli_fetch_assoc(mysqli_query($conn, $query))["game_index"];
+					$dailyMax = mysqli_fetch_assoc(mysqli_query($conn, $query))["daily_max"];
 					
-					$query = "UPDATE town_details SET daily_max = 99 WHERE town_id = '$townID';";
-					mysqli_query($conn, $query);
+					if($gameIndex == $dailyMax) {
+						$prev = $tempIndex/2 - 0.5;
 					
-					$query = "SELECT name FROM town_" . $townID . " WHERE night_" . $prev . " <> 0;";
-					$killed = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
-					$query = "SELECT name FROM town_" . $townID . " WHERE medic_" . $prev . " <> 0;";
-					$healed = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
+						$query = "UPDATE town_details SET daily_max = 99 WHERE town_id = '$townID';";
+						mysqli_query($conn, $query);
+					
+						$query = "SELECT name FROM town_" . $townID . " WHERE night_" . $prev . " <> 0;";
+						$killed = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
+						$query = "SELECT name FROM town_" . $townID . " WHERE medic_" . $prev . " <> 0;";
+						$healed = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
 				
-					if($killed != $healed) {
-						$query = "UPDATE town_" . $townID . " SET is_killed = 1 WHERE name = '$killed';";
+						if($killed != $healed) {
+							$query = "UPDATE town_" . $townID . " SET is_killed = 1 WHERE name = '$killed';";
+							mysqli_query($conn, $query);
+						}
+					
+						$query = "UPDATE town_details SET game_index = 0 WHERE town_id = '$townID';";
+						mysqli_query($conn, $query);
+					
+						$query = "SELECT COUNT(name) FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0;";
+						$max = mysqli_fetch_assoc(mysqli_query($conn, $query))["COUNT(name)"];
+						$query = "UPDATE town_details SET daily_max = " . $max . " WHERE town_id = '$townID';";
 						mysqli_query($conn, $query);
 					}
-					
-					$query = "UPDATE town_details SET game_index = 0 WHERE town_id = '$townID';";
-					mysqli_query($conn, $query);
-					
-					$query = "SELECT COUNT(name) FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0;";
-					$max = mysqli_fetch_assoc(mysqli_query($conn, $query))["COUNT(name)"];
-					$query = "UPDATE town_details SET daily_max = " . $max . " WHERE town_id = '$townID';";
-					mysqli_query($conn, $query);
+					else {
+						$query = "SELECT name FROM town_" . $townID . " WHERE night_" . $prev . " <> 0;";
+						$killed = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
+						$query = "SELECT name FROM town_" . $townID . " WHERE medic_" . $prev . " <> 0;";
+						$healed = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
+					}
 					
 					$_SESSION["dailyIndex"] = $tempIndex;
 					
@@ -911,7 +959,7 @@
 		
 		var results = document.getElementById('results').innerHTML;
 		results = results.slice(3, -4).trim();
-		
+	
 		if(results != '') {
 			closeAll();
 			document.getElementById('win-modal').classList.add("show-modal");
