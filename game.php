@@ -101,9 +101,9 @@
 											if($result = mysqli_query($conn, $query)) {
 												while($row = mysqli_fetch_assoc($result)) {
 													if($row["name"] == $name)
-														echo '<div style="100%; text-align: right;"><div class="chat-r"><b>' . $row["name"] . ':</b> ' . $row["message"] . '</div></div>';
+														echo '<div style="100%; text-align: right;"><div class="message" style="background: #fff; color: #000;"><b>' . $row["name"] . ':</b> ' . $row["message"] . '</div></div>';
 													else
-														echo '<div style="100%; text-align: left;"><div class="chat-l"><b>' . $row["name"] . ':</b> ' . $row["message"] . '</div></div>';
+														echo '<div style="100%; text-align: left;"><div class="message" style="background: #000; color: #fff;"><b>' . $row["name"] . ':</b> ' . $row["message"] . '</div></div>';
 												}
 											}
 											break;
@@ -119,9 +119,9 @@
 								if($result = mysqli_query($conn, $query)) {
 									while($row = mysqli_fetch_assoc($result)) {
 										if($row["name"] == $name)
-											echo '<div style="100%; text-align: right;"><div class="chat-r"><b>' . $row["name"] . ':</b> ' . $row["message"] . '</div></div>';
+											echo '<div style="100%; text-align: right;"><div class="message" style="background: #fff; color: #000;"><b>' . $row["name"] . ':</b> ' . $row["message"] . '</div></div>';
 										else
-											echo '<div style="100%; text-align: left;"><div class="chat-l"><b>' . $row["name"] . ':</b> ' . $row["message"] . '</div></div>';
+											echo '<div style="100%; text-align: left;"><div class="message" style="background: #000; color: #fff;"><b>' . $row["name"] . ':</b> ' . $row["message"] . '</div></div>';
 									}
 								}
 							}
