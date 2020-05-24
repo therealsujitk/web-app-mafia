@@ -165,9 +165,17 @@ function setCookie() {
 	document.cookie = "avatar=" + avatar + ";expires=" + expires + ";path=/";
 }
 
-function copyInvite(townID) {
-	var link = "https://playmafia.cf/" + townID + "/";
-	alert(link);
+function copyText(value) {
+	let tempInput = document.createElement("input");
+	tempInput.value = value;
+	document.body.appendChild(tempInput);
+	tempInput.select();
+	document.execCommand("copy");
+	document.body.removeChild(tempInput);
+	
+	let x = document.getElementById('copy');
+	x.classList.add("tooltip");
+	x.innerHTML = 'Click here<span class="tooltiptext">Copied!</span>';
 }
 
 function displayNews(news, i) {
