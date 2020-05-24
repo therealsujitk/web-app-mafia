@@ -147,12 +147,12 @@
 							
 								if($_SESSION["dailyIndex"]%2 == 0) {
 									$query = "SELECT name FROM town_" . $townID . " WHERE is_mafia = 1 AND is_killed = 0 AND is_executed = 0 AND user_id = " . $userID . ";";
-									if(mysqli_fetch_assoc(mysqli_query($conn, $query)) && $flag)
+									if(mysqli_fetch_assoc(mysqli_query($conn, $query)))
 										$ability = '';
 								}
 								else {
 									$query = "SELECT user_id FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0 AND user_id = " . $userID . ";";
-									if(mysqli_fetch_assoc(mysqli_query($conn, $query)) && $flag)
+									if(mysqli_fetch_assoc(mysqli_query($conn, $query)))
 										$ability = '';
 								}
 								
@@ -212,10 +212,8 @@
 								}
 								else {
 									$query = "SELECT user_id FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0 AND user_id = " . $userID . ";";
-									if(mysqli_fetch_assoc(mysqli_query($conn, $query)) && $flag) {
+									if(mysqli_fetch_assoc(mysqli_query($conn, $query)))
 										$ability = '';
-										$flag = 0;
-									}
 								}
 								
 								echo $ability;
