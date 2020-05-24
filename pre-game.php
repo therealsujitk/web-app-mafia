@@ -14,9 +14,9 @@
 </script>
 <div id="header">
 	<table cellpadding="0" cellspacing="0" style="width: 100%; padding-left: 1%; padding-right: 1%;">
-		<td><h1 style="color: white; margin: 0;">Mafia</h1></td>
-		<td style="text-align: right;">
-			<nav>
+		<td><img src="/assets/images/logo.png" style="height: 65px;"></img></td>
+			<td style="text-align: right; vertical-align: top; padding-top: 20px;">
+				<nav>
 				<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Privacy Policy" onclick="openPrivacy()"></input>
 				<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Report Bug" onclick="openBug()"></input>
 				<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="About Us" onclick="openAbout()"></input>
@@ -42,7 +42,7 @@
 		?>
 	</div>
 
-	<p id="share">Your Town ID is <b><?php echo $townID; ?></b>. <span class="link3" onclick="copyInvite(townID);">Click here</span> to copy.</p>
+	<p id="share">Your Town ID is <b><?php echo $townID; ?></b>. <span id="copy" class="link3" onclick="copyText(townID);">Click here</span> to copy.</p>
 	<?php
 		$query = "SELECT user_id FROM town_" . $townID . ";";
 		$ownerID = mysqli_fetch_assoc(mysqli_query($conn, $query))["user_id"];

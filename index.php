@@ -14,7 +14,7 @@
 		<link rel="manifest" href="/assets/favicon/site.webmanifest">
 		<link rel="mask-icon" href="/assets/favicon/safari-pinned-tab.svg" color="#5bbad5">
 		<meta name="msapplication-TileColor" content="#ffffff">
-		<meta name="theme-color" content="#936c6c">
+		<meta name="theme-color" content="#c80000">
 		<meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="user-scalable=no">
 		<meta name="description" content="Mafia is a free multiplayer social deduction game. The game models a conflict between two groups: an informed minority, and an uninformed majority. At the start of the game, each player is secretly assigned a role affiliated with one of these teams.">
@@ -38,8 +38,8 @@
 	<body>
 		<div id="header">
 			<table cellpadding="0" cellspacing="0" style="width: 100%; padding-left: 1%; padding-right: 1%;">
-				<td><h1 style="color: white; margin: 0;">Mafia</h1></td>
-				<td style="text-align: right;">
+				<td><img src="/assets/images/logo.png" style="height: 65px;"></img></td>
+				<td style="text-align: right; vertical-align: top; padding-top: 20px;">
 					<nav>
 						<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Privacy Policy" onclick="openPrivacy()"></input>
 						<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Report Bug" onclick="openBug()"></input>

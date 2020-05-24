@@ -12,7 +12,7 @@
 		<link rel="manifest" href="/assets/favicon/site.webmanifest">
 		<link rel="mask-icon" href="/assets/favicon/safari-pinned-tab.svg" color="#5bbad5">
 		<meta name="msapplication-TileColor" content="#ffffff">
-		<meta name="theme-color" content="#1f1414">
+		<meta name="theme-color" content="#c80000">
 		<meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge">
 		<meta name="viewport" content="user-scalable=no">
 		<title>Statistics - Mafia</title>
@@ -22,16 +22,16 @@
 			include('conn.php');
 		?>
 		<div style="position: absolute; text-align: center; width: 40%; margin-left: 50%; margin-top: 50vh; transform: translate(-50%, -50%);">
-			<h1 style="font-size: 50px;">Mafia</h1>
+			<img src="/assets/images/logo.png" style="height: 100px;"></img>
 			<table style="text-align: center; width: 100%;">
 				<tr>
-					<td style="font-weight: bold; font-size: 100px; color: #fff;">
+					<td style="font-size: 100px; color: #fff; padding-top: 0px;">
 						<?php
 							$query = "SELECT players_joined FROM statistics WHERE id = 1;";
 							echo mysqli_fetch_assoc(mysqli_query($conn, $query))["players_joined"];
 						?>
 					</td>
-					<td style="font-weight: bold; font-size: 100px; color: #fff;">
+					<td style="font-size: 100px; color: #fff; padding-top: 0px;">
 						<?php
 							$query = "SELECT games_played FROM statistics WHERE id = 1;";
 							echo mysqli_fetch_assoc(mysqli_query($conn, $query))["games_played"];
