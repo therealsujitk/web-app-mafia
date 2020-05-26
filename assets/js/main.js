@@ -128,7 +128,7 @@ function next() {
 	let x = document.getElementById('avatar');
 	let index = x.src.slice(-6, -4);
 
-	if(index == 12)
+	if(index == 20)
 		index = 1;
 	else
 		++index;
@@ -144,7 +144,7 @@ function prev() {
 	let index = x.src.slice(-6, -4);
 
 	if(index == 1)
-		index = 12;
+		index = 20;
 	else
 		--index;
 	
