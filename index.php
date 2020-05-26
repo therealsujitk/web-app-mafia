@@ -6,7 +6,7 @@
 		<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 		<meta content="utf-8" http-equiv="encoding">
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
-		<script src="http://code.jquery.com/jquery-3.5.0.js"></script>
+		<script src="https://code.jquery.com/jquery-3.5.0.js"></script>
 		<script src="/assets/js/main.js"></script>
 		<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
 		<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
@@ -38,7 +38,7 @@
 	<body>
 		<div id="header">
 			<table cellpadding="0" cellspacing="0" style="width: 100%; padding-left: 1%; padding-right: 1%;">
-				<td><img src="/assets/images/logo.png" style="height: 65px;"></img></td>
+				<td><img src="/assets/images/logo-beta.png" style="height: 65px;"></img></td>
 				<td style="text-align: right; vertical-align: top; padding-top: 20px;">
 					<nav>
 						<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Privacy Policy" onclick="openPrivacy()"></input>

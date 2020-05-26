@@ -920,12 +920,11 @@
 			closeAll();
 			news.innerHTML = message;
 			$("#vote-modal").load("/game.php" + " #vote-modal > *" );
+			$("#game-index").load("/game.php" + " #game-index > *" );
+			$("#game-footer").load("/game.php" + " #game-footer > *" );
+			$("#players").load("/game.php" + " #players > *" );
+			$("#results").load("/game.php" + " #results > *" );
 		}
-		
-		$("#game-index").load("/game.php" + " #game-index > *" );
-		$("#game-footer").load("/game.php" + " #game-footer > *" );
-		$("#players").load("/game.php" + " #players > *" );
-		$("#results").load("/game.php" + " #results > *" );
 		
 		let gameIndex = document.getElementById('game-index').innerHTML.slice(4, -5).trim();
 		document.getElementsByTagName('title')[0].innerHTML = gameIndex + ' • ' + town + ' - Mafia';
