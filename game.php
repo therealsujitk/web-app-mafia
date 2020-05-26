@@ -901,10 +901,10 @@
 		if(!scrolled) {
 			elem.scrollTop = elem.scrollHeight;
 		}
-	}, 500);	
+	}, 1000);	
 	$("#game-display").on('scroll', function(){
 		if(elem.scrollTop + elem.clientHeight == elem.scrollHeight)
-			scrolled=false;
+			scrolled = false;
 		else
 			scrolled = true;
 	});
@@ -917,14 +917,15 @@
 		var news = document.getElementById('news');
 		
 		if(message != news.innerHTML && message != '') {
-			news.innerHTML = message;
 			closeAll();
-			$("#game-index").load("/game.php" + " #game-index > *" );
-			$("#game-footer").load("/game.php" + " #game-footer > *" );
+			news.innerHTML = message;
 			$("#vote-modal").load("/game.php" + " #vote-modal > *" );
-			$("#players").load("/game.php" + " #players > *" );
-			$("#results").load("/game.php" + " #results > *" );
 		}
+		
+		$("#game-index").load("/game.php" + " #game-index > *" );
+		$("#game-footer").load("/game.php" + " #game-footer > *" );
+		$("#players").load("/game.php" + " #players > *" );
+		$("#results").load("/game.php" + " #results > *" );
 		
 		let gameIndex = document.getElementById('game-index').innerHTML.slice(4, -5).trim();
 		document.getElementsByTagName('title')[0].innerHTML = gameIndex + ' • ' + town + ' - Mafia';
