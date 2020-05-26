@@ -655,8 +655,8 @@
 					echo '</div></div>';
 				}
 				else {
-					$name = mysqli_fetch_assoc(mysqli_query($conn, $query1))["name"];
-					$avatar = mysqli_fetch_assoc(mysqli_query($conn, $query1))["avatar"];
+					$name = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
+					$avatar = mysqli_fetch_assoc(mysqli_query($conn, $query))["avatar"];
 					
 					echo '<table cellpadding="0" cellspacing="0" style="width: 100%;">
 						<td class="header2" style="text-align: left;">Citizen saved</td>
