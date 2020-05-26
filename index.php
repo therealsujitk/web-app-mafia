@@ -81,6 +81,26 @@
 				<tr>
 					<td>
 						<img id="avatar" src="">
+						<img class="cache" style="display: none;" src="/assets/avatars/avatar_01.png">
+						<img class="cache" style="display: none;" src="/assets/avatars/avatar_02.png">
+						<img class="cache" style="display: none;" src="/assets/avatars/avatar_03.png">
+						<img class="cache" style="display: none;" src="/assets/avatars/avatar_04.png">
+						<img class="cache" style="display: none;" src="/assets/avatars/avatar_05.png">
+						<img class="cache" style="display: none;" src="/assets/avatars/avatar_06.png">
+						<img class="cache" style="display: none;" src="/assets/avatars/avatar_07.png">
+						<img class="cache" style="display: none;" src="/assets/avatars/avatar_08.png">
+						<img class="cache" style="display: none;" src="/assets/avatars/avatar_09.png">
+						<img class="cache" style="display: none;" src="/assets/avatars/avatar_10.png">
+						<img class="cache" style="display: none;" src="/assets/avatars/avatar_11.png">
+						<img class="cache" style="display: none;" src="/assets/avatars/avatar_12.png">
+						<img class="cache" style="display: none;" src="/assets/avatars/avatar_13.png">
+						<img class="cache" style="display: none;" src="/assets/avatars/avatar_14.png">
+						<img class="cache" style="display: none;" src="/assets/avatars/avatar_15.png">
+						<img class="cache" style="display: none;" src="/assets/avatars/avatar_16.png">
+						<img class="cache" style="display: none;" src="/assets/avatars/avatar_17.png">
+						<img class="cache" style="display: none;" src="/assets/avatars/avatar_18.png">
+						<img class="cache" style="display: none;" src="/assets/avatars/avatar_19.png">
+						<img class="cache" style="display: none;" src="/assets/avatars/avatar_20.png">
 					</td>
 					<td>
 						<table cellpadding="0" cellspacing="0" width="100%">
@@ -179,7 +199,7 @@
 		</div>
 		
 		<script>
-			let avatarID = Math.round(Math.random() * 11) + 1;
+			let avatarID = Math.round(Math.random() * 19) + 1;
 			if(avatarID < 10)
 				document.getElementById('avatar').src = '/assets/avatars/avatar_0' + avatarID + '.png';
 			else

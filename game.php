@@ -279,9 +279,6 @@
 			$tempIndex = mysqli_fetch_assoc(mysqli_query($conn, $query))["daily_index"];
 			
 			if($_SESSION["dailyIndex"] != $tempIndex) {
-				$query = "TRUNCATE TABLE chat_" . $townID . ";";
-				mysqli_query($conn, $query);
-				
 				if($tempIndex%2 == 0) {
 					$query = "SELECT game_index, daily_max FROM town_details WHERE town_id = '$townID'";
 					$gameIndex = mysqli_fetch_assoc(mysqli_query($conn, $query))["game_index"];
@@ -290,6 +287,9 @@
 					if($gameIndex == $dailyMax) {
 						$prev = $tempIndex/2;
 						$night = $tempIndex/2;
+						
+						$query = "TRUNCATE TABLE chat_" . $townID . ";";
+						mysqli_query($conn, $query);
 					
 						$query = "UPDATE town_details SET daily_max = 99 WHERE town_id = '$townID';";
 						mysqli_query($conn, $query);
@@ -409,6 +409,9 @@
 					
 					if($gameIndex == $dailyMax) {
 						$prev = $tempIndex/2 - 0.5;
+						
+						$query = "TRUNCATE TABLE chat_" . $townID . ";";
+						mysqli_query($conn, $query);
 					
 						$query = "UPDATE town_details SET daily_max = 99 WHERE town_id = '$townID';";
 						mysqli_query($conn, $query);
@@ -510,7 +513,7 @@
 
 <div id="role-modal" class="modal" style="text-align: left;">
 	<?php
-		$query = "SELECT * FROM town_" . $townID . " WHERE user_id = " . $userID . ";";
+		$query = "SELECT is_mafia, is_poser, is_medic, is_sherrif FROM town_" . $townID . " WHERE user_id = " . $userID . ";";
 		if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_mafia"]) {
 			echo '<table cellpadding="0" cellspacing="0" style="width: 100%;">
 				<td class="header2" style="text-align: left;">Your Role</td>
@@ -567,8 +570,10 @@
 <div id="vote-modal" class="modal">
 	<?php
 		if($_SESSION["dailyIndex"]%2 == 0) {
+			$flag = 1;
+		
 			$query = "SELECT user_id FROM town_" . $townID . " WHERE is_mafia = 1 AND is_killed = 0 AND is_executed = 0 AND user_id = " . $userID . ";";
-			if(mysqli_fetch_assoc(mysqli_query($conn, $query))) {
+			if(mysqli_fetch_assoc(mysqli_query($conn, $query)) && $flag) {
 				$query = "SELECT user_id FROM town_" . $townID . " WHERE is_mafia = 1 AND is_killed = 0 AND is_executed = 0;";
 				$killer = mysqli_fetch_assoc(mysqli_query($conn, $query))["user_id"];
 				
@@ -620,10 +625,12 @@
 						<td><p style="padding: 0; margin: 0;">Your accomplice will be taking care of the dirty work for tonight.</p></td>
 					</table>';
 				}
+				
+				$flag = 0;
 			}
 		
 			$query = "SELECT user_id FROM town_" . $townID . " WHERE is_medic = 1 AND is_killed = 0 AND is_executed = 0 AND user_id = " . $userID . ";";
-			if(mysqli_fetch_assoc(mysqli_query($conn, $query))) {
+			if(mysqli_fetch_assoc(mysqli_query($conn, $query)) && $flag) {
 				$night = $_SESSION["dailyIndex"] / 2;
 				$query = "SELECT name, avatar FROM town_" . $townID . " WHERE medic_" . $night . " = 1;";
 				if(!mysqli_fetch_assoc(mysqli_query($conn, $query))) {
@@ -656,10 +663,12 @@
 						<td><h3>' . $name . '</h3><br><p style="padding: 0; margin: 0;">You have already saved <b>' . $name . '</b> tonight. You can only save <b>one</b> citizen per night.</p></td>
 					</table>';
 				}
+				
+				$flag = 0;
 			}
 
 			$query = "SELECT user_id FROM town_" . $townID . " WHERE is_sherrif = 1 AND is_killed = 0 AND is_executed = 0 AND user_id = " . $userID . ";";
-			if(mysqli_fetch_assoc(mysqli_query($conn, $query))) {
+			if(mysqli_fetch_assoc(mysqli_query($conn, $query)) && $flag) {
 				echo '<table cellpadding="0" cellspacing="0" style="width: 100%;">
 					<td class="header2" style="text-align: left;">Select a citizen</td>
 					<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
@@ -675,6 +684,8 @@
 						echo '<figure style="margin: 10px; display: inline-block;"><img class="candidate candidate-sherrif" style="height: 100px;" src="'. $row["avatar"] .'" onclick="checkMafia(`' . $row["user_id"] . '`);"></img><figcaption style="color: ' . $color . ';">' . $name . '</figcaption></figure>';
 					}
 				echo '</div></div>';
+				
+				$flag = 0;
 			}
 		}
 		else {
@@ -689,7 +700,7 @@
 					</table>';
 				
 					echo '<div style="margin: 10px;"><div id="candidates">';
-					$query = "SELECT user_id, name, avatar, is_mafia FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0;";
+					$query = "SELECT user_id, name, avatar FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0;";
 					if($result = mysqli_query($conn, $query))
 						while($row = mysqli_fetch_assoc($result)) {
 							$name = $row["name"];
@@ -700,7 +711,7 @@
 					echo '</div></div>';
 				}
 				else {
-					$vote = mysqli_fetch_assoc(mysqli_query($conn, $query1))["day_" . $day];
+					$vote = mysqli_fetch_assoc(mysqli_query($conn, $query))["day_" . $day];
 					$query = "SELECT name, avatar FROM town_" . $townID . " WHERE user_id = " . $vote . ";";
 					
 					$name = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
