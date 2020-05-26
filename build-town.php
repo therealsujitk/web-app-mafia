@@ -149,25 +149,25 @@
 		$i = 0;
 	
 		while($row = mysqli_fetch_assoc($result)) {
-			if($i < 2) {
+			if($i < 3) {
 				$userID = $row["user_id"];
 				$query = "UPDATE town_" . $_SESSION["townID"] . " SET is_mafia = 1 WHERE user_id = " . $userID . ";";
 				mysqli_query($conn, $query);
 				++$i;
 			}
-			else if($i < 3) {
+			else if($i < 4) {
 				$userID = $row["user_id"];
 				$query = "UPDATE town_" . $_SESSION["townID"] . " SET is_medic = 1 WHERE user_id = " . $userID . ";";
 				mysqli_query($conn, $query);
 				++$i;
 			}
-			else if($i < 4) {
+			else if($i < 5) {
 				$userID = $row["user_id"];
 				$query = "UPDATE town_" . $_SESSION["townID"] . " SET is_sherrif = 1 WHERE user_id = " . $userID . ";";
 				mysqli_query($conn, $query);
 				++$i;
 			}
-			else if($i < 5) {
+			else if($i < 6) {
 				$userID = $row["user_id"];
 				$query = "UPDATE town_" . $_SESSION["townID"] . " SET is_poser = 1 WHERE user_id = " . $userID . ";";
 				mysqli_query($conn, $query);
@@ -204,7 +204,7 @@
 	$query = "CREATE TRIGGER game_trigger_" . $townID . " BEFORE UPDATE ON town_" . $townID . " FOR EACH ROW UPDATE town_details SET game_index = game_index + 1 WHERE town_id = '$townID';";
 	mysqli_query($conn, $query);
 	
-	$query = "CREATE TRIGGER daily_trigger_" . $townID . " AFTER UPDATE ON town_" . $townID . " FOR EACH ROW UPDATE town_details SET daily_index = daily_index + 1 WHERE town_id = '$townID' AND game_index = daily_max;";
+	$query = "CREATE TRIGGER daily_trigger_" . $townID . " AFTER UPDATE ON town_" . $townID . " FOR EACH ROW UPDATE town_details SET daily_index = daily_index + 1 WHERE town_id = '$townID' AND game_index >= daily_max;";
 	mysqli_query($conn, $query);
 	
 	$query = "UPDATE town_details SET has_started = 1 WHERE town_id = '$townID';";

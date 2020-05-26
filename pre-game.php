@@ -14,7 +14,7 @@
 </script>
 <div id="header">
 	<table cellpadding="0" cellspacing="0" style="width: 100%; padding-left: 1%; padding-right: 1%;">
-		<td><img src="/assets/images/logo.png" style="height: 65px;"></img></td>
+		<td><img src="/assets/images/logo-beta.png" style="height: 65px;"></img></td>
 			<td style="text-align: right; vertical-align: top; padding-top: 20px;">
 				<nav>
 				<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Privacy Policy" onclick="openPrivacy()"></input>
