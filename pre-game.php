@@ -20,7 +20,13 @@
 				<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Privacy Policy" onclick="openPrivacy()"></input>
 				<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Report Bug" onclick="openBug()"></input>
 				<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="About Us" onclick="openAbout()"></input>
-				<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Leave Game" onclick="openLeave()"></input>
+				<?php
+					$query = "SELECT user_id FROM town_" . $townID . ";";
+					$ownerID = mysqli_fetch_assoc(mysqli_query($conn, $query))["user_id"];
+		
+					if($ownerID != $userID)
+						echo '<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Leave Game" onclick="openLeave()"></input>';
+				?>
 			</nav>
 		</td>
 	</table>
@@ -113,9 +119,10 @@
 <div id="has-started" style="display: none;">
 	<?php
 		$query = "SELECT has_started FROM town_details WHERE town_id = '$townID';";
-		if(mysqli_fetch_assoc(mysqli_query($conn, $query))["has_started"])
+		if(mysqli_fetch_assoc(mysqli_query($conn, $query))["has_started"]) {
 			echo '<span>Let the games begin!</span>';
 			mysqli_close($conn);
+		}
 	?>
 </div>
 <script>
@@ -142,8 +149,8 @@
 	});
 
 	var preGame = setInterval(function(){
-		$("#player-cards").load("/pre-game.php" + " #player-cards > *" );
-		$("#has-started").load("/pre-game.php" + " #has-started > *" );
+		$("#player-cards").load("/pre-game.php #player-cards > *");
+		$("#has-started").load("/pre-game.php #has-started > *");
 		
 		var x = document.getElementById('has-started').innerHTML.trim();
 		if(x != '') {

@@ -894,23 +894,22 @@
 		}).then(response => clearSession(response));
 	}
 	
-	scrolled = false;
-	var elem = document.getElementById("game-display");
-	var chat = setInterval(function(){
-		$("#game-display").load("/game.php" + " #game-display > *" );
-		if(!scrolled) {
-			elem.scrollTop = elem.scrollHeight;
-		}
-	}, 1000);	
+	var scrolled = false;
 	$("#game-display").on('scroll', function(){
-		if(elem.scrollTop + elem.clientHeight == elem.scrollHeight)
+		if($('#game-display')[0].scrollTop + $('#game-display')[0].clientHeight == $('#game-display')[0].scrollHeight)
 			scrolled = false;
 		else
 			scrolled = true;
 	});
 	
 	var game = setInterval(function(){
+		$("#results").load("/game.php" + " #results > *" );
 		$("#game-update").load("/game.php" + " #game-update > *" );
+		$("#game-display").load("/game.php" + " #game-display > *" );
+		if(!scrolled)
+			$('#game-display').scrollTop($('#game-display')[0].scrollHeight);
+		$("#game-index").load("/game.php" + " #game-index > *" );
+		$("#players").load("/game.php" + " #players > *" );
 		
 		var message = document.getElementById('game-update').innerHTML.trim();
 		message = message.slice(6, -7);
@@ -920,10 +919,7 @@
 			closeAll();
 			news.innerHTML = message;
 			$("#vote-modal").load("/game.php" + " #vote-modal > *" );
-			$("#game-index").load("/game.php" + " #game-index > *" );
 			$("#game-footer").load("/game.php" + " #game-footer > *" );
-			$("#players").load("/game.php" + " #players > *" );
-			$("#results").load("/game.php" + " #results > *" );
 		}
 		
 		let gameIndex = document.getElementById('game-index').innerHTML.slice(4, -5).trim();
@@ -937,9 +933,8 @@
 			document.getElementById('win-modal').classList.add("show-modal");
 			document.getElementById('modal-background2').style.display = "block";
 			clearInterval(game);
-			clearInterval(chat);
 		}
-	}, 1000);
+	}, 500);
 	
 	window.onbeforeunload = function() {
 		return "Are you sure you want to leave? If your session ends, you won\'t be able to continue playing this game.";
