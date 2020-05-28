@@ -374,8 +374,9 @@
 					}
 					
 					$_SESSION["dailyIndex"] = $tempIndex;
+					$_SESSION["revealed"] = '';
 					
-					$message = '<span>You are in the underworld. There is no way to contact anyone from here.</span>';
+					$message = '<span>You are in the underworld and there\'s no escape... get some sleep, you can try again tomorrow... and fail.</span>';
 					$postMessage = 'The citizens of <b>' . $town . '</b> are sleeping. Zzz';
 					
 					$flag = 1;
@@ -452,7 +453,7 @@
 					
 					$_SESSION["dailyIndex"] = $tempIndex;
 					
-					$message = '<span>You are in the underworld. There is no way to contact anyone from here.</span>';
+					$message = '<span>It\'s a new day for you in the underworld. You can try escaping, but you\'ll soon realise that there is no way to contact anyone from here.</span>';
 					
 					$query = "SELECT name FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0 AND user_id = " . $userID . ";";
 					if(mysqli_fetch_assoc(mysqli_query($conn, $query))) {
@@ -670,24 +671,29 @@
 				
 				$flag = 0;
 			}
-
+			
 			$query = "SELECT user_id FROM town_" . $townID . " WHERE is_sherrif = 1 AND is_killed = 0 AND is_executed = 0 AND user_id = " . $userID . ";";
 			if(mysqli_fetch_assoc(mysqli_query($conn, $query)) && $flag) {
-				echo '<table cellpadding="0" cellspacing="0" style="width: 100%;">
-					<td class="header2" style="text-align: left;">Select a citizen</td>
-					<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
-				</table>';
-				
-				echo '<div style="margin: 10px;"><div id="candidates">';
-				$query = "SELECT user_id, name, avatar FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0;";
-				if($result = mysqli_query($conn, $query))
-					while($row = mysqli_fetch_assoc($result)) {
-						$name = $row["name"];
-						if($userID == $row["user_id"])
-							continue;
-						echo '<figure style="margin: 10px; display: inline-block;"><img class="candidate candidate-sherrif" style="height: 100px;" src="'. $row["avatar"] .'" onclick="checkMafia(`' . $row["user_id"] . '`);"></img><figcaption style="color: ' . $color . ';">' . $name . '</figcaption></figure>';
-					}
-				echo '</div></div>';
+				if($_SESSION["revealed"] == '') {
+					echo '<table cellpadding="0" cellspacing="0" style="width: 100%;">
+						<td class="header2" style="text-align: left;">Select a citizen</td>
+						<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
+					</table>';
+			
+					echo '<div style="margin: 10px;"><div id="candidates">';
+					$query = "SELECT user_id, name, avatar FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0;";
+					if($result = mysqli_query($conn, $query))
+						while($row = mysqli_fetch_assoc($result)) {
+							$name = $row["name"];
+							if($userID == $row["user_id"])
+								continue;
+							echo '<figure style="margin: 10px; display: inline-block;"><img class="candidate candidate-sherrif" style="height: 100px;" src="'. $row["avatar"] .'" onclick="registerVote(`sheriff`, `' . $row["user_id"] . '`);"></img><figcaption style="color: ' . $color . ';">' . $name . '</figcaption></figure>';
+						}
+					echo '</div></div>';
+				}
+				else {
+					echo $_SESSION["revealed"];
+				}
 				
 				$flag = 0;
 			}
@@ -757,6 +763,8 @@
 					echo 'Mafia Wins! <b>' . $mob . '</b> has taken over our town. The game ends here because after the mafia kills one of the citizens tonight, there will never be a majority on who is to be executed.';
 					echo '<input style="margin-top: 10px; margin-left: 50%; transform: translate(-50%, 0%);" class="btn" type="button" value="Go Home" onclick="goHome()">';
 				}
+				
+				mysqli_close($conn);
 			?>
 		</p></td>
 	</table>
@@ -815,7 +823,8 @@
 	}
 	
 	function registerVote(role, vote) {
-		closeAll();
+		if(role != 'sheriff')
+			closeAll();
 		$.ajax({
 			type: 'POST',
 			url: '/register-vote.php',
@@ -824,20 +833,6 @@
 				vote: vote
 			}
 		}).then(response => regVote(response));
-	}
-	
-	function chkMafia(response) {
-		document.getElementById('vote-modal').innerHTML = response;
-	}
-	
-	function checkMafia(selected) {
-		$.ajax({
-			type: 'POST',
-			url: '/check-mafia.php',
-			data: {
-				selected: selected
-			}
-		}).then(response => chkMafia(response));
 	}
 	
 	function submitReport(response) {
@@ -902,14 +897,12 @@
 			scrolled = true;
 	});
 	
-	var game = setInterval(function(){
-		$("#results").load("/game.php" + " #results > *" );
-		$("#game-update").load("/game.php" + " #game-update > *" );
-		$("#game-display").load("/game.php" + " #game-display > *" );
-		if(!scrolled)
-			$('#game-display').scrollTop($('#game-display')[0].scrollHeight);
-		$("#game-index").load("/game.php" + " #game-index > *" );
-		$("#players").load("/game.php" + " #players > *" );
+	var game = setInterval(function() {
+		$("#game-update").load("/game.php #game-update > *");
+		$("#game-display").load("/game.php #game-display > *", function() {
+			if(!scrolled)
+				$('#game-display').scrollTop($('#game-display')[0].scrollHeight);
+		});
 		
 		var message = document.getElementById('game-update').innerHTML.trim();
 		message = message.slice(6, -7);
@@ -918,8 +911,40 @@
 		if(message != news.innerHTML && message != '') {
 			closeAll();
 			news.innerHTML = message;
-			$("#vote-modal").load("/game.php" + " #vote-modal > *" );
-			$("#game-footer").load("/game.php" + " #game-footer > *" );
+			var results = setInterval(function() {
+				$("#results").load("/game.php #results > *", function(response, status) {
+					if(status !=  "error")
+						clearInterval(results);
+				});
+			}, 500);
+			
+			var gameIndex = setInterval(function() {
+				$("#game-index").load("/game.php #game-index > *", function(response, status) {
+					if(status !=  "error")
+						clearInterval(gameIndex);
+				});
+			}, 500);
+			
+			var players = setInterval(function() {
+				$("#players").load("/game.php #players > *", function(response, status) {
+					if(status !=  "error")
+						clearInterval(players);
+				});
+			}, 500);
+			
+			var voteModal = setInterval(function() {
+				$("#vote-modal").load("/game.php #vote-modal > *", function(response, status) {
+					if(status !=  "error")
+						clearInterval(voteModal);
+				});
+			}, 500);
+			
+			var gameFooter = setInterval(function() {
+				$("#game-footer").load("/game.php #game-footer > *", function(response, status) {
+					if(status !=  "error")
+						clearInterval(gameFooter);
+				});
+			}, 500);
 		}
 		
 		let gameIndex = document.getElementById('game-index').innerHTML.slice(4, -5).trim();
@@ -930,9 +955,14 @@
 	
 		if(results != '') {
 			closeAll();
-			document.getElementById('win-modal').classList.add("show-modal");
-			document.getElementById('modal-background2').style.display = "block";
 			clearInterval(game);
+			clearInterval(results);
+			clearInterval(gameIndex);
+			clearInterval(players);
+			clearInterval(voteModal);
+			clearInterval(gameFooter);
+			document.getElementById('modal-background2').style.display = "block";
+			document.getElementById('win-modal').classList.add("show-modal");
 		}
 	}, 500);
 	

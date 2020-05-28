@@ -71,6 +71,8 @@
 									}
 								}
 							}
+							
+							mysqli_close($conn);
 						?>
 					</nav>
 				</td>

@@ -119,10 +119,10 @@
 <div id="has-started" style="display: none;">
 	<?php
 		$query = "SELECT has_started FROM town_details WHERE town_id = '$townID';";
-		if(mysqli_fetch_assoc(mysqli_query($conn, $query))["has_started"]) {
+		if(mysqli_fetch_assoc(mysqli_query($conn, $query))["has_started"])
 			echo '<span>Let the games begin!</span>';
-			mysqli_close($conn);
-		}
+		
+		mysqli_close($conn);
 	?>
 </div>
 <script>
