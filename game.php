@@ -898,72 +898,74 @@
 	});
 	
 	var game = setInterval(function() {
-		$("#game-update").load("/game.php #game-update > *");
+		$("#game-update").load("/game.php #game-update > *", function() {
+			var message = document.getElementById('game-update').innerHTML.trim();
+			message = message.slice(6, -7);
+			var news = document.getElementById('news');
+		
+			if(message != news.innerHTML && message != '') {
+				closeAll();
+				news.innerHTML = message;
+				
+				var gameIndex = setInterval(function() {
+					$("#game-index").load("/game.php #game-index > *", function(response, status) {
+						if(status !=  "error") {
+							clearInterval(gameIndex);
+							let gameIndex = document.getElementById('game-index').innerHTML.slice(4, -5).trim();
+							document.getElementsByTagName('title')[0].innerHTML = gameIndex + ' • ' + town + ' - Mafia';
+						}
+					});
+				}, 500);
+			
+				var players = setInterval(function() {
+					$("#players").load("/game.php #players > *", function(response, status) {
+						if(status !=  "error")
+							clearInterval(players);
+					});
+				}, 500);
+			
+				var voteModal = setInterval(function() {
+					$("#vote-modal").load("/game.php #vote-modal > *", function(response, status) {
+						if(status !=  "error")
+							clearInterval(voteModal);
+					});
+				}, 500);
+			
+				var gameFooter = setInterval(function() {
+					$("#game-footer").load("/game.php #game-footer > *", function(response, status) {
+						if(status !=  "error")
+							clearInterval(gameFooter);
+					});
+				}, 500);
+				
+				var results = setInterval(function() {
+					$("#results").load("/game.php #results > *", function(response, status) {
+						if(status !=  "error") {
+							clearInterval(results);
+							var results = document.getElementById('results').innerHTML;
+							results = results.slice(3, -4).trim();
+	
+							if(results != '') {
+								closeAll();
+								clearInterval(game);
+								clearInterval(results);
+								clearInterval(gameIndex);
+								clearInterval(players);
+								clearInterval(voteModal);
+								clearInterval(gameFooter);
+								document.getElementById('modal-background2').style.display = "block";
+								document.getElementById('win-modal').classList.add("show-modal");
+							}
+						}
+					});
+				}, 500);
+			}
+		});
+		
 		$("#game-display").load("/game.php #game-display > *", function() {
 			if(!scrolled)
 				$('#game-display').scrollTop($('#game-display')[0].scrollHeight);
 		});
-		
-		var message = document.getElementById('game-update').innerHTML.trim();
-		message = message.slice(6, -7);
-		var news = document.getElementById('news');
-		
-		if(message != news.innerHTML && message != '') {
-			closeAll();
-			news.innerHTML = message;
-			var results = setInterval(function() {
-				$("#results").load("/game.php #results > *", function(response, status) {
-					if(status !=  "error")
-						clearInterval(results);
-				});
-			}, 500);
-			
-			var gameIndex = setInterval(function() {
-				$("#game-index").load("/game.php #game-index > *", function(response, status) {
-					if(status !=  "error")
-						clearInterval(gameIndex);
-				});
-			}, 500);
-			
-			var players = setInterval(function() {
-				$("#players").load("/game.php #players > *", function(response, status) {
-					if(status !=  "error")
-						clearInterval(players);
-				});
-			}, 500);
-			
-			var voteModal = setInterval(function() {
-				$("#vote-modal").load("/game.php #vote-modal > *", function(response, status) {
-					if(status !=  "error")
-						clearInterval(voteModal);
-				});
-			}, 500);
-			
-			var gameFooter = setInterval(function() {
-				$("#game-footer").load("/game.php #game-footer > *", function(response, status) {
-					if(status !=  "error")
-						clearInterval(gameFooter);
-				});
-			}, 500);
-		}
-		
-		let gameIndex = document.getElementById('game-index').innerHTML.slice(4, -5).trim();
-		document.getElementsByTagName('title')[0].innerHTML = gameIndex + ' • ' + town + ' - Mafia';
-		
-		var results = document.getElementById('results').innerHTML;
-		results = results.slice(3, -4).trim();
-	
-		if(results != '') {
-			closeAll();
-			clearInterval(game);
-			clearInterval(results);
-			clearInterval(gameIndex);
-			clearInterval(players);
-			clearInterval(voteModal);
-			clearInterval(gameFooter);
-			document.getElementById('modal-background2').style.display = "block";
-			document.getElementById('win-modal').classList.add("show-modal");
-		}
 	}, 500);
 	
 	window.onbeforeunload = function() {
