@@ -774,8 +774,8 @@
 	document.getElementById("role-modal").classList.add("show-modal");
 	document.getElementById("modal-background").style.display = "block";
 	
-	let gameIndex = document.getElementById('game-index').innerHTML.slice(4, -5).trim();
-	document.getElementsByTagName('title')[0].innerHTML = gameIndex + ' • ' + town + ' - Mafia';
+	let gIndex = document.getElementById('game-index').innerHTML.slice(4, -5).trim();
+	document.getElementsByTagName('title')[0].innerHTML = gIndex + ' • ' + town + ' - Mafia';
 
 	function sendMsg(response, message) {
 		if(response === "Success!")
@@ -812,7 +812,12 @@
 	
 	function regVote(response) {
 		if(response === "Success!") {
-			$("#vote-modal").load("/game.php" + " #vote-modal > *" );
+			var afterVote = setInterval(function() {
+				$("#vote-modal").load("/game.php #vote-modal > *", function(response, status) {
+					if(status !=  "error")
+						clearInterval(afterVote);
+				});
+			}, 500);
 		}
 		else {
 			closeAll();
@@ -911,8 +916,8 @@
 					$("#game-index").load("/game.php #game-index > *", function(response, status) {
 						if(status !=  "error") {
 							clearInterval(gameIndex);
-							let gameIndex = document.getElementById('game-index').innerHTML.slice(4, -5).trim();
-							document.getElementsByTagName('title')[0].innerHTML = gameIndex + ' • ' + town + ' - Mafia';
+							let gIndex = document.getElementById('game-index').innerHTML.slice(4, -5).trim();
+							document.getElementsByTagName('title')[0].innerHTML = gIndex + ' • ' + town + ' - Mafia';
 						}
 					});
 				}, 500);
