@@ -814,7 +814,7 @@
 		if(response === "Success!") {
 			var afterVote = setInterval(function() {
 				$("#vote-modal").load("/game.php #vote-modal > *", function(response, status) {
-					if(status !=  "error")
+					if(status ==  "success")
 						clearInterval(afterVote);
 				});
 			}, 500);
@@ -914,7 +914,7 @@
 				
 				var gameIndex = setInterval(function() {
 					$("#game-index").load("/game.php #game-index > *", function(response, status) {
-						if(status !=  "error") {
+						if(status ==  "success") {
 							clearInterval(gameIndex);
 							let gIndex = document.getElementById('game-index').innerHTML.slice(4, -5).trim();
 							document.getElementsByTagName('title')[0].innerHTML = gIndex + ' • ' + town + ' - Mafia';
@@ -924,28 +924,28 @@
 			
 				var players = setInterval(function() {
 					$("#players").load("/game.php #players > *", function(response, status) {
-						if(status !=  "error")
+						if(status ==  "success")
 							clearInterval(players);
 					});
 				}, 500);
 			
 				var voteModal = setInterval(function() {
 					$("#vote-modal").load("/game.php #vote-modal > *", function(response, status) {
-						if(status !=  "error")
+						if(status ==  "success")
 							clearInterval(voteModal);
 					});
 				}, 500);
 			
 				var gameFooter = setInterval(function() {
 					$("#game-footer").load("/game.php #game-footer > *", function(response, status) {
-						if(status !=  "error")
+						if(status ==  "success")
 							clearInterval(gameFooter);
 					});
 				}, 500);
 				
 				var results = setInterval(function() {
 					$("#results").load("/game.php #results > *", function(response, status) {
-						if(status !=  "error") {
+						if(status ==  "success") {
 							clearInterval(results);
 							var results = document.getElementById('results').innerHTML;
 							results = results.slice(3, -4).trim();
@@ -953,7 +953,6 @@
 							if(results != '') {
 								closeAll();
 								clearInterval(game);
-								clearInterval(results);
 								clearInterval(gameIndex);
 								clearInterval(players);
 								clearInterval(voteModal);

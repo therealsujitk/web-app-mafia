@@ -9,7 +9,8 @@
 	$name = trim($name);
 	
 	$query = "SELECT COUNT(user_id) FROM town_" . $townID . ";";
-	$query1 = "SELECT name FROM town_" . $townID . " WHERE name = '$name';";
+	$query1 = "SELECT has_started FROM town_details WHERE town_id = '$townID';";
+	$query2 = "SELECT name FROM town_" . $townID . " WHERE name = '$name';";
 	
 	if($name == '') {
 		die("Please enter a valid name.");
@@ -17,13 +18,16 @@
 	else if($townID == $_SESSION["townID"]) {
 		die("You are already in this town. Click <b>Continue Playing</b> at the top right corner to get back to your game.");
 	}
+	else if(mysqli_fetch_assoc(mysqli_query($conn, $query1))["has_started"]) {
+		die("Sorry, this game has already started. You can not join a game in progress.");
+	}
 	else if(!mysqli_query($conn, $query)) {
 		die("There are no towns having the Town ID <b>$townID</b>. Please recheck the Town ID you have entered.");
 	}
 	else if(mysqli_fetch_assoc(mysqli_query($conn, $query))["COUNT(user_id)"] == 10) {
 		die("Sorry, this town is already full. Please try");
 	}
-	else if(mysqli_fetch_assoc(mysqli_query($conn, $query1))) {
+	else if(mysqli_fetch_assoc(mysqli_query($conn, $query2))) {
 		die("Sorry, that name has already been taken in this town. Please use a different name.");
 	}
 	else {
