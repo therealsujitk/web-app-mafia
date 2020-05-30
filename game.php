@@ -307,7 +307,7 @@
 						}
 				
 						if($executed != '') {
-							$query = "UPDATE town_" . $townID . " SET is_executed = 1 WHERE name = '$executed';";
+							$query = "UPDATE town_" . $townID . " SET is_executed = 1 WHERE name = '$executed' AND is_executed = 0;";
 							mysqli_query($conn, $query);
 						
 							$query = "SELECT is_mafia, is_poser, is_medic, is_sherrif FROM town_" . $townID . " WHERE name = '$executed';";
@@ -430,7 +430,7 @@
 						$healed = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
 				
 						if($killed != $healed) {
-							$query = "UPDATE town_" . $townID . " SET is_killed = 1 WHERE name = '$killed';";
+							$query = "UPDATE town_" . $townID . " SET is_killed = 1 WHERE name = '$killed' AND is_killed = 0;";
 							mysqli_query($conn, $query);
 						}
 					
