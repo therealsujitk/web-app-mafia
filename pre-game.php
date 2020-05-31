@@ -87,7 +87,7 @@
 		<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 	</table>
 	<p>Made with love by a team of talented people from <b>BinaryStack</b>.</p>
-	<p>Built By: <b><a class="link2" href="https://instagram.com/abishek_devendran/">@AbishekDevendran</a></b> & <b><a class="link2" href="https://instagram.com/therealsujitk">@therealsujitk</a></b>.</p>
+	<p>Built By: <b><a class="link2" href="https://instagram.com/abishek.stuff/" target="_blank">@AbishekDevendran</a></b> & <b><a class="link2" href="https://instagram.com/therealsujitk" target="_blank">@therealsujitk</a></b>.</p>
 </div>
 
 <div id="error-modal" class="modal">
@@ -128,7 +128,6 @@
 <script>
 	function buildTown(response) {
 		if(response != "Success!") {
-			closeAll();
 			document.getElementById('error-message').innerHTML = response;
 			document.getElementById('error-modal').classList.add("show-modal");;
 			document.getElementById('modal-background').style.display = "block";
@@ -144,7 +143,15 @@
 	
 		$.ajax({
 			type: 'POST',
-			url: '/build-town.php'
+			url: '/build-town.php',
+			error: function() {
+				document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
+				document.getElementById('error-modal').classList.add("show-modal");
+				document.getElementById('modal-background').style.display = "block";
+				
+				$('#start').prop('disabled', false);
+				$('#start').val('Start Game');
+			}
 		}).then(response => buildTown(response));
 	});
 
@@ -165,9 +172,8 @@
 			document.getElementById('report').value = "";
 		}
 		else {
-			closeAll();
 			document.getElementById('error-message').innerHTML = response;
-			document.getElementById('error-modal').classList.add("show-modal");;
+			document.getElementById('error-modal').classList.add("show-modal");
 			document.getElementById('modal-background').style.display = "block";
 			
 			$('#submit-report').prop('disabled', false);
@@ -186,6 +192,14 @@
 			url: 'report-bug.php',
 			data: {
 				report: report
+			},
+			error: function() {
+				document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
+				document.getElementById('error-modal').classList.add("show-modal");
+				document.getElementById('modal-background').style.display = "block";
+				
+				$('#submit-report').prop('disabled', false);
+				$('#submit-report').val('Submit Bug Report');
 			}
 		}).then(response => submitReport(response));
 	});
@@ -195,9 +209,8 @@
 			window.location.href = window.location.href;
 		}
 		else {
-			closeAll();
 			document.getElementById('error-message').innerHTML = response;
-			document.getElementById('error-modal').classList.add("show-modal");;
+			document.getElementById('error-modal').classList.add("show-modal");
 			document.getElementById('modal-background').style.display = "block";
 			
 			$('#leave-game').prop('disabled', false);
@@ -214,6 +227,14 @@
 			url: 'leave-game.php',
 			data: {
 				check: 'true'
+			},
+			error: function() {
+				document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
+				document.getElementById('error-modal').classList.add("show-modal");
+				document.getElementById('modal-background').style.display = "block";
+				
+				$('#leave-game').prop('disabled', false);
+				$('#leave-game').val("Yes, I'm sure");
 			}
 		}).then(response => leaveGame(response));
 	});

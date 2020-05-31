@@ -156,7 +156,7 @@
 				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 			</table>
 			<p>Made with love by a team of talented people from <b>BinaryStack</b>.</p>
-			<p>Built By: <b><a class="link2" href="https://instagram.com/abishek_devendran/">@AbishekDevendran</a></b> & <b><a class="link2" href="https://instagram.com/therealsujitk">@therealsujitk</a></b>.</p>
+			<p>Built By: <b><a class="link2" href="https://instagram.com/abishek.stuff/" target="_blank">@AbishekDevendran</a></b> & <b><a class="link2" href="https://instagram.com/therealsujitk" target="_blank">@therealsujitk</a></b>.</p>
 		</div>
 		
 		<div id="create-modal" class="modal">
@@ -216,9 +216,8 @@
 					$('#submit-report').val('Submit Bug Report');
 				}
 				else {
-					closeAll();
 					document.getElementById('error-message').innerHTML = response;
-					document.getElementById('error-modal').classList.add("show-modal");;
+					document.getElementById('error-modal').classList.add("show-modal");
 					document.getElementById('modal-background').style.display = "block";
 			
 					$('#submit-report').prop('disabled', false);
@@ -237,6 +236,14 @@
 					url: 'report-bug.php',
 					data: {
 						report: report
+					},
+					error: function() {
+						document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
+						document.getElementById('error-modal').classList.add("show-modal");
+						document.getElementById('modal-background').style.display = "block";
+						
+						$('#submit-report').prop('disabled', false);
+						$('#submit-report').val('Submit Bug Report');
 					}
 				}).then(response => submitReport(response));
 			});
@@ -245,9 +252,8 @@
 				if(response === "Success!")
 					$("body").load("/pre-game.php");
 				else {
-					closeAll();
 					document.getElementById('error-message').innerHTML = response;
-					document.getElementById('error-modal').classList.add("show-modal");;
+					document.getElementById('error-modal').classList.add("show-modal");
 					document.getElementById('modal-background').style.display = "block";
 					
 					$('#create').prop('disabled', false);
@@ -272,6 +278,14 @@
 						mob: mob,
 						name: name,
 						avatar: avatar
+					},
+					error: function() {
+						document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
+						document.getElementById('error-modal').classList.add("show-modal");
+						document.getElementById('modal-background').style.display = "block";
+						
+						$('#create').prop('disabled', false);
+						$('#create').val('Create Town');
 					}
 				}).then(response => createTown(response));
 			});
@@ -280,9 +294,8 @@
 				if(response === "Success!")
 					$("body").load("/pre-game.php");
 				else {
-					closeAll();
 					document.getElementById('error-message').innerHTML = response;
-					document.getElementById('error-modal').classList.add("show-modal");;
+					document.getElementById('error-modal').classList.add("show-modal");
 					document.getElementById('modal-background').style.display = "block";
 					document.getElementById('town-id').value = "";
 					
@@ -306,6 +319,14 @@
 						townID: townID,
 						name: name,
 						avatar: avatar
+					},
+					error: function() {
+						document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
+						document.getElementById('error-modal').classList.add("show-modal");
+						document.getElementById('modal-background').style.display = "block";
+						
+						$('#join').prop('disabled', false);
+						$('#join').val('Join Town');
 					}
 				}).then(response => joinTown(response));
 			});

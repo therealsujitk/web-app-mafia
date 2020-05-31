@@ -83,45 +83,83 @@ function closeAll() {
 	
 	if(document.getElementById('privacy-modal')) {
 		let x = document.getElementById('privacy-modal')
-		x.classList.remove("show-modal");
+		x.classList.add("hide-modal");
+		setTimeout(function() {
+			x.classList.remove("show-modal");
+			x.classList.remove("hide-modal");
+		}, 500);
 	}
 	if(document.getElementById('bug-modal')) {
 		let x = document.getElementById('bug-modal')
-		x.classList.remove("show-modal");
+		x.classList.add("hide-modal");
+		setTimeout(function() {
+			x.classList.remove("show-modal");
+			x.classList.remove("hide-modal");
+		}, 500);
 		document.getElementById('success-bug').style.display = "none";
 	}
 	if(document.getElementById('about-modal')) {
 		let x = document.getElementById('about-modal')
-		x.classList.remove("show-modal");
+		x.classList.add("hide-modal");
+		setTimeout(function() {
+			x.classList.remove("show-modal");
+			x.classList.remove("hide-modal");
+		}, 500);
 	}
 	if(document.getElementById('create-modal')) {
 		let x = document.getElementById('create-modal')
-		x.classList.remove("show-modal");
+		x.classList.add("hide-modal");
+		setTimeout(function() {
+			x.classList.remove("show-modal");
+			x.classList.remove("hide-modal");
+		}, 500);
 	}
 	if(document.getElementById('join-modal')) {
 		let x = document.getElementById('join-modal')
-		x.classList.remove("show-modal");
+		x.classList.add("hide-modal");
+		setTimeout(function() {
+			x.classList.remove("show-modal");
+			x.classList.remove("hide-modal");
+		}, 500);
 	}
 	if(document.getElementById('error-modal')) {
 		let x = document.getElementById('error-modal')
-		x.classList.remove("show-modal");
+		x.classList.add("hide-modal");
+		setTimeout(function() {
+			x.classList.remove("show-modal");
+			x.classList.remove("hide-modal");
+		}, 500);
 	}
 	if(document.getElementById('role-modal')) {
 		let x = document.getElementById('role-modal')
-		x.classList.remove("show-modal");
+		x.classList.add("hide-modal");
+		setTimeout(function() {
+			x.classList.remove("show-modal");
+			x.classList.remove("hide-modal");
+		}, 500);
 	}
 	
 	if(document.getElementById('vote-modal')) {
 		let x = document.getElementById('vote-modal')
-		x.classList.remove("show-modal");
+		x.classList.add("hide-modal");
+		setTimeout(function() {
+			x.classList.remove("show-modal");
+			x.classList.remove("hide-modal");
+		}, 500);
 	}
 	
 	if(document.getElementById('leave-modal')) {
 		let x = document.getElementById('leave-modal')
-		x.classList.remove("show-modal");
+		x.classList.add("hide-modal");
+		setTimeout(function() {
+			x.classList.remove("show-modal");
+			x.classList.remove("hide-modal");
+		}, 500);
 	}
 	
-	a.style.display = "none";
+	setTimeout(function() {
+		a.style.display = "none";
+	}, 500);
 }
 
 function next() {
@@ -181,6 +219,14 @@ function copyText(value) {
 function displayNews(news, i) {
 	let x = document.getElementById('news');
 	
+	if(i === 0) {
+		if(type)
+			clearTimeout(type);
+		if(typeBold)
+			clearTimeout(typeBold);
+		x.innerHtml = '';
+	}
+	
 	if (i < news.length) {
 		if(news.charAt(i) === '*') {
 			++i;
@@ -189,7 +235,7 @@ function displayNews(news, i) {
 		else {
 			x.innerHTML += news.charAt(i);
 			++i;
-			setTimeout(function() {
+			var type = setTimeout(function() {
 				displayNews(news, i);
 			}, 50);
 		}
@@ -207,7 +253,7 @@ function displayNewsBold(news, i) {
 		else {
 			x.innerHTML += news.charAt(i).bold();
 			i++;
-			setTimeout(function() {
+			var typeBold = setTimeout(function() {
 				displayNewsBold(news, i);
 			}, 50);
 		}

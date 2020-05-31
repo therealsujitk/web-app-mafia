@@ -194,6 +194,12 @@ p {
 .show-modal {
 	display: block;
 	animation: fadeIn 0.5s, zoomIn 0.5s;
+	animation-fill-mode: forwards;
+}
+
+.hide-modal {
+	animation: fadeOut 0.5s, zoomOut 0.5s;
+	animation-fill-mode: forwards;
 }
 
 @keyframes fadeIn {
@@ -204,6 +210,16 @@ p {
 @keyframes zoomIn {
 	from {transform: translate(-50%, -50%) scale(0.8);}
 	to {transform: translate(-50%, -50%) scale(1);}
+}
+
+@keyframes fadeOut {
+	from {opacity: 1; transform: translate(-50%, -50%);}
+	to {opacity: 0; transform: translate(-50%, -50%);}
+}
+
+@keyframes zoomOut {
+	from {transform: translate(-50%, -50%) scale(1);}
+	to {transform: translate(-50%, -50%) scale(0.8);}
 }
 
 #close {
@@ -390,4 +406,38 @@ figcaption {
 
 .candidate-sherrif:hover {
 
+}
+
+.alert {
+	position: absolute;
+	padding: 12px 24px;
+	background: #b4f1af;
+	color: #33722d;
+	font-size: 13px;
+	font-weight: bold;
+	border-radius: 7px;
+	margin-top: 0px;
+	margin-left: 50%;
+	box-shadow: 0 7px 15px #000;
+	transform: translate(-50%, -100px);
+}
+
+.show-alert {
+	animation: pullDown 0.5s;
+	animation-fill-mode: forwards;
+}
+
+.hide-alert {
+	animation: pushUp 0.5s;
+	animation-fill-mode: forwards;
+}
+
+@keyframes pullDown {
+	from {margin-top: 0px; transform: translate(-50%, -100px);}
+	to {margin-top: 140px; transform: translate(-50%, -100px);}
+}
+
+@keyframes pushUp {
+	from {margin-top: 140px; transform: translate(-50%, -100px);}
+	to {margin-top: 0px; transform: translate(-50%, -100px);}
 }

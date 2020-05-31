@@ -54,48 +54,45 @@
 							<?php
 								$message = 'The citizens of <b>' . $town . '</b> are sleeping. Zzz';
 			
-								$query = "SELECT user_id FROM town_" . $townID . " WHERE is_mafia = 1;";
-								if($result = mysqli_query($conn, $query)) {
-									while($row = mysqli_fetch_assoc($result)) {
-										if($row["user_id"] == $userID) {
-											$query = "SELECT name FROM town_" . $townID . " WHERE is_mafia = 1;";
-											$killer = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
-											$message = 'Welcome members of <b>' . $mob . '</b>, discuss below on who you would like to kill, after that <b>' . $killer . '</b> has to click the <b>Kill</b> button to choose the first victim.';
-											break;
-										}
-									}
+								$query = "SELECT user_id FROM town_" . $townID . " WHERE is_mafia = 1 AND user_id = " . $userID . ";";
+								if(mysqli_fetch_assoc(mysqli_query($conn, $query))) {
+									$query = "SELECT name FROM town_" . $townID . " WHERE is_mafia = 1;";
+									$killer = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
+									$message = 'Welcome members of <b>' . $mob . '</b>, discuss below on who you would like to kill, after that <b>' . $killer . '</b> has to click the <b>Kill</b> button to choose the first victim.';
+									if($name = $killer)
+										$message = $message . '<script>
+											let notification = document.getElementById("notification");
+											notification.innerHTML = "We are waiting for you to choose your victim.";
+											notification.classList.remove("hide-alert");
+											notification.classList.add("show-alert");
+										</script>';
 								}
 								
-								$query = "SELECT user_id FROM town_" . $townID . " WHERE is_poser = 1;";
-								if($result = mysqli_query($conn, $query)) {
-									while($row = mysqli_fetch_assoc($result)) {
-										if($row["user_id"] == $userID) {
-											$query = "SELECT name FROM town_" . $townID . " WHERE is_mafia = 1;";
-											$killer = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
-											$message = 'Hello there! You probably already know this but, you are the poser. The mafia members are marked in red for you, you have to try and make sure they don\'t get caught.';
-											break;
-										}
-									}
+								$query = "SELECT user_id FROM town_" . $townID . " WHERE is_poser = 1 AND user_id = " . $userID . ";";
+								if(mysqli_fetch_assoc(mysqli_query($conn, $query))) {
+									$message = 'Hello there! You probably already know this but, you are the poser. The mafia members are marked in red for you, you have to try and make sure they don\'t get caught.';
 								}
 
 								$query = "SELECT user_id FROM town_" . $townID . " WHERE is_medic = 1;";
-								if($result = mysqli_query($conn, $query)) {
-									while($row = mysqli_fetch_assoc($result)) {
-										if($row["user_id"] == $userID) {
-											$message = 'Hello there! You probably already know this but, you are the towns medic. Click the <b>Heal</b> button below to use your amazing abilities. :)';
-											break;
-										}
-									}
+								if(mysqli_fetch_assoc(mysqli_query($conn, $query))) {
+									$message = 'Hello there! You probably already know this but, you are the towns medic. Click the <b>Heal</b> button below to use your amazing abilities. :)';
+									$message = $message . '<script>
+										let notification = document.getElementById("notification");
+										notification.innerHTML = "We are waiting for you to save a citizen.";
+										notification.classList.remove("hide-alert");
+										notification.classList.add("show-alert");
+									</script>';
 								}
 
-								$query = "SELECT user_id FROM town_" . $townID . " WHERE is_sherrif = 1;";
-								if($result = mysqli_query($conn, $query)) {
-									while($row = mysqli_fetch_assoc($result)) {
-										if($row["user_id"] == $userID) {
-											$message = 'Hello there! You probably already know this but, you are the towns sheriff. Click the <b>Reveal</b> button below to check whether a citizen is a mafia member. Remember, you only have this ability while the night lasts.';
-											break;
-										}
-									}
+								$query = "SELECT user_id FROM town_" . $townID . " WHERE is_sherrif = 1 AND user_id = " . $userID . ";";
+								if(mysqli_fetch_assoc(mysqli_query($conn, $query))) {
+									$message = 'Hello there! You probably already know this but, you are the towns sheriff. Click the <b>Reveal</b> button below to check whether a citizen is a mafia member. Remember, you only have this ability while the night lasts.';
+									$message = $message . '<script>
+										let notification = document.getElementById("notification");
+										notification.innerHTML = "Hurry up! You\'re running out of time!!";
+										notification.classList.remove("hide-alert");
+										notification.classList.add("show-alert");
+									</script>';
 								}
 								
 								echo $message;
@@ -472,6 +469,8 @@
 	</div>
 </div>
 
+<div id="notification" class="alert"></div>
+
 <div id="modal-background" onclick="closeAll()"></div>
 
 <div id="privacy-modal" class="modal" style="text-align: left;">
@@ -502,7 +501,7 @@
 		<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 	</table>
 	<p>Made with love by a team of talented people from <b>BinaryStack</b>.</p>
-	<p>Credits: <b><a class="link2" href="https://instagram.com/abishek_devendran/">@AbishekDevendran</a></b> & <b><a class="link2" href="https://instagram.com/therealsujitk">@therealsujitk</a></b>.</p>
+	<p>Credits: <b><a class="link2" href="https://instagram.com/abishek.stuff/" target="_blank">@AbishekDevendran</a></b> & <b><a class="link2" href="https://instagram.com/therealsujitk" target="_blank">@therealsujitk</a></b>.</p>
 </div>
 
 <div id="error-modal" class="modal">
@@ -605,6 +604,8 @@
 								echo '<figure style="margin: 10px; display: inline-block;"><img class="candidate candidate-mafia" style="height: 100px;" src="'. $row["avatar"] .'" onclick="registerVote(`mafia`, `' . $row["user_id"] . '`);"></img><figcaption style="color: ' . $color . ';">' . $name . '</figcaption></figure>';
 							}
 						echo '</div></div>';
+						
+						echo '<span id="alert" style="display: none;">We are waiting for you to choose your victim.</span>';
 					}
 					else {
 						$name = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
@@ -654,6 +655,8 @@
 							echo '<figure style="margin: 10px; display: inline-block;"><img class="candidate candidate-medic" style="height: 100px;" src="'. $row["avatar"] .'" onclick="registerVote(`medic`, `' . $row["user_id"] . '`);"></img><figcaption style="color: ' . $color . ';">' . $name . '</figcaption></figure>';
 						}
 					echo '</div></div>';
+					
+					echo '<span id="alert" style="display: none;">We are waiting for you to save a citizen.</span>';
 				}
 				else {
 					$name = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
@@ -690,6 +693,8 @@
 							echo '<figure style="margin: 10px; display: inline-block;"><img class="candidate candidate-sherrif" style="height: 100px;" src="'. $row["avatar"] .'" onclick="registerVote(`sheriff`, `' . $row["user_id"] . '`);"></img><figcaption style="color: ' . $color . ';">' . $name . '</figcaption></figure>';
 						}
 					echo '</div></div>';
+					
+					echo '<span id="alert" style="display: none;">Hurry up! You\'re running out of time!!</span>';
 				}
 				else {
 					echo $_SESSION["revealed"];
@@ -719,6 +724,8 @@
 							echo '<figure style="margin: 10px; display: inline-block;"><img class="candidate" style="height: 100px;" src="'. $row["avatar"] .'" onclick="registerVote(`citizen`, `' . $row["user_id"] . '`);"></img><figcaption style="color: ' . $color . ';">' . $name . '</figcaption></figure>';
 						}
 					echo '</div></div>';
+					
+					echo '<span id="alert" style="display: none;">We are awaiting your vote.</span>';
 				}
 				else {
 					$vote = mysqli_fetch_assoc(mysqli_query($conn, $query))["day_" . $day];
@@ -781,9 +788,8 @@
 		if(response === "Success!")
 			document.getElementById('chat-box').value = "";
 		else {
-			closeAll();
 			document.getElementById('error-message').innerHTML = response;
-			document.getElementById('error-modal').classList.add("show-modal");;
+			document.getElementById('error-modal').classList.add("show-modal");
 			document.getElementById('modal-background').style.display = "block";
 			
 			document.getElementById('chat-box').value = message;
@@ -799,6 +805,13 @@
 			url: '/send-message.php',
 			data: {
 				message: message
+			},
+			error: function() {
+				document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
+				document.getElementById('error-modal').classList.add("show-modal");
+				document.getElementById('modal-background').style.display = "block";
+				
+				document.getElementById('chat-box').value = message;
 			}
 		}).then(response => sendMsg(response, message));
 	}
@@ -812,6 +825,9 @@
 	
 	function regVote(response) {
 		if(response === "Success!") {
+			let notification = document.getElementById('notification');
+			notification.classList.add("hide-alert");
+			
 			var afterVote = setInterval(function() {
 				$("#vote-modal").load("/game.php #vote-modal > *", function(response, status) {
 					if(status ==  "success")
@@ -820,9 +836,8 @@
 			}, 500);
 		}
 		else {
-			closeAll();
 			document.getElementById('error-message').innerHTML = response;
-			document.getElementById('error-modal').classList.add("show-modal");;
+			document.getElementById('error-modal').classList.add("show-modal");
 			document.getElementById('modal-background').style.display = "block";
 		}
 	}
@@ -836,6 +851,14 @@
 			data: {
 				role: role,
 				vote: vote
+			},
+			success: function() {
+				document.getElementById('candidates').innerHTML = '<p>Loading...</p>';
+			},
+			error: function() {
+				document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
+				document.getElementById('error-modal').classList.add("show-modal");
+				document.getElementById('modal-background').style.display = "block";
 			}
 		}).then(response => regVote(response));
 	}
@@ -848,7 +871,7 @@
 		else {
 			closeAll();
 			document.getElementById('error-message').innerHTML = response;
-			document.getElementById('error-modal').classList.add("show-modal");;
+			document.getElementById('error-modal').classList.add("show-modal");
 			document.getElementById('modal-background').style.display = "block";
 			
 			$('#submit-report').prop('disabled', false);
@@ -867,6 +890,14 @@
 			url: 'report-bug.php',
 			data: {
 				report: report
+			},
+			error: function() {
+				document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
+				document.getElementById('error-modal').classList.add("show-modal");
+				document.getElementById('modal-background').style.display = "block";
+				
+				$('#submit-report').prop('disabled', false);
+				$('#submit-report').val('Submit Bug Report');
 			}
 		}).then(response => submitReport(response));
 	});
@@ -890,6 +921,14 @@
 			url: 'leave-game.php',
 			data: {
 				check: 'true'
+			},
+			error: function() {
+				document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
+				document.getElementById('error-modal').classList.add("show-modal");
+				document.getElementById('modal-background').style.display = "block";
+				
+				$('#home').prop('disabled', false);
+				$('#home').val("Go Home");
 			}
 		}).then(response => clearSession(response));
 	}
@@ -931,8 +970,22 @@
 			
 				var voteModal = setInterval(function() {
 					$("#vote-modal").load("/game.php #vote-modal > *", function(response, status) {
-						if(status ==  "success")
+						if(status ==  "success") {
 							clearInterval(voteModal);
+							if(document.getElementById('alert')) {
+								let alert = document.getElementById('alert').innerHTML;
+								let notification = document.getElementById('notification');
+								notification.innerHTML = alert;
+								notification.classList.remove("hide-alert");
+								notification.classList.add("show-alert");
+							}
+							else {
+								let notification = document.getElementById('notification');
+								if(notification.innerHTML.trim() != '')
+									notification.classList.add("hide-alert");
+								notification.classList.remove("show-alert");
+							}
+						}
 					});
 				}, 500);
 			
