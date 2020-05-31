@@ -76,7 +76,7 @@
 									$flag = 0;
 								}
 
-								$query = "SELECT user_id FROM town_" . $townID . " WHERE is_medic = 1; AND user_id = " . $userID . ";";
+								$query = "SELECT user_id FROM town_" . $townID . " WHERE is_medic = 1 AND user_id = " . $userID . ";";
 								if(mysqli_fetch_assoc(mysqli_query($conn, $query)) && $flag) {
 									$message = 'Hello there! You probably already know this but, you are the towns medic. Click the <b>Heal</b> button below to use your amazing abilities. :)';
 									$message = $message . '<script>
