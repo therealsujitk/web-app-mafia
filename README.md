@@ -4,8 +4,20 @@ Mafia is a social deduction game, created by Dimitry Davidoff in 1986. The game 
 
 ### Preview
 
+![Preview 1](https://i.imgur.com/NEy5d3i.png)
+
+![Preview 2](https://i.imgur.com/NOOkvyN.png)
+
+![Preview 3](https://i.imgur.com/IoBpD6w.png)
+
+![Preview 4](https://i.imgur.com/cQL5cTZ.png)
+
+![Preview 5](https://i.imgur.com/hXyh1BR.png)
+
 ### Requirements
 
+- PHP 5.6+
+- MySQL 5.2+
 - SQL table **bug_reports**:
 ```sql
 CREATE TABLE bug_reports (
@@ -42,7 +54,7 @@ INSERT INTO statistics (id, players_joined, games_played) VALUES ('1', '0', '0')
 
 ### Usage
 
-To play the game visit: [`https://playmafia.cf`](https://playmafia.cf)
+To play the game visit: [`https://playmafia.cf/`](https://playmafia.cf/)
 
 ### Links
 
@@ -52,4 +64,4 @@ To play the game visit: [`https://playmafia.cf`](https://playmafia.cf)
 ### Built by
 
 - [Abishek Devendran](https://github.com/abishekdevendran) (Graphic Designer)
-- [Sujit Kumar](https://github.com/therealsujitk) (Lead Developer)
+- [Sujit Kumar](https://github.com/therealsujitk) (Lead Software Developer)
