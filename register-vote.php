@@ -12,12 +12,12 @@
 	
 	if($role == 'mafia' && mysqli_fetch_assoc(mysqli_query($conn, $query))["is_mafia"]) {
 		$night = $dailyIndex / 2;
-		$query = "UPDATE town_" . $townID . " SET night_" . $night . " = 1 WHERE user_id = " . $vote . ";";
+		$query = "UPDATE town_" . $townID . " SET night_" . $night . " = 1 WHERE user_id = " . $vote . " AND night_" . $night . " = 0;";
 		mysqli_query($conn, $query);
 	}
 	else if($role == 'medic' && mysqli_fetch_assoc(mysqli_query($conn, $query))["is_medic"]) {
 		$night = $dailyIndex / 2;
-		$query = "UPDATE town_" . $townID . " SET medic_" . $night . " = 1 WHERE user_id = " . $vote . ";";
+		$query = "UPDATE town_" . $townID . " SET medic_" . $night . " = 1 WHERE user_id = " . $vote . " AND medic_" . $night . " = 0;";
 		mysqli_query($conn, $query);
 		$query = "UPDATE town_" . $townID . " SET saved = 1 WHERE user_id = " . $vote . ";";
 		mysqli_query($conn, $query);
@@ -50,7 +50,7 @@
 	}
 	else if($role == 'citizen') {
 		$day = $dailyIndex/2 + 0.5;
-		$query = "UPDATE town_" . $townID . " SET day_" . $day . " = " . $vote . " WHERE user_id = " . $userID . ";";
+		$query = "UPDATE town_" . $townID . " SET day_" . $day . " = " . $vote . " WHERE user_id = " . $userID . " AND day_" . $day . " = 0;";
 		mysqli_query($conn, $query);
 	}
 	else {
