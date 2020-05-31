@@ -53,28 +53,31 @@
 						<p id="news">
 							<?php
 								$message = 'The citizens of <b>' . $town . '</b> are sleeping. Zzz';
+								$flag = 1;
 			
 								$query = "SELECT user_id FROM town_" . $townID . " WHERE is_mafia = 1 AND user_id = " . $userID . ";";
-								if(mysqli_fetch_assoc(mysqli_query($conn, $query))) {
+								if(mysqli_fetch_assoc(mysqli_query($conn, $query)) && $flag) {
 									$query = "SELECT name FROM town_" . $townID . " WHERE is_mafia = 1;";
 									$killer = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
 									$message = 'Welcome members of <b>' . $mob . '</b>, discuss below on who you would like to kill, after that <b>' . $killer . '</b> has to click the <b>Kill</b> button to choose the first victim.';
-									if($name = $killer)
+									if($name == $killer)
 										$message = $message . '<script>
 											let notification = document.getElementById("notification");
 											notification.innerHTML = "We are waiting for you to choose your victim.";
 											notification.classList.remove("hide-alert");
 											notification.classList.add("show-alert");
 										</script>';
+									$flag = 0;
 								}
 								
 								$query = "SELECT user_id FROM town_" . $townID . " WHERE is_poser = 1 AND user_id = " . $userID . ";";
-								if(mysqli_fetch_assoc(mysqli_query($conn, $query))) {
+								if(mysqli_fetch_assoc(mysqli_query($conn, $query)) && $flag) {
 									$message = 'Hello there! You probably already know this but, you are the poser. The mafia members are marked in red for you, you have to try and make sure they don\'t get caught.';
+									$flag = 0;
 								}
 
-								$query = "SELECT user_id FROM town_" . $townID . " WHERE is_medic = 1;";
-								if(mysqli_fetch_assoc(mysqli_query($conn, $query))) {
+								$query = "SELECT user_id FROM town_" . $townID . " WHERE is_medic = 1; AND user_id = " . $userID . ";";
+								if(mysqli_fetch_assoc(mysqli_query($conn, $query)) && $flag) {
 									$message = 'Hello there! You probably already know this but, you are the towns medic. Click the <b>Heal</b> button below to use your amazing abilities. :)';
 									$message = $message . '<script>
 										let notification = document.getElementById("notification");
@@ -82,10 +85,11 @@
 										notification.classList.remove("hide-alert");
 										notification.classList.add("show-alert");
 									</script>';
+									$flag = 0;
 								}
 
 								$query = "SELECT user_id FROM town_" . $townID . " WHERE is_sherrif = 1 AND user_id = " . $userID . ";";
-								if(mysqli_fetch_assoc(mysqli_query($conn, $query))) {
+								if(mysqli_fetch_assoc(mysqli_query($conn, $query)) && $flag) {
 									$message = 'Hello there! You probably already know this but, you are the towns sheriff. Click the <b>Reveal</b> button below to check whether a citizen is a mafia member. Remember, you only have this ability while the night lasts.';
 									$message = $message . '<script>
 										let notification = document.getElementById("notification");
@@ -93,6 +97,7 @@
 										notification.classList.remove("hide-alert");
 										notification.classList.add("show-alert");
 									</script>';
+									$flag = 0;
 								}
 								
 								echo $message;
