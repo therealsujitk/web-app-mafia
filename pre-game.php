@@ -128,9 +128,12 @@
 <script>
 	function buildTown(response) {
 		if(response != "Success!") {
-			document.getElementById('error-message').innerHTML = response;
-			document.getElementById('error-modal').classList.add("show-modal");;
-			document.getElementById('modal-background').style.display = "block";
+			closeAll();
+			setTimeout(function() {
+				document.getElementById('error-message').innerHTML = response;
+				document.getElementById('error-modal').classList.add("show-modal");
+				document.getElementById('modal-background').style.display = "block";
+			}, 500);
 			
 			$('#start').prop('disabled', false);
 			$('#start').val('Start Game');
@@ -145,9 +148,12 @@
 			type: 'POST',
 			url: '/build-town.php',
 			error: function() {
-				document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
-				document.getElementById('error-modal').classList.add("show-modal");
-				document.getElementById('modal-background').style.display = "block";
+				closeAll();
+				setTimeout(function() {
+					document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
+					document.getElementById('error-modal').classList.add("show-modal");
+					document.getElementById('modal-background').style.display = "block";
+				}, 500);
 				
 				$('#start').prop('disabled', false);
 				$('#start').val('Start Game');
@@ -172,9 +178,12 @@
 			document.getElementById('report').value = "";
 		}
 		else {
-			document.getElementById('error-message').innerHTML = response;
-			document.getElementById('error-modal').classList.add("show-modal");
-			document.getElementById('modal-background').style.display = "block";
+			closeAll();
+			setTimeout(function() {
+				document.getElementById('error-message').innerHTML = response;
+				document.getElementById('error-modal').classList.add("show-modal");
+				document.getElementById('modal-background').style.display = "block";
+			}, 500);
 			
 			$('#submit-report').prop('disabled', false);
 			$('#submit-report').val('Submit Bug Report');
@@ -194,9 +203,12 @@
 				report: report
 			},
 			error: function() {
-				document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
-				document.getElementById('error-modal').classList.add("show-modal");
-				document.getElementById('modal-background').style.display = "block";
+				closeAll();
+				setTimeout(function() {
+					document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
+					document.getElementById('error-modal').classList.add("show-modal");
+					document.getElementById('modal-background').style.display = "block";
+				}, 500);
 				
 				$('#submit-report').prop('disabled', false);
 				$('#submit-report').val('Submit Bug Report');
@@ -209,9 +221,12 @@
 			window.location.href = window.location.href;
 		}
 		else {
-			document.getElementById('error-message').innerHTML = response;
-			document.getElementById('error-modal').classList.add("show-modal");
-			document.getElementById('modal-background').style.display = "block";
+			closeAll();
+			setTimeout(function() {
+				document.getElementById('error-message').innerHTML = response;
+				document.getElementById('error-modal').classList.add("show-modal");
+				document.getElementById('modal-background').style.display = "block";
+			}, 500);
 			
 			$('#leave-game').prop('disabled', false);
 			$('#leave-game').val("Yes, I'm sure");
@@ -229,9 +244,12 @@
 				check: 'true'
 			},
 			error: function() {
-				document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
-				document.getElementById('error-modal').classList.add("show-modal");
-				document.getElementById('modal-background').style.display = "block";
+				closeAll();
+				setTimeout(function() {
+					document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
+					document.getElementById('error-modal').classList.add("show-modal");
+					document.getElementById('modal-background').style.display = "block";
+				}, 500);
 				
 				$('#leave-game').prop('disabled', false);
 				$('#leave-game').val("Yes, I'm sure");

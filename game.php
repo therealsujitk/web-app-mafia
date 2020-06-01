@@ -797,9 +797,12 @@
 		if(response === "Success!")
 			document.getElementById('chat-box').value = "";
 		else {
-			document.getElementById('error-message').innerHTML = response;
-			document.getElementById('error-modal').classList.add("show-modal");
-			document.getElementById('modal-background').style.display = "block";
+			closeAll();
+			setTimeout(function() {
+				document.getElementById('error-message').innerHTML = response;
+				document.getElementById('error-modal').classList.add("show-modal");
+				document.getElementById('modal-background').style.display = "block";
+			}, 500);
 			
 			document.getElementById('chat-box').value = message;
 		}
@@ -816,9 +819,12 @@
 				message: message
 			},
 			error: function() {
-				document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
-				document.getElementById('error-modal').classList.add("show-modal");
-				document.getElementById('modal-background').style.display = "block";
+				closeAll();
+				setTimeout(function() {
+					document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
+					document.getElementById('error-modal').classList.add("show-modal");
+					document.getElementById('modal-background').style.display = "block";
+				}, 500);
 				
 				document.getElementById('chat-box').value = message;
 			}
@@ -845,9 +851,13 @@
 			}, 500);
 		}
 		else {
-			document.getElementById('error-message').innerHTML = response;
-			document.getElementById('error-modal').classList.add("show-modal");
-			document.getElementById('modal-background').style.display = "block";
+			closeAll();
+			setTimeout(function() {
+				document.getElementById('error-message').innerHTML = response;
+				document.getElementById('error-modal').classList.add("show-modal");
+				document.getElementById('modal-background').style.display = "block";
+			}, 500);
+			
 		}
 	}
 	
@@ -865,9 +875,12 @@
 				document.getElementById('candidates').innerHTML = '<p>Loading...</p>';
 			},
 			error: function() {
-				document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
-				document.getElementById('error-modal').classList.add("show-modal");
-				document.getElementById('modal-background').style.display = "block";
+				closeAll();
+				setTimeout(function() {
+					document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
+					document.getElementById('error-modal').classList.add("show-modal");
+					document.getElementById('modal-background').style.display = "block";
+				}, 500);
 			}
 		}).then(response => regVote(response));
 	}
@@ -879,9 +892,12 @@
 		}
 		else {
 			closeAll();
-			document.getElementById('error-message').innerHTML = response;
-			document.getElementById('error-modal').classList.add("show-modal");
-			document.getElementById('modal-background').style.display = "block";
+			setTimeout(function() {
+				document.getElementById('error-message').innerHTML = response;
+				document.getElementById('error-modal').classList.add("show-modal");
+				document.getElementById('modal-background').style.display = "block";
+			}, 500);
+			
 			
 			$('#submit-report').prop('disabled', false);
 			$('#submit-report').val('Submit Bug Report');
@@ -901,9 +917,12 @@
 				report: report
 			},
 			error: function() {
-				document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
-				document.getElementById('error-modal').classList.add("show-modal");
-				document.getElementById('modal-background').style.display = "block";
+				closeAll();
+				setTimeout(function() {
+					document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
+					document.getElementById('error-modal').classList.add("show-modal");
+					document.getElementById('modal-background').style.display = "block";
+				}, 500);
 				
 				$('#submit-report').prop('disabled', false);
 				$('#submit-report').val('Submit Bug Report');
@@ -932,9 +951,12 @@
 				check: 'true'
 			},
 			error: function() {
-				document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
-				document.getElementById('error-modal').classList.add("show-modal");
-				document.getElementById('modal-background').style.display = "block";
+				closeAll();
+				setTimeout(function() {
+					document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
+					document.getElementById('error-modal').classList.add("show-modal");
+					document.getElementById('modal-background').style.display = "block";
+				}, 500);
 				
 				$('#home').prop('disabled', false);
 				$('#home').val("Go Home");
