@@ -22,10 +22,18 @@ function openPrivacy() {
 	y.style.display = "block";
 }
 
-function openCreate() {
+function openCreate(i) {
 	document.getElementById('name-error').style.display = "none";
-	if(document.getElementById('name').value.trim() === '') {
+	document.getElementById('name-error-mobile').style.display = "none";
+	
+	if(i)
+		var name = document.getElementById('name').value;
+	else
+		var name = document.getElementById('name-mobile').value;
+		
+	if(name.trim() === '') {
 		document.getElementById('name-error').style.display = "block";
+		document.getElementById('name-error-mobile').style.display = "block";
 		return;
 	}
 
@@ -35,12 +43,18 @@ function openCreate() {
 	x.classList.add("show-modal");
 	y.style.display = "block";
 	
-	setCookie();
+	setCookie(i);
 }
 
-function openJoin() {
+function openJoin(i) {
 	document.getElementById('name-error').style.display = "none";
-	if(document.getElementById('name').value.trim() === '') {
+	
+	if(i)
+		var name = document.getElementById('name').value;
+	else
+		var name = document.getElementById('name-mobile').value;
+	
+	if(name.trim() === '') {
 		document.getElementById('name-error').style.display = "block";
 		return;
 	}
@@ -51,7 +65,7 @@ function openJoin() {
 	x.classList.add("show-modal");
 	y.style.display = "block";
 	
-	setCookie();
+	setCookie(i);
 }
 
 function openRole() {
@@ -76,6 +90,26 @@ function openLeave() {
 	
 	x.classList.add("show-modal");
 	y.style.display = "block";
+}
+
+function openMenu() {
+	let x = document.getElementById('nav-mobile');
+	let y = document.getElementById('menu-background');
+	
+	x.classList.add("show-menu");
+	y.style.display = "block";
+}
+
+function closeMenu() {
+	let x = document.getElementById('nav-mobile');
+	let y = document.getElementById('menu-background');
+	
+	x.classList.add("hide-menu");
+	setTimeout(function() {
+		x.classList.remove("show-menu");
+		x.classList.remove("hide-menu");
+		y.style.display = "none";
+	}, 500);
 }
 
 function closeAll() {
@@ -192,11 +226,15 @@ function prev() {
 		x.src = './assets/avatars/avatar_0' + index + '.png';
 }
 
-function setCookie() {
+function setCookie(i) {
 	let d = new Date();
 	d.setTime(d.getTime() + (30*24*60*60*1000));
 	let expires = d.toUTCString();
-	let name = document.getElementById('name').value;
+	
+	if(i)
+		var name = document.getElementById('name').value;
+	else
+		var name = document.getElementById('name-mobile').value;
 	let avatar = document.getElementById('avatar').src;
 	
 	document.cookie = "name=" + name + ";expires=" + expires + ";path=/";

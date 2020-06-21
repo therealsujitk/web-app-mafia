@@ -16,7 +16,7 @@
 		<meta name="msapplication-TileColor" content="#ffffff">
 		<meta name="theme-color" content="#c80000">
 		<meta charset="utf-8"><meta http-equiv="X-UA-Compatible" content="IE=edge">
-		<meta name="viewport" content="user-scalable=no">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
 		<meta name="description" content="Mafia is a free multiplayer social deduction game. The game models a conflict between two groups: an informed minority, and an uninformed majority. At the start of the game, each player is secretly assigned a role affiliated with one of these teams.">
 		<meta name="keywords" content="mafia, mafia cf, mafiacf, mafia.cf, cf, fun, winner, browser, free, friends">
 		<meta name="robots" content="index">
@@ -78,11 +78,59 @@
 				</td>
 			</table>
 		</div>
+		<div id="header-mobile">
+			<i id="menu-mobile" class="fas fa-bars" onclick="openMenu();"></i>
+			<div id="logo-mobile"><img src="/assets/images/logo.png" style="height: 65px;"></img></div>
+			<nav id="nav-mobile">
+				<table cellpadding="0" cellspacing="0" style="width: 100%; margin-top: 20px;">
+					<td class="header2" style="text-align: left;">Menu</td>
+					<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeMenu()"></i></td>
+				</table>
+				<input class="header link" style="padding: 10px 20px 10px 20px;" type="button" value="Privacy Policy" onclick="openPrivacy()"></input>
+				</br>
+				<input class="header link" style="padding: 10px 20px 10px 20px;" type="button" value="Report Bug" onclick="openBug()"></input>
+				</br>
+				<input class="header link" style="padding: 10px 20px 10px 20px;" type="button" value="About Us" onclick="openAbout()"></input>
+				</br>
+				<?php
+					include('conn.php');
+					session_start();
+					$townID = $_SESSION["townID"];
+					
+					if($townID) {
+						echo '<input class="header link" style="padding: 10px 20px 10px 20px;" type="button" value="Continue Playing" onclick="continuePlaying()"></input>';
+					
+						$query = "SELECT user_id FROM town_" . $townID . ";";
+						if(mysqli_query($conn, $query)) {
+							$query = "SELECT has_started FROM town_details WHERE town_id = '$townID';";
+							if(mysqli_fetch_assoc(mysqli_query($conn, $query))["has_started"]) {
+								echo '<script>
+									function continuePlaying() {
+										$("body").load("/game.php");
+									}
+								</script>';
+							}
+							else {
+								echo '<script>
+									function continuePlaying() {
+										$("body").load("/pre-game.php");
+									}
+								</script>';
+							}
+						}
+					}
+					
+					mysqli_close($conn);
+				?>
+			</nav>
+		</div>
 		<div align="center">
-			<table id="user-details">
+			<table id="user-details" cellpadding="0" cellspacing="0">
 				<tr>
-					<td>
+					<td align="center">
+						<i class="btn2 fas fa-caret-left fa-3x prev-next-mobile" onclick="prev()"></i>
 						<img id="avatar" src="">
+						<i class="btn2 fas fa-caret-right fa-3x prev-next-mobile" onclick="next()"></i>
 						<img class="cache" style="display: none;" src="/assets/avatars/avatar_01.png">
 						<img class="cache" style="display: none;" src="/assets/avatars/avatar_02.png">
 						<img class="cache" style="display: none;" src="/assets/avatars/avatar_03.png">
@@ -104,29 +152,43 @@
 						<img class="cache" style="display: none;" src="/assets/avatars/avatar_19.png">
 						<img class="cache" style="display: none;" src="/assets/avatars/avatar_20.png">
 					</td>
-					<td>
+					<td id="details">
 						<table cellpadding="0" cellspacing="0" width="100%">
 							<td style="padding-right: 1px;"><span>Name:</span></td>
 							<td style="padding-left: 1px;"><input id="name" class="text-box" type="text" autocomplete="off" spellcheck="false" maxlength = "10"></input></td>
 						</table>
 						<span id="name-error" style="padding-left: 10px; color: #c80000; display: none;">Error! Please enter a valid name.</span>
 						<table cellpadding="0" cellspacing="0">
-							<td><input class="btn" type="button" value="Create a Town" onclick="openCreate()"></input></td>
-							<td><input class="btn" type="button" value="Join a Town" onclick="openJoin()"></input></td>
+							<td><input class="btn" type="button" value="Create a Town" onclick="openCreate(1)"></input></td>
+							<td><input class="btn" type="button" value="Join a Town" onclick="openJoin(1)"></input></td>
 						</table>
 					</td>
 				</tr>
 				<tr>
-					<td style = "padding: 0;">
+					<td id="prev-next" style = "padding: 0;">
 						<table cellpadding="0" cellspacing="0" width="100%">
 							<td style = "text-align: right; padding: 0; padding-right: 15px;"><i class="btn2 fas fa-caret-left fa-3x" onclick="prev()"></i></td>
 							<td style = "text-align: left; padding: 0; padding-left: 15px;"><i class="btn2 fas fa-caret-right fa-3x" onclick="next()"></i></input></td>
 						</table>
 					</td>
 				</tr>
+				<tr id="details-mobile">
+					<td>
+						<table cellpadding="0" cellspacing="0" width="100%">
+							<td style="padding-right: 1px;"><span>Name:</span></td>
+							<td style="padding-left: 1px;"><input id="name-mobile" class="text-box" type="text" autocomplete="off" spellcheck="false" maxlength = "10"></input></td>
+						</table>
+						<span id="name-error-mobile" style="padding-left: 20px; color: #c80000; display: none;">Error! Please enter a valid name.</span>
+						<table cellpadding="0" cellspacing="0">
+							<td><input class="btn" type="button" value="Create a Town" onclick="openCreate(0)"></input></td>
+							<td><input class="btn" type="button" value="Join a Town" onclick="openJoin(0)"></input></td>
+						</table>
+					</td>
+				</tr>
 			</table>
 		</div>
 		
+		<div id="menu-background" onclick="closeMenu()"></div>
 		<div id="modal-background" onclick="closeAll()"></div>
 		
 		<div id="privacy-modal" class="modal" style="text-align: left;">
@@ -361,8 +423,10 @@
 				return null;
 			}
 		
-			if(getCookie('name') != null)
+			if(getCookie('name') != null) {
 				document.getElementById('name').value = getCookie('name');
+				document.getElementById('name-mobile').value = getCookie('name');
+			}
 		
 			if(getCookie('avatar') != null)
 				document.getElementById('avatar').src = getCookie('avatar');
