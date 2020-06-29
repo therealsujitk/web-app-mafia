@@ -2,6 +2,7 @@ body {
 	background: #1f1414;
 	font-family: 'Raleway', sans-serif;
 	margin: 0;
+	overflow-x: hidden;
 }
 
 h1, h2, h3, h4, h5 {
@@ -35,7 +36,7 @@ h1, h2, h3, h4, h5 {
 	display: none;
 }
 
-#nav-mobile {
+.nav {
 	position: absolute;
 	background: #1f1414;
 	height: 100vh;
@@ -43,12 +44,14 @@ h1, h2, h3, h4, h5 {
 	box-shadow: 0 7px 15px #000;
 	min-width: 60%;
 	margin-left: -100%;
+	display: none;
 	z-index: 2;
 }
 
 .show-menu {
 	animation: slideRight 0.5s;
 	animation-fill-mode: forwards;
+	display: block;
 }
 
 .hide-menu {
@@ -117,7 +120,7 @@ h1, h2, h3, h4, h5 {
 }
 
 .prev-next-mobile {
-	margin: 10px;
+	margin: 7px;
 	margin-bottom: 17.5vh;
 	transform: translate(0%, 50%);
 	display: none;
@@ -520,6 +523,11 @@ figcaption {
 	#logo-mobile {
 		position: absolute;
 		display: block;
+	}
+	
+	#user-details {
+		margin-top: 80px;
+		transform: translate(-50%, 0%);
 	}
 	
 	#details {
