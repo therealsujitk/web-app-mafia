@@ -81,7 +81,7 @@
 		<div id="header-mobile">
 			<i id="menu-mobile" class="fas fa-bars" onclick="openMenu();"></i>
 			<div id="logo-mobile"><img src="/assets/images/logo.png" style="height: 65px;"></img></div>
-			<nav id="nav-mobile">
+			<nav id="nav-mobile" class="nav">
 				<table cellpadding="0" cellspacing="0" style="width: 100%; margin-top: 20px;">
 					<td class="header2" style="text-align: left;">Menu</td>
 					<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeMenu()"></i></td>
@@ -165,7 +165,7 @@
 					</td>
 				</tr>
 				<tr>
-					<td id="prev-next" style = "padding: 0;">
+					<td id="prev-next" style="padding: 0;">
 						<table cellpadding="0" cellspacing="0" width="100%">
 							<td style = "text-align: right; padding: 0; padding-right: 15px;"><i class="btn2 fas fa-caret-left fa-3x" onclick="prev()"></i></td>
 							<td style = "text-align: left; padding: 0; padding-left: 15px;"><i class="btn2 fas fa-caret-right fa-3x" onclick="next()"></i></input></td>
