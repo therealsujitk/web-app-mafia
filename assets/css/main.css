@@ -40,10 +40,10 @@ h1, h2, h3, h4, h5 {
 	position: absolute;
 	background: #1f1414;
 	height: 100vh;
+	height: calc(var(--vh, 1vh) * 100);
 	padding: 0px 20px 0px 20px;
 	box-shadow: 0 7px 15px #000;
 	min-width: 60%;
-	margin-left: -100%;
 	display: none;
 	z-index: 2;
 }
@@ -60,13 +60,13 @@ h1, h2, h3, h4, h5 {
 }
 
 @keyframes slideRight {
-	from {margin-left: -100%;}
-	to {margin-left: 0%;}
+	from {transform: translate(-100%, 0%);}
+	to {transform: translate(0%, 0%);}
 }
 
 @keyframes slideLeft {
-	from {margin-left: 0%;}
-	to {margin-left: -100%;}
+	from {transform: translate(0%, 0%);}
+	to {transform: translate(-100%, 0%);}
 }
 
 .header {
@@ -122,6 +122,7 @@ h1, h2, h3, h4, h5 {
 .prev-next-mobile {
 	margin: 7px;
 	margin-bottom: 17.5vh;
+	margin-bottom: calc(var(--vh, 1vh) * 17.5);
 	transform: translate(0%, 50%);
 	display: none;
 }
@@ -129,6 +130,7 @@ h1, h2, h3, h4, h5 {
 #user-details {
 	position: absolute;
 	margin-top: 50vh;
+	margin-top: calc(var(--vh, 1vh) * 50);
 	margin-left: 50%;
 	transform: translate(-50%, -50%);
 }
@@ -175,6 +177,7 @@ img {
 
 #avatar {
 	height: 35vh;
+	height: calc(var(--vh, 1vh) * 35);
 	max-height: 250px;	
 }
 
@@ -258,6 +261,7 @@ p {
 	background: #1f1414;
 	margin-left: 50%;
 	margin-top: 50vh;
+	margin-top: calc(var(--vh, 1vh) * 50);
 	box-shadow: 0 7px 15px #000;
 	transform: translate(-50%, -50%);
 	display: none;
@@ -334,6 +338,7 @@ textArea:focus {
 	text-align: center;
 	margin-left: 50%;
 	margin-top: 15vh;
+	margin-top: calc(var(--vh, 1vh) * 15);
 	max-width: 90%;
 	transform: translate(-50%, 0%);
 }
@@ -390,6 +395,7 @@ figcaption {
 	position: absolute;
 	margin-left: 50%;
 	margin-top: 46vh;
+	margin-top: calc(var(--vh, 1vh) * 46);
 	width: 100%;
 	text-align: center;
 	transform: translate(-50%, -50%);
@@ -575,6 +581,7 @@ figcaption {
 		background: #1f1414;
 		margin-left: 50%;
 		margin-top: 50vh;
+		margin-top: calc(var(--vh, 1vh) * 50);
 		box-shadow: 0 7px 15px #000;
 		transform: translate(-50%, -50%);
 	}
@@ -591,13 +598,13 @@ figcaption {
 	}
 
 	@keyframes slideUp {
-		from {margin-top: 150vh; transform: translate(-50%, -50%);}
-		to {margin-top: 50vh; transform: translate(-50%, -50%);}
+		from {margin-top: 100vh; margin-top: calc(var(--vh, 1vh) * 100); transform: translate(-50%, 0%);}
+		to {margin-top: 50vh; margin-top: calc(var(--vh, 1vh) * 50); transform: translate(-50%, -50%);}
 	}
 
 	@keyframes slideDown {
-		from {margin-top: 50vh; transform: translate(-50%, -50%);}
-		to {margin-top: 150vh; transform: translate(-50%, -50%);}
+		from {margin-top: 50vh; margin-top: calc(var(--vh, 1vh) * 50); transform: translate(-50%, -50%);}
+		to {margin-top: 100vh; margin-top: calc(var(--vh, 1vh) * 100); transform: translate(-50%, 0%);}
 	}
 }
 

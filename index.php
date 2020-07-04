@@ -33,6 +33,15 @@
 		<meta name="twitter:title" content="Mafia - Free multiplayer social deduction game">
 		<meta name="twitter:description" content="Mafia is a free multiplayer social deduction game. The game models a conflict between two groups: an informed minority, and an uninformed majority. At the start of the game, each player is secretly assigned a role affiliated with one of these teams.">
 		<meta name="twitter:image" content="https://playmafia.cf/assets/images/thumbnail.png">
+		<script>
+			let vh = window.innerHeight * 0.01;
+			document.documentElement.style.setProperty('--vh', `${vh}px`);
+			
+			window.addEventListener('resize', () => {
+				let vh = window.innerHeight * 0.01;
+				document.documentElement.style.setProperty('--vh', `${vh}px`);
+			});
+		</script>
 		<title>Mafia</title>
 	</head>
 	<body>
@@ -83,7 +92,7 @@
 			<div id="logo-mobile"><img src="/assets/images/logo.png" style="height: 65px;"></img></div>
 			<nav id="nav-mobile" class="nav">
 				<table cellpadding="0" cellspacing="0" style="width: 100%; margin-top: 20px;">
-					<td class="header2" style="text-align: left;">Menu</td>
+					<td class="header2" style="text-align: left;"><img src="/assets/images/logo.png" style="height: 40px;"></img></td>
 					<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeMenu()"></i></td>
 				</table>
 				<input class="header link" style="padding: 10px 20px 10px 20px;" type="button" value="Privacy Policy" onclick="openPrivacy()"></input>
