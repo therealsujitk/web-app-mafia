@@ -32,8 +32,32 @@
 	</table>
 </div>
 
+<div id="header-mobile">
+	<i id="menu-mobile" class="fas fa-bars" onclick="openMenu();"></i>
+	<div id="logo-mobile"><h2><?php echo $town; ?></h2></div>
+	<nav id="nav-mobile" class="nav">
+		<table cellpadding="0" cellspacing="0" style="width: 100%; margin-top: 20px;">
+			<td class="header2" style="text-align: left;"><img src="/assets/images/logo.png" style="height: 40px;"></img></td>
+			<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeMenu()"></i></td>
+		</table>
+		<input class="header link" style="padding: 10px 20px 10px 20px;" type="button" value="Privacy Policy" onclick="openPrivacy()"></input>
+		</br>
+		<input class="header link" style="padding: 10px 20px 10px 20px;" type="button" value="Report Bug" onclick="openBug()"></input>
+		</br>
+		<input class="header link" style="padding: 10px 20px 10px 20px;" type="button" value="About Us" onclick="openAbout()"></input>
+		</br>
+		<?php
+			$query = "SELECT user_id FROM town_" . $townID . ";";
+			$ownerID = mysqli_fetch_assoc(mysqli_query($conn, $query))["user_id"];
+
+			if($ownerID != $userID)
+				echo '<input class="header link" style="padding: 10px 20px 10px 20px;" type="button" value="Leave Game" onclick="openLeave()"></input>';
+		?>
+	</nav>
+</div>
+
 <div id="town-players">
-	<h2><?php echo $town; ?></h2>
+	<h2 id="town-name" style="margin-bottom: 10px;"><?php echo $town; ?></h2>
 	<div id="player-cards">
 		<?php
 			$query = "SELECT user_id, name, avatar FROM town_" . $townID . ";";
@@ -43,7 +67,7 @@
 					$name = $row["name"];
 					if($userID == $row["user_id"])
 						$name = $name . " <b>(You)</b>";
-					echo '<figure style="margin: 10px; display: inline-block;"><img style="height: 150px;" src="'. $row["avatar"] .'"></img><figcaption>' . $name . '</figcaption></figure>';
+					echo '<figure style="margin: 10px; display: inline-block;"><img style="height: 22vh; max-height: 150px;" src="'. $row["avatar"] .'"></img><figcaption>' . $name . '</figcaption></figure>';
 				}
 		?>
 	</div>
@@ -58,6 +82,7 @@
 	?>
 </div>
 
+<div id="menu-background" onclick="closeMenu()"></div>
 <div id="modal-background" onclick="closeAll()"></div>
 
 <div id="privacy-modal" class="modal" style="text-align: left;">

@@ -339,7 +339,7 @@ textArea:focus {
 	margin-left: 50%;
 	margin-top: 15vh;
 	margin-top: calc(var(--vh, 1vh) * 15);
-	max-width: 90%;
+	width: 90%;
 	transform: translate(-50%, 0%);
 }
 
@@ -353,6 +353,7 @@ textArea:focus {
 	color: #936c6c;
 	width: 100%;
 	margin-top: 1.5%;
+	padding: 0;
 }
 
 .tooltip {
@@ -532,7 +533,7 @@ figcaption {
 	}
 	
 	#user-details {
-		margin-top: 80px;
+		margin-top: 90px;
 		transform: translate(-50%, 0%);
 	}
 	
@@ -605,6 +606,15 @@ figcaption {
 	@keyframes slideDown {
 		from {margin-top: 50vh; margin-top: calc(var(--vh, 1vh) * 50); transform: translate(-50%, -50%);}
 		to {margin-top: 100vh; margin-top: calc(var(--vh, 1vh) * 100); transform: translate(-50%, 0%);}
+	}
+	
+	#town-name {
+		display: none;
+	}
+	
+	#town-players {
+		margin-top: 90px;
+		max-width: 90%;
 	}
 }
 
