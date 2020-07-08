@@ -67,7 +67,7 @@
 					$name = $row["name"];
 					if($userID == $row["user_id"])
 						$name = $name . " <b>(You)</b>";
-					echo '<figure style="margin: 10px; display: inline-block;"><img style="height: 22vh; max-height: 150px;" src="'. $row["avatar"] .'"></img><figcaption>' . $name . '</figcaption></figure>';
+					echo '<figure style="margin: 10px; display: inline-block;"><img style="height: 22vh; max-height: 150px;" src="'. $row["avatar"] .'"></img><figcaption style="width: 17vh; white-space: nowrap; overflow: auto;">' . $name . '</figcaption></figure>';
 				}
 		?>
 	</div>
