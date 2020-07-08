@@ -345,7 +345,8 @@ textArea:focus {
 
 #player-cards {
 	max-width: 100%;
-	display: inline-flex;
+	max-height: 40vh;
+	max-height: calc(var(--vh, 1vh) * 40);
 	overflow-x: auto;
 }
 
