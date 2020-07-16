@@ -25,6 +25,37 @@
 	</table>
 </div>
 
+<div id="header-mobile">
+	<i id="menu-mobile" class="fas fa-bars" onclick="openMenu();"></i>
+	<div id="logo-mobile"><h3>
+		<?php
+			if($_SESSION["dailyIndex"]%2 == 0) {
+				if($_SESSION["dailyIndex"] == 0)
+					echo 'The First Night';
+				else {
+					$night = $_SESSION["dailyIndex"] / 2;
+					echo 'Night ' . $night;
+				}
+			}
+			else {
+				$day = $_SESSION["dailyIndex"]/2 + 0.5;
+				echo 'Day ' . $day;
+			}
+		?>
+	</h3></div>
+	<nav id="nav-mobile" class="nav">
+		<table cellpadding="0" cellspacing="0" style="width: 100%; margin-top: 20px;">
+			<td class="header2" style="text-align: left;"><img src="/assets/images/logo.png" style="height: 40px;"></img></td>
+			<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeMenu()"></i></td>
+		</table>
+		<input class="header link" style="padding: 10px 20px 10px 20px;" type="button" value="Privacy Policy" onclick="openPrivacy()"></input>
+		</br>
+		<input class="header link" style="padding: 10px 20px 10px 20px;" type="button" value="Report Bug" onclick="openBug()"></input>
+		</br>
+		<input class="header link" style="padding: 10px 20px 10px 20px;" type="button" value="About Us" onclick="openAbout()"></input>
+	</nav>
+</div>
+
 <div id="game">
 	<table id="game-content">
 		<tr>
@@ -44,12 +75,18 @@
 					}
 				?>
 			</h3></th>
-			<th style="height: 5px; vertical-align: center;"><input id="my-role" class="btn" type="button" value="My Role" onclick="openRole()"></input></th>
+			<th id="role-button" style="height: 5px; vertical-align: center;"><input id="my-role" class="btn" type="button" value="My Role" onclick="openRole()"></input></th>
+		</tr>
+		<tr id="mobile-game-nav">
+			<td colspan="2"><table style="width: 100%; vertical-align: middle;">
+				<th><i id="button-l" class="fas fa-comment-alt fa-2x mobile-game-nav" onclick="loadL();" style="color: #c80000;"></i></th>
+				<th><i id="button-r" class="fas fa-info-circle fa-2x mobile-game-nav" onclick="loadR();" style="color: #936c6c;"></i></th>
+			</table></td>
 		</tr>
 		<tr>
 			<td id="game-content-l" style="width: 80%; padding: 0;">
-				<div id="content" style="width: 100%; height: 100%; background: #111; border-radius: 20px;">
-					<div id="news-bar" style="background: #000; width: 99.5%; border-radius: 20px 20px 0px 0px; padding: 0.25%;">
+				<div id="content">
+					<div id="news-bar">
 						<p id="news">
 							<?php
 								$message = 'The citizens of <b>' . $town . '</b> are sleeping. Zzz';
@@ -108,7 +145,7 @@
 							?>
 						</p>
 					</div>
-					<div id="game-display" style="height: 35vh; overflow-y: auto;">
+					<div id="game-display">
 						<?php
 							if($_SESSION["dailyIndex"]%2 == 0) {
 								$query = "SELECT user_id FROM town_" . $townID . " WHERE is_mafia = 1;";
@@ -229,6 +266,12 @@
 				</div>
 			</td>
 			<td id="game-content-r" style="width: 20%;">
+				<div id="role-mobile">
+					<hr class="divider" style="width: 40%; margin-top: 0; margin-bottom: 10px;">
+					<input class="btn" type="button" value="My Role" style="margin-left: 50%; transform: translate(-50%, 0%);" onclick="openRole()"></input>
+					<hr class="divider" style="width: 40%; margin-top: 10px;">
+				</div>
+				
 				<div id="players">
 					<?php
 						$query = "SELECT user_id, name, is_mafia, is_poser, is_medic, is_sherrif, is_executed, is_killed FROM town_" . $townID . ";";
@@ -267,7 +310,7 @@
 				<div id="town-details">
 					<?php
 						if($result = mysqli_query($conn, $query)) {
-							echo '<hr style="border-style: solid; border-color: #936c6c; margin-top: 20px; margin-bottom: 20px;">';
+							echo '<hr class="divider">';
 							echo '<span>Population: ' . mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(user_id) FROM town_" . $_SESSION["townID"] . ";"))["COUNT(user_id)"] . '</span><br>';
 							echo '<span style="color: #c80000;">Mafia: ' . mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(user_id) FROM town_" . $_SESSION["townID"] . " WHERE is_mafia = 1;"))["COUNT(user_id)"] . '</span><br>';
 							echo '<span style="color: #ffd300;">Poser: ' . mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(user_id) FROM town_" . $_SESSION["townID"] . " WHERE is_poser = 1;"))["COUNT(user_id)"] . '</span><br>';
@@ -480,6 +523,7 @@
 
 <div id="notification" class="alert"></div>
 
+<div id="menu-background" onclick="closeMenu()"></div>
 <div id="modal-background" onclick="closeAll()"></div>
 
 <div id="privacy-modal" class="modal" style="text-align: left;">
@@ -1056,7 +1100,7 @@
 		});
 	}, 500);
 	
-	window.onbeforeunload = function() {
+	/*window.onbeforeunload = function() {
 		return "Are you sure you want to leave? If your session ends, you won\'t be able to continue playing this game.";
-	}
+	}*/
 </script>

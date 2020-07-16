@@ -297,3 +297,31 @@ function displayNewsBold(news, i) {
 		}
 	}
 }
+
+function loadL() {
+	let x = document.getElementById('button-l');
+	let y = document.getElementById('button-r');
+	
+	x.style.color = '#c80000';
+	y.style.color = '#936c6c';
+	
+	let a = document.getElementById('game-content-l');
+	let b = document.getElementById('game-content-r');
+	
+	a.style.display = 'contents';
+	b.style.display = 'none';
+}
+
+function loadR() {
+	let x = document.getElementById('button-l');
+	let y = document.getElementById('button-r');
+	
+	x.style.color = '#936c6c';
+	y.style.color = '#c80000';
+	
+	let a = document.getElementById('game-content-l');
+	let b = document.getElementById('game-content-r');
+	
+	a.style.display = 'none';
+	b.style.display = 'contents';
+}

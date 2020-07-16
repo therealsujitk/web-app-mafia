@@ -419,6 +419,25 @@ figcaption {
 	padding: 1.5%;
 }
 
+#news-bar {
+	background: #000;
+	width: 99.5%;
+	border-radius: 20px 20px 0px 0px;
+	padding: 0.25%;
+}
+
+#content {
+	width: 100%;
+	height: 100%;
+	background: #111;
+	border-radius: 20px;
+}
+
+#game-content {
+	height: 35vh;
+	overflow-y: auto;
+}
+
 #chat-box {
 	width: 100%;
 	font-size: 15px;
@@ -489,6 +508,13 @@ figcaption {
 
 }
 
+.divider {
+	border-style: solid;
+	border-color: #936c6c;
+	margin-top: 20px;
+	margin-bottom: 20px;
+}
+
 .alert {
 	position: absolute;
 	padding: 12px 24px;
@@ -521,6 +547,24 @@ figcaption {
 @keyframes pushUp {
 	from {margin-top: 140px; transform: translate(-50%, -100px);}
 	to {margin-top: 0px; transform: translate(-50%, -100px);}
+}
+
+#mobile-game-nav {
+	display: none;
+	padding: 5px;
+}
+
+.mobile-game-nav {
+	color: #936c6c;
+	cursor: pointer;
+}
+
+.mobile-game-nav:hover {
+	color: #c80000;
+}
+
+#role-mobile {
+	display: none;
 }
 
 @media only screen and (max-width: 600px) {
@@ -616,6 +660,64 @@ figcaption {
 	#town-players {
 		margin-top: 90px;
 		max-width: 90%;
+	}
+	
+	#game-index {
+		display: none;
+	}
+	
+	#role-button {
+		display: none;
+	}
+	
+	#game {
+		margin-top: 90px;
+		transform: translate(-50%, 0%);
+	}
+	
+	
+	#mobile-game-nav {
+		display: contents;
+	}
+	
+	#game-content {
+		width: 100%;
+		border-spacing: 0;
+		padding: 0;
+	}
+	
+	#content {
+		border-radius: 0;
+	}
+	
+	#game-content-l {
+		border: none;
+		border-radius: 0;
+	}
+	
+	#news-bar {
+		border-radius: 0;
+	}
+	
+	#game-footer {
+		padding: 0;
+	}
+	
+	#game-display {
+		height: 42vh;
+	}
+	
+	#game-content-r {
+		display: none;
+		text-align: center;
+	}
+	
+	.divider {
+		width: 60%;
+	}
+	
+	#role-mobile {
+		display: contents;
 	}
 }
 
