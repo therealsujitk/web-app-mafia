@@ -347,7 +347,10 @@
 			
 				let town = document.getElementById('town').value;
 				let mob = document.getElementById('mob').value;
-				let name = document.getElementById('name').value;
+				if(window.innerWidth > 600)
+					var name = document.getElementById('name').value;
+				else
+					var name = document.getElementById('name-mobile').value;
 				let avatar = document.getElementById('avatar').src;
 
 				$.ajax({
@@ -395,7 +398,10 @@
 				$('#join').val('Please wait...');
 			
 				let townID = document.getElementById('town-id').value;
-				let name = document.getElementById('name').value;
+				if(window.innerWidth > 600)
+					var name = document.getElementById('name').value;
+				else
+					var name = document.getElementById('name-mobile').value;
 				let avatar = document.getElementById('avatar').src;
 
 				$.ajax({
