@@ -25,13 +25,13 @@
 			<img src="/assets/images/logo.png" style="height: 100px;"></img>
 			<table style="text-align: center; width: 100%;">
 				<tr>
-					<td style="font-size: 100px; color: #fff; padding-top: 0px;">
+					<td id="players-joined" style="font-size: 100px; color: #fff; padding-top: 0px;">
 						<?php
 							$query = "SELECT players_joined FROM statistics WHERE id = 1;";
 							echo mysqli_fetch_assoc(mysqli_query($conn, $query))["players_joined"];
 						?>
 					</td>
-					<td style="font-size: 100px; color: #fff; padding-top: 0px;">
+					<td id="games-played" style="font-size: 100px; color: #fff; padding-top: 0px;">
 						<?php
 							$query = "SELECT games_played FROM statistics WHERE id = 1;";
 							echo mysqli_fetch_assoc(mysqli_query($conn, $query))["games_played"];
