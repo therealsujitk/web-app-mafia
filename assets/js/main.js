@@ -252,6 +252,11 @@ function copyText(value) {
 	let x = document.getElementById('copy');
 	x.classList.add("tooltip");
 	x.innerHTML = 'Click here<span class="tooltiptext">Copied!</span>';
+	
+	setTimeout(function () {
+		x.classList.remove("tooltip");
+		x.innerHTML = 'Click here';
+	}, 3000);
 }
 
 function displayNews(news, i) {

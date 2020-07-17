@@ -376,15 +376,8 @@ textArea:focus {
 	margin-left: -60px;
 }
 
-.tooltip .tooltiptext::after {
-	content: "";
-	position: absolute;
-	top: 100%;
-	left: 50%;
-	margin-left: -5px;
-	border-width: 5px;
-	border-style: solid;
-	border-color: black transparent transparent transparent;
+.tooltip:hover .tooltiptext {
+	visibility: visible;
 }
 
 figcaption {
@@ -422,6 +415,8 @@ figcaption {
 #news-bar {
 	background: #000;
 	width: 99.5%;
+	max-height: 75px;
+	overflow: auto;
 	border-radius: 20px 20px 0px 0px;
 	padding: 0.25%;
 }
@@ -436,6 +431,14 @@ figcaption {
 #game-content {
 	height: 35vh;
 	overflow-y: auto;
+}
+
+#game-display {
+	height: 35vh;
+	height: calc(var(--vh, 1vh) * 35);
+	max-height: 35vh;
+	max-height: calc(var(--vh, 1vh) * 35);
+	overflow: auto;
 }
 
 #chat-box {
@@ -517,6 +520,7 @@ figcaption {
 
 .alert {
 	position: absolute;
+	text-align: center;
 	padding: 12px 24px;
 	background: #b4f1af;
 	color: #33722d;
@@ -623,13 +627,6 @@ figcaption {
 	.modal {
 		border-radius: 0px;
 		width: 100%;
-		padding: 10px;
-		background: #1f1414;
-		margin-left: 50%;
-		margin-top: 50vh;
-		margin-top: calc(var(--vh, 1vh) * 50);
-		box-shadow: 0 7px 15px #000;
-		transform: translate(-50%, -50%);
 	}
 	
 	.show-modal {
@@ -704,7 +701,11 @@ figcaption {
 	}
 	
 	#game-display {
-		height: 42vh;
+		height: 40vh;
+		height: calc(var(--vh, 1vh) * 40);
+		max-height: 40vh;
+		max-height: calc(var(--vh, 1vh) * 40);
+		overflow: auto;
 	}
 	
 	#game-content-r {
@@ -724,5 +725,13 @@ figcaption {
 @media only screen and (min-height: 714.3px) {
 	.prev-next-mobile {
 		margin-bottom: 125px;
+	}
+}
+
+@media only screen and (min-height: 640px) {
+	#user-details {
+		margin-top: 50vh;
+		margin-top: calc(var(--vh, 1vh) * 50);
+		transform: translate(-50%, -50%);
 	}
 }
