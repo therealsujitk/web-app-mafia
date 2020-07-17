@@ -22,7 +22,7 @@
 		<meta name="robots" content="index">
 		<meta http-equiv="content-language" content="en">
 		<meta property="og:type" content="website">
-		<meta property="og:title" content="Mafia - Free multiplayer social deduction game">
+		<meta property="og:title" content="Mafia - Free Multiplayer Social Deduction Game">
 		<meta property="og:url" content="https://playmafia.cf/">
 		<meta property="og:description" content="Mafia is a free multiplayer social deduction game. The game models a conflict between two groups: an informed minority, and an uninformed majority. At the start of the game, each player is secretly assigned a role affiliated with one of these teams.">
 		<meta property="og:site_name" content="Mafia">
@@ -30,7 +30,7 @@
 		<meta property="og:image:width" content="768">
 		<meta property="og:image:height" content="435">
 		<meta name="twitter:card" content="summary_large_image">
-		<meta name="twitter:title" content="Mafia - Free multiplayer social deduction game">
+		<meta name="twitter:title" content="Mafia - Free Multiplayer Social Deduction Game">
 		<meta name="twitter:description" content="Mafia is a free multiplayer social deduction game. The game models a conflict between two groups: an informed minority, and an uninformed majority. At the start of the game, each player is secretly assigned a role affiliated with one of these teams.">
 		<meta name="twitter:image" content="https://playmafia.cf/assets/images/thumbnail.png">
 		<script>
@@ -42,7 +42,7 @@
 				document.documentElement.style.setProperty('--vh', `${vh}px`);
 			});
 		</script>
-		<title>Mafia</title>
+		<title>Mafia - Free Multiplayer Social Deduction Game</title>
 	</head>
 	<body>
 		<div id="header">

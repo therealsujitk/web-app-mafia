@@ -1035,6 +1035,14 @@
 						}
 					});
 				}, 500);
+				
+				var gameIndexMobile = setInterval(function() {
+					$("#logo-mobile").load("/game.php #logo-mobile > *", function(response, status) {
+						if(status ==  "success") {
+							clearInterval(gameIndex);
+						}
+					});
+				}, 500);
 			
 				var players = setInterval(function() {
 					$("#players").load("/game.php #players > *", function(response, status) {
@@ -1100,7 +1108,7 @@
 		});
 	}, 500);
 	
-	/*window.onbeforeunload = function() {
+	window.onbeforeunload = function() {
 		return "Are you sure you want to leave? If your session ends, you won\'t be able to continue playing this game.";
-	}*/
+	}
 </script>
