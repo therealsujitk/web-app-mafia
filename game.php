@@ -840,10 +840,15 @@
     	let totalHeight = window.innerHeight;
     	let headerHeight = document.getElementById('header').offsetHeight;
     	let gameIndexHeight = document.getElementById('game-index').offsetHeight;
+    	let mobileGameNavHeight = document.getElementById('mobile-game-nav-content').offsetHeight;
     	let newsBarHeight = document.getElementById('news-bar').offsetHeight;
     	let gameFooterHeight = document.getElementById('game-footer').offsetHeight;
     	
-    	if(window.inneWidth < 728) {
+    	if(window.innerWidth < 600) {
+    	    let gameSpaceHeight = totalHeight - mobileGameNavHeight - newsBarHeight - gameFooterHeight - (window.innerWidth/728)*90 - 90 - 20;
+    			document.documentElement.style.setProperty('--gs', `${gameSpaceHeight}px`);
+    	}
+    	else if(window.inneWidth < 728) {
     		if ((window.innerWidth/728)*90 > headerHeight) {
     			let gameSpaceHeight = totalHeight - (window.innerWidth/728)*90 - gameIndexHeight - newsBarHeight - gameFooterHeight - 100;
     			document.documentElement.style.setProperty('--gs', `${gameSpaceHeight}px`);
