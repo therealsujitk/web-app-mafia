@@ -415,7 +415,6 @@ figcaption {
 #news-bar {
 	background: #000;
 	width: 99.5%;
-	max-height: 75px;
 	overflow: auto;
 	border-radius: 20px 20px 0px 0px;
 	padding: 0.25%;
@@ -428,16 +427,11 @@ figcaption {
 	border-radius: 20px;
 }
 
-#game-content {
-	height: 35vh;
-	overflow-y: auto;
-}
-
 #game-display {
 	height: 35vh;
-	height: calc(var(--vh, 1vh) * 35);
+	height: var(--gs);
 	max-height: 35vh;
-	max-height: calc(var(--vh, 1vh) * 35);
+	max-height: var(--gs);
 	overflow: auto;
 }
 
@@ -474,6 +468,10 @@ figcaption {
 	max-width: 100%;
 	display: inline-flex;
 	overflow-x: auto;
+}
+
+#candidates-box {
+	margin: 10px;
 }
 
 .candidate {
@@ -672,6 +670,9 @@ figcaption {
 		transform: translate(-50%, 0%);
 	}
 	
+	#news-bar {
+		max-height: 60px;
+	}
 	
 	#mobile-game-nav {
 		display: contents;
@@ -719,6 +720,10 @@ figcaption {
 	
 	#role-mobile {
 		display: contents;
+	}
+	
+	#candidates-box {
+		margin: 10px 20px;
 	}
 }
 
