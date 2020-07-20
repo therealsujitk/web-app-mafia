@@ -643,7 +643,7 @@
 							<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 						</table>';
 				
-						echo '<div style="margin: 10px;"><div id="candidates">';
+						echo '<div id="candidates-box"><div id="candidates">';
 						$query = "SELECT user_id, name, avatar, is_mafia FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0;";
 						if($result = mysqli_query($conn, $query))
 							while($row = mysqli_fetch_assoc($result)) {
@@ -654,7 +654,7 @@
 									$color = '#c80000';
 								else
 									$color = '#fff';
-								echo '<figure style="margin: 10px; display: inline-block;"><img class="candidate candidate-mafia" style="height: 100px;" src="'. $row["avatar"] .'" onclick="registerVote(`mafia`, `' . $row["user_id"] . '`);"></img><figcaption style="color: ' . $color . ';">' . $name . '</figcaption></figure>';
+								echo '<figure style="margin: 10px 20px 10px 0px; display: inline-block;"><img class="candidate candidate-mafia" style="height: 100px;" src="'. $row["avatar"] .'" onclick="registerVote(`mafia`, `' . $row["user_id"] . '`);"></img><figcaption style="color: ' . $color . ';">' . $name . '</figcaption></figure>';
 							}
 						echo '</div></div>';
 						
@@ -698,14 +698,14 @@
 						<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 					</table>';
 				
-					echo '<div style="margin: 10px;"><div id="candidates">';
+					echo '<div id="candidates-box"><div id="candidates">';
 					$query = "SELECT user_id, name, avatar FROM town_" . $townID . " WHERE saved = 0 AND is_killed = 0 AND is_executed = 0;";
 					if($result = mysqli_query($conn, $query))
 						while($row = mysqli_fetch_assoc($result)) {
 							$name = $row["name"];
 							if($userID == $row["user_id"])
 								$name = $name . ' <b>(You)</b>';
-							echo '<figure style="margin: 10px; display: inline-block;"><img class="candidate candidate-medic" style="height: 100px;" src="'. $row["avatar"] .'" onclick="registerVote(`medic`, `' . $row["user_id"] . '`);"></img><figcaption style="color: ' . $color . ';">' . $name . '</figcaption></figure>';
+							echo '<figure style="margin: 10px 20px 10px 0px; display: inline-block;"><img class="candidate candidate-medic" style="height: 100px;" src="'. $row["avatar"] .'" onclick="registerVote(`medic`, `' . $row["user_id"] . '`);"></img><figcaption style="color: ' . $color . ';">' . $name . '</figcaption></figure>';
 						}
 					echo '</div></div>';
 					
@@ -736,14 +736,14 @@
 						<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 					</table>';
 			
-					echo '<div style="margin: 10px;"><div id="candidates">';
+					echo '<div id="candidates-box"><div id="candidates">';
 					$query = "SELECT user_id, name, avatar FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0;";
 					if($result = mysqli_query($conn, $query))
 						while($row = mysqli_fetch_assoc($result)) {
 							$name = $row["name"];
 							if($userID == $row["user_id"])
 								continue;
-							echo '<figure style="margin: 10px; display: inline-block;"><img class="candidate candidate-sherrif" style="height: 100px;" src="'. $row["avatar"] .'" onclick="registerVote(`sheriff`, `' . $row["user_id"] . '`);"></img><figcaption style="color: ' . $color . ';">' . $name . '</figcaption></figure>';
+							echo '<figure style="margin: 10px 20px 10px 0px; display: inline-block;"><img class="candidate candidate-sherrif" style="height: 100px;" src="'. $row["avatar"] .'" onclick="registerVote(`sheriff`, `' . $row["user_id"] . '`);"></img><figcaption style="color: ' . $color . ';">' . $name . '</figcaption></figure>';
 						}
 					echo '</div></div>';
 					
@@ -767,14 +767,14 @@
 						<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 					</table>';
 				
-					echo '<div style="margin: 10px;"><div id="candidates">';
+					echo '<div id="candidates-box"><div id="candidates">';
 					$query = "SELECT user_id, name, avatar FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0;";
 					if($result = mysqli_query($conn, $query))
 						while($row = mysqli_fetch_assoc($result)) {
 							$name = $row["name"];
 							if($userID == $row["user_id"])
 								$name = $name . ' <b>(You)</b>';
-							echo '<figure style="margin: 10px; display: inline-block;"><img class="candidate" style="height: 100px;" src="'. $row["avatar"] .'" onclick="registerVote(`citizen`, `' . $row["user_id"] . '`);"></img><figcaption style="color: ' . $color . ';">' . $name . '</figcaption></figure>';
+							echo '<figure style="margin: 10px 20px 10px 0px; display: inline-block;"><img class="candidate" style="height: 100px;" src="'. $row["avatar"] .'" onclick="registerVote(`citizen`, `' . $row["user_id"] . '`);"></img><figcaption style="color: ' . $color . ';">' . $name . '</figcaption></figure>';
 						}
 					echo '</div></div>';
 					
@@ -831,6 +831,48 @@
 </div>
 
 <script>
+	function vhCalc() {
+	    let vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+    }
+    
+    function gameSpaceCalc() {
+    	let totalHeight = window.innerHeight;
+    	let headerHeight = document.getElementById('header').offsetHeight;
+    	let gameIndexHeight = document.getElementById('game-index').offsetHeight;
+    	let newsBarHeight = document.getElementById('news-bar').offsetHeight;
+    	let gameFooterHeight = document.getElementById('game-footer').offsetHeight;
+    	
+    	if(window.inneWidth < 728) {
+    		if ((window.innerWidth/728)*90 > headerHeight) {
+    			let gameSpaceHeight = totalHeight - (window.innerWidth/728)*90 - gameIndexHeight - newsBarHeight - gameFooterHeight - 100;
+    			document.documentElement.style.setProperty('--gs', `${gameSpaceHeight}px`);
+    		}
+    		else {
+    			let gameSpaceHeight = totalHeight - headerHeight - gameIndexHeight - newsBarHeight - gameFooterHeight - 100;
+    			document.documentElement.style.setProperty('--gs', `${gameSpaceHeight}px`);
+    		}
+    	}
+    	else {
+    		if (90 > headerHeight) {
+    			let gameSpaceHeight = totalHeight - 90 - gameIndexHeight - newsBarHeight - gameFooterHeight - 150;
+    			document.documentElement.style.setProperty('--gs', `${gameSpaceHeight}px`);
+    		}
+    		else {
+    			let gameSpaceHeight = totalHeight - headerHeight - gameIndexHeight - newsBarHeight - gameFooterHeight - 150;
+    			document.documentElement.style.setProperty('--gs', `${gameSpaceHeight}px`);
+    		}
+    	}
+    }
+    
+    vhCalc();
+    gameSpaceCalc();
+    
+    window.addEventListener('resize', () => {
+    	vhCalc();
+    	gameSpaceCalc();
+    });
+
 	document.getElementById("role-modal").classList.add("show-modal");
 	document.getElementById("modal-background").style.display = "block";
 	
@@ -1039,7 +1081,7 @@
 				var gameIndexMobile = setInterval(function() {
 					$("#logo-mobile").load("/game.php #logo-mobile > *", function(response, status) {
 						if(status ==  "success") {
-							clearInterval(gameIndex);
+							clearInterval(gameIndexMobile);
 						}
 					});
 				}, 500);

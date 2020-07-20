@@ -33,15 +33,6 @@
 		<meta name="twitter:title" content="Mafia - Free Multiplayer Social Deduction Game">
 		<meta name="twitter:description" content="Mafia is a free multiplayer social deduction game. The game models a conflict between two groups: an informed minority, and an uninformed majority. At the start of the game, each player is secretly assigned a role affiliated with one of these teams.">
 		<meta name="twitter:image" content="https://playmafia.cf/assets/images/thumbnail.png">
-		<script>
-			let vh = window.innerHeight * 0.01;
-			document.documentElement.style.setProperty('--vh', `${vh}px`);
-			
-			window.addEventListener('resize', () => {
-				let vh = window.innerHeight * 0.01;
-				document.documentElement.style.setProperty('--vh', `${vh}px`);
-			});
-		</script>
 		<title>Mafia - Free Multiplayer Social Deduction Game</title>
 	</head>
 	<body>
@@ -272,6 +263,17 @@
 		</div>
 		
 		<script>
+			function vhCalc() {
+    		    let vh = window.innerHeight * 0.01;
+                document.documentElement.style.setProperty('--vh', `${vh}px`);
+		    }
+		    
+		    vhCalc();
+            
+            window.addEventListener('resize', () => {
+            	vhCalc();
+            });
+		
 			let avatarID = Math.round(Math.random() * 19) + 1;
 			if(avatarID < 10)
 				document.getElementById('avatar').src = '/assets/avatars/avatar_0' + avatarID + '.png';

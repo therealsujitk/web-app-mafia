@@ -151,6 +151,17 @@
 	?>
 </div>
 <script>
+	function vhCalc() {
+	    let vh = window.innerHeight * 0.01;
+        document.documentElement.style.setProperty('--vh', `${vh}px`);
+    }
+    
+    vhCalc();
+    
+    window.addEventListener('resize', () => {
+    	vhCalc();
+    });
+
 	function buildTown(response) {
 		if(response != "Success!") {
 			closeAll();
