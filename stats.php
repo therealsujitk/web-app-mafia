@@ -21,7 +21,7 @@
 		<?php
 			include('conn.php');
 		?>
-		<div style="position: absolute; text-align: center; width: 40%; margin-left: 50%; margin-top: 50vh; transform: translate(-50%, -50%);">
+		<div id="stats">
 			<img src="/assets/images/logo.png" style="height: 100px;"></img>
 			<table style="text-align: center; width: 100%;">
 				<tr>
