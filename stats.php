@@ -22,16 +22,16 @@
 			include('conn.php');
 		?>
 		<div id="stats">
-			<img src="/assets/images/logo.png" style="height: 100px;"></img>
+			<img src="/assets/images/logo.png" style="height: 13vh; height: calc(var(--vh, 1vh) * 13);"></img>
 			<table style="text-align: center; width: 100%;">
 				<tr>
-					<td id="players-joined" style="font-size: 100px; color: #fff; padding-top: 0px;">
+					<td id="players-joined" style="font-size: 13vh; font-size: calc(var(--vh, 1vh) * 13); color: #fff; padding-top: 0px;">
 						<?php
 							$query = "SELECT players_joined FROM statistics WHERE id = 1;";
 							echo mysqli_fetch_assoc(mysqli_query($conn, $query))["players_joined"];
 						?>
 					</td>
-					<td id="games-played" style="font-size: 100px; color: #fff; padding-top: 0px;">
+					<td id="games-played" style="font-size: 13vh; font-size: calc(var(--vh, 1vh) * 13); color: #fff; padding-top: 0px;">
 						<?php
 							$query = "SELECT games_played FROM statistics WHERE id = 1;";
 							echo mysqli_fetch_assoc(mysqli_query($conn, $query))["games_played"];
@@ -41,10 +41,22 @@
 					</td>
 				</tr>
 				<tr>
-					<td style="font-weight: bold; font-size: 15px; color: #936c6c;">PLAYERS JOINED</td>
-					<td style="font-weight: bold; font-size: 15px; color: #936c6c;">GAMES PLAYED</td>
+					<td style="font-weight: bold; font-size: 2.1vh; font-size: calc(var(--vh, 1vh) * 2.1); color: #936c6c;">PLAYERS JOINED</td>
+					<td style="font-weight: bold; font-size: 2.1vh; font-size: calc(var(--vh, 1vh) * 2.1); color: #936c6c;">GAMES PLAYED</td>
 				</tr>
 			</table>
 		</div>
+		<script>
+			function vhCalc() {
+    		    let vh = window.innerHeight * 0.01;
+                document.documentElement.style.setProperty('--vh', `${vh}px`);
+		    }
+		    
+		    vhCalc();
+            
+            window.addEventListener('resize', () => {
+            	vhCalc();
+            });
+		</script>
 	</body>
 </html>
