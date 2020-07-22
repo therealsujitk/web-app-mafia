@@ -59,7 +59,7 @@
 <div id="game">
 	<table id="game-content">
 		<tr>
-			<th id="game-index" style="height: 5px; vertical-align: center;"><h3>
+			<th id="game-index" style="vertical-align: center;"><h3>
 				<?php
 					if($_SESSION["dailyIndex"]%2 == 0) {
 						if($_SESSION["dailyIndex"] == 0)
@@ -75,10 +75,10 @@
 					}
 				?>
 			</h3></th>
-			<th id="role-button" style="height: 5px; vertical-align: center;"><input id="my-role" class="btn" type="button" value="My Role" onclick="openRole()"></input></th>
+			<th id="role-button" style="vertical-align: center;"><input id="my-role" class="btn" type="button" value="My Role" onclick="openRole()"></input></th>
 		</tr>
 		<tr id="mobile-game-nav">
-			<td colspan="2"><table style="width: 100%; vertical-align: middle;">
+			<td colspan="2"><table id="mobile-game-nav-content" style="width: 100%; vertical-align: middle;">
 				<th><i id="button-l" class="fas fa-comment-alt fa-2x mobile-game-nav" onclick="loadL();" style="color: #c80000;"></i></th>
 				<th><i id="button-r" class="fas fa-info-circle fa-2x mobile-game-nav" onclick="loadR();" style="color: #936c6c;"></i></th>
 			</table></td>
@@ -271,53 +271,54 @@
 					<input class="btn" type="button" value="My Role" style="margin-left: 50%; transform: translate(-50%, 0%);" onclick="openRole()"></input>
 					<hr class="divider" style="width: 40%; margin-top: 10px;">
 				</div>
-				
-				<div id="players">
-					<?php
-						$query = "SELECT user_id, name, is_mafia, is_poser, is_medic, is_sherrif, is_executed, is_killed FROM town_" . $townID . ";";
-						if($result = mysqli_query($conn, $query)) {
-							while($row = mysqli_fetch_assoc($result)) {
-								$name = $row["name"];
-								if($userID == $row["user_id"])
-									$name = $name . " <b>(You)</b>";
+				<div id="game-details">
+					<div id="players">
+						<?php
+							$query = "SELECT user_id, name, is_mafia, is_poser, is_medic, is_sherrif, is_executed, is_killed FROM town_" . $townID . ";";
+							if($result = mysqli_query($conn, $query)) {
+								while($row = mysqli_fetch_assoc($result)) {
+									$name = $row["name"];
+									if($userID == $row["user_id"])
+										$name = $name . " <b>(You)</b>";
 						
-								$span = '<span style="font-weight: normal;">';
+									$span = '<span style="font-weight: normal;">';
 						
-								if($row["is_mafia"] && $row["is_executed"])
-									$span = '<span style="font-weight: normal; color: #c80000; text-decoration: line-through;">';
-								else if($row["is_poser"] && $row["is_executed"])
-									$span = '<span style="font-weight: normal; color: #ffd300; text-decoration: line-through;">';
-								else if($row["is_medic"] && $row["is_executed"])
-									$span = '<span style="font-weight: normal; color: #fa691d; text-decoration: line-through;">';
-								else if($row["is_sherrif"] && $row["is_executed"])
-									$span = '<span style="font-weight: normal; color: #3895d3; text-decoration: line-through;">';
-								else if($row["is_executed"])
-									$span = '<span style="font-weight: normal; text-decoration: line-through;">';
-								else if($row["is_killed"])
-									$span = '<span style="font-weight: normal; text-decoration: line-through;">';
-								else if($row["is_mafia"]) {
-									$query = "SELECT name FROM town_" . $townID . " WHERE (is_mafia = 1 OR is_poser = 1) AND user_id = " . $userID . ";";
-									if(mysqli_fetch_assoc(mysqli_query($conn, $query)))
-										$span = '<span style="font-weight: normal; color: #c80000">';
+									if($row["is_mafia"] && $row["is_executed"])
+										$span = '<span style="font-weight: normal; color: #c80000; text-decoration: line-through;">';
+									else if($row["is_poser"] && $row["is_executed"])
+										$span = '<span style="font-weight: normal; color: #ffd300; text-decoration: line-through;">';
+									else if($row["is_medic"] && $row["is_executed"])
+										$span = '<span style="font-weight: normal; color: #fa691d; text-decoration: line-through;">';
+									else if($row["is_sherrif"] && $row["is_executed"])
+										$span = '<span style="font-weight: normal; color: #3895d3; text-decoration: line-through;">';
+									else if($row["is_executed"])
+										$span = '<span style="font-weight: normal; text-decoration: line-through;">';
+									else if($row["is_killed"])
+										$span = '<span style="font-weight: normal; text-decoration: line-through;">';
+									else if($row["is_mafia"]) {
+										$query = "SELECT name FROM town_" . $townID . " WHERE (is_mafia = 1 OR is_poser = 1) AND user_id = " . $userID . ";";
+										if(mysqli_fetch_assoc(mysqli_query($conn, $query)))
+											$span = '<span style="font-weight: normal; color: #c80000">';
+									}
+						
+									echo $span . $name . '</span><br>';
 								}
-						
-								echo $span . $name . '</span><br>';
 							}
-						}
-					?>
-				</div>
+						?>
+					</div>
 				
-				<div id="town-details">
-					<?php
-						if($result = mysqli_query($conn, $query)) {
-							echo '<hr class="divider">';
-							echo '<span>Population: ' . mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(user_id) FROM town_" . $_SESSION["townID"] . ";"))["COUNT(user_id)"] . '</span><br>';
-							echo '<span style="color: #c80000;">Mafia: ' . mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(user_id) FROM town_" . $_SESSION["townID"] . " WHERE is_mafia = 1;"))["COUNT(user_id)"] . '</span><br>';
-							echo '<span style="color: #ffd300;">Poser: ' . mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(user_id) FROM town_" . $_SESSION["townID"] . " WHERE is_poser = 1;"))["COUNT(user_id)"] . '</span><br>';
-							echo '<span style="color: #fa691d;">Medic: ' . mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(user_id) FROM town_" . $_SESSION["townID"] . " WHERE is_medic = 1;"))["COUNT(user_id)"] . '</span><br>';
-							echo '<span style="color: #3895d3;">Sheriff: ' . mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(user_id) FROM town_" . $_SESSION["townID"] . " WHERE is_sherrif = 1;"))["COUNT(user_id)"] . '</span><br>';
-						}
-					?>
+					<div id="town-details">
+						<?php
+							if($result = mysqli_query($conn, $query)) {
+								echo '<hr class="divider">';
+								echo '<span>Population: ' . mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(user_id) FROM town_" . $_SESSION["townID"] . ";"))["COUNT(user_id)"] . '</span><br>';
+								echo '<span style="color: #c80000;">Mafia: ' . mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(user_id) FROM town_" . $_SESSION["townID"] . " WHERE is_mafia = 1;"))["COUNT(user_id)"] . '</span><br>';
+								echo '<span style="color: #ffd300;">Poser: ' . mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(user_id) FROM town_" . $_SESSION["townID"] . " WHERE is_poser = 1;"))["COUNT(user_id)"] . '</span><br>';
+								echo '<span style="color: #fa691d;">Medic: ' . mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(user_id) FROM town_" . $_SESSION["townID"] . " WHERE is_medic = 1;"))["COUNT(user_id)"] . '</span><br>';
+								echo '<span style="color: #3895d3;">Sheriff: ' . mysqli_fetch_assoc(mysqli_query($conn, "SELECT COUNT(user_id) FROM town_" . $_SESSION["townID"] . " WHERE is_sherrif = 1;"))["COUNT(user_id)"] . '</span><br>';
+							}
+						?>
+					</div>
 				</div>
 			</td>
 		</td>
@@ -845,29 +846,32 @@
     	let gameFooterHeight = document.getElementById('game-footer').offsetHeight;
     	
     	if(window.innerWidth < 600) {
-    	    let gameSpaceHeight = totalHeight - mobileGameNavHeight - newsBarHeight - gameFooterHeight - (window.innerWidth/728)*90 - 90 - 20;
+    	    var gameSpaceHeight = totalHeight - mobileGameNavHeight - newsBarHeight - gameFooterHeight - (window.innerWidth/728)*90 - 90 - 20;
     			document.documentElement.style.setProperty('--gs', `${gameSpaceHeight}px`);
     	}
     	else if(window.inneWidth < 728) {
     		if ((window.innerWidth/728)*90 > headerHeight) {
-    			let gameSpaceHeight = totalHeight - (window.innerWidth/728)*90 - gameIndexHeight - newsBarHeight - gameFooterHeight - 100;
+    			var gameSpaceHeight = totalHeight - (window.innerWidth/728)*90 - gameIndexHeight - newsBarHeight - gameFooterHeight - 100;
     			document.documentElement.style.setProperty('--gs', `${gameSpaceHeight}px`);
     		}
     		else {
-    			let gameSpaceHeight = totalHeight - headerHeight - gameIndexHeight - newsBarHeight - gameFooterHeight - 100;
+    			var gameSpaceHeight = totalHeight - headerHeight - gameIndexHeight - newsBarHeight - gameFooterHeight - 100;
     			document.documentElement.style.setProperty('--gs', `${gameSpaceHeight}px`);
     		}
     	}
     	else {
     		if (90 > headerHeight) {
-    			let gameSpaceHeight = totalHeight - 90 - gameIndexHeight - newsBarHeight - gameFooterHeight - 150;
+    			var gameSpaceHeight = totalHeight - 90 - gameIndexHeight - newsBarHeight - gameFooterHeight - 150;
     			document.documentElement.style.setProperty('--gs', `${gameSpaceHeight}px`);
     		}
     		else {
-    			let gameSpaceHeight = totalHeight - headerHeight - gameIndexHeight - newsBarHeight - gameFooterHeight - 150;
+    			var gameSpaceHeight = totalHeight - headerHeight - gameIndexHeight - newsBarHeight - gameFooterHeight - 150;
     			document.documentElement.style.setProperty('--gs', `${gameSpaceHeight}px`);
     		}
     	}
+    	
+    	let gameSpaceHeightR = newsBarHeight + gameFooterHeight + gameSpaceHeight;
+    	document.documentElement.style.setProperty('--gsr', `${gameSpaceHeightR}px`);
     }
     
     vhCalc();
