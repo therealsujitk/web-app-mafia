@@ -580,6 +580,7 @@ figcaption {
 	width: 40%;
 	margin-left: 50%;
 	margin-top: 50vh;
+	margin-top: calc(var(--vh, 1vh) * 50);
 	transform: translate(-50%, -50%);
 }
 
