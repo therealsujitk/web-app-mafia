@@ -412,6 +412,11 @@ figcaption {
 	padding: 1.5%;
 }
 
+#game-details {
+	max-height: var(--gsr);
+	overflow: auto;
+}
+
 #news-bar {
 	background: #000;
 	width: 99.5%;
@@ -569,6 +574,103 @@ figcaption {
 	display: none;
 }
 
+@media only screen and (orientation: portrait) {
+	#header {
+		display: none;
+	}
+	
+	#logo-mobile {
+		position: absolute;
+		display: block;
+	}
+	
+	#menu-mobile {
+		color: #936c6c;
+		font-size: 1.7em;
+	}
+	
+	#menu-mobile:hover {
+		cursor: pointer;
+		color: #c80000;
+	}
+	
+	#town-name {
+		display: none;
+	}
+	
+	#town-players {
+		margin-top: 90px;
+		max-width: 90%;
+	}
+	
+	#game-index {
+		display: none;
+	}
+	
+	#role-button {
+		display: none;
+	}
+	
+	#game {
+		margin-top: 90px;
+		transform: translate(-50%, 0%);
+	}
+	
+	#news-bar {
+		max-height: 60px;
+	}
+	
+	#mobile-game-nav {
+		display: contents;
+	}
+	
+	#game-content {
+		width: 100%;
+		border-spacing: 0;
+		padding: 0;
+	}
+	
+	#content {
+		border-radius: 0;
+	}
+	
+	#game-content-l {
+		border: none;
+		border-radius: 0;
+	}
+	
+	#news-bar {
+		border-radius: 0;
+	}
+	
+	#game-footer {
+		padding: 0;
+	}
+	
+	#game-content-r {
+		display: none;
+		text-align: center;
+	}
+	
+	.divider {
+		width: 60%;
+	}
+	
+	#role-mobile {
+		display: contents;
+	}
+	
+	#candidates-box {
+		margin: 10px 20px;
+	}
+}
+
+@media only screen and (min-width: 475px) {
+	.nav {
+		min-width: 40%;
+	}
+}
+
 @media only screen and (max-width: 600px) {
 	#header {
 		display: none;
@@ -699,14 +801,6 @@ figcaption {
 	
 	#game-footer {
 		padding: 0;
-	}
-	
-	#game-display {
-		height: 40vh;
-		height: calc(var(--vh, 1vh) * 40);
-		max-height: 40vh;
-		max-height: calc(var(--vh, 1vh) * 40);
-		overflow: auto;
 	}
 	
 	#game-content-r {
