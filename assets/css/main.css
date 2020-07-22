@@ -574,6 +574,15 @@ figcaption {
 	display: none;
 }
 
+#stats {
+	position: absolute;
+	text-align: center;
+	width: 40%;
+	margin-left: 50%;
+	margin-top: 50vh;
+	transform: translate(-50%, -50%);
+}
+
 @media only screen and (orientation: portrait) {
 	#header {
 		display: none;
@@ -818,6 +827,10 @@ figcaption {
 	
 	#candidates-box {
 		margin: 10px 20px;
+	}
+	
+	#stats {
+		width: 100%;
 	}
 }
 
