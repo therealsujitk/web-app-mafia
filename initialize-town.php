@@ -30,21 +30,21 @@
 		
 		$ID = '';
 		
-		for($i=0; $i<15; ++$i) {
+		for($i=0; $i<8; ++$i) {
 			$ID = $ID.$arr[rand(0, 35)];
 		}
 			
 		return $ID;
 	}
 	
+	include('conn.php');
+
 	while(true) {
 		$townID = uniqueID();
 		$query = "SELECT * FROM town_details WHERE town_id = " . $townID . ";";
 		if(!mysqli_query($conn, $query))
 			break;
 	}
-	
-	include('conn.php');
 	
 	$query = "INSERT INTO town_details (town_id, town_name, mob_name) VALUES('$townID', '$town', '$mob');";
 	mysqli_query($conn, $query);

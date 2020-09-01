@@ -706,7 +706,7 @@
 							$name = $row["name"];
 							if($userID == $row["user_id"])
 								$name = $name . ' <b>(You)</b>';
-							echo '<figure style="margin: 10px 20px 10px 0px; display: inline-block;"><img class="candidate candidate-medic" style="height: 100px;" src="'. $row["avatar"] .'" onclick="registerVote(`medic`, `' . $row["user_id"] . '`);"></img><figcaption style="color: ' . $color . ';">' . $name . '</figcaption></figure>';
+							echo '<figure style="margin: 10px 20px 10px 0px; display: inline-block;"><img class="candidate candidate-medic" style="height: 100px;" src="'. $row["avatar"] .'" onclick="registerVote(`medic`, `' . $row["user_id"] . '`);"></img><figcaption>' . $name . '</figcaption></figure>';
 						}
 					echo '</div></div>';
 					
@@ -744,7 +744,7 @@
 							$name = $row["name"];
 							if($userID == $row["user_id"])
 								continue;
-							echo '<figure style="margin: 10px 20px 10px 0px; display: inline-block;"><img class="candidate candidate-sherrif" style="height: 100px;" src="'. $row["avatar"] .'" onclick="registerVote(`sheriff`, `' . $row["user_id"] . '`);"></img><figcaption style="color: ' . $color . ';">' . $name . '</figcaption></figure>';
+							echo '<figure style="margin: 10px 20px 10px 0px; display: inline-block;"><img class="candidate candidate-sherrif" style="height: 100px;" src="'. $row["avatar"] .'" onclick="registerVote(`sheriff`, `' . $row["user_id"] . '`);"></img><figcaption>' . $name . '</figcaption></figure>';
 						}
 					echo '</div></div>';
 					
@@ -769,12 +769,17 @@
 					</table>';
 				
 					echo '<div id="candidates-box"><div id="candidates">';
-					$query = "SELECT user_id, name, avatar FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0;";
+					$query = "SELECT user_id, name, avatar, is_mafia FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0;";
 					if($result = mysqli_query($conn, $query))
 						while($row = mysqli_fetch_assoc($result)) {
 							$name = $row["name"];
 							if($userID == $row["user_id"])
 								$name = $name . ' <b>(You)</b>';
+							$query2 = "SELECT user_id FROM town_" . $townID . " WHERE user_id = " . $userID . " AND is_mafia = 1;";
+							$color = "#fff";
+							if(mysqli_fetch_assoc(mysqli_query($conn, $query2)))
+								if($row["is_mafia"])
+									$color = "#c80000";
 							echo '<figure style="margin: 10px 20px 10px 0px; display: inline-block;"><img class="candidate" style="height: 100px;" src="'. $row["avatar"] .'" onclick="registerVote(`citizen`, `' . $row["user_id"] . '`);"></img><figcaption style="color: ' . $color . ';">' . $name . '</figcaption></figure>';
 						}
 					echo '</div></div>';
@@ -992,11 +997,10 @@
 				document.getElementById('error-modal').classList.add("show-modal");
 				document.getElementById('modal-background').style.display = "block";
 			}, 500);
-			
-			
-			$('#submit-report').prop('disabled', false);
-			$('#submit-report').val('Submit Bug Report');
 		}
+
+		$('#submit-report').prop('disabled', false);
+		$('#submit-report').val('Submit Bug Report');
 	}
 
 	$('#submit-report').on('click', function () {

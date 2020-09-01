@@ -50,29 +50,30 @@
 							
 							if(isset($_SESSION["townID"])) {
 								$townID = $_SESSION["townID"];
-								echo '<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Continue Playing" onclick="continuePlaying()"></input>';
 							
 								$query = "SELECT user_id FROM town_" . $townID . ";";
 								if(mysqli_query($conn, $query)) {
 									$query = "SELECT has_started FROM town_details WHERE town_id = '$townID';";
 									if(mysqli_fetch_assoc(mysqli_query($conn, $query))["has_started"]) {
+										echo '<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Continue Playing" onclick="continuePlaying()"></input>';
+
 										echo '<script>
 											function continuePlaying() {
 												$("body").load("/game.php");
 											}
 										</script>';
 									}
-									else {
+									else if(!mysqli_fetch_assoc(mysqli_query($conn, $query))["has_started"]) {
+										echo '<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Continue Playing" onclick="continuePlaying()"></input>';
+										
 										echo '<script>
 											function continuePlaying() {
-												$("body").load("/pre-game.php");
+												$("body").load("/lounge.php");
 											}
 										</script>';
 									}
 								}
 							}
-							
-							mysqli_close($conn);
 						?>
 					</nav>
 				</td>
@@ -93,29 +94,14 @@
 				<input class="header link" style="padding: 10px 20px 10px 20px;" type="button" value="About Us" onclick="openAbout()"></input>
 				</br>
 				<?php
-					include('conn.php');
-					session_start();
-					$townID = $_SESSION["townID"];
-					
-					if($townID) {
-						echo '<input class="header link" style="padding: 10px 20px 10px 20px;" type="button" value="Continue Playing" onclick="continuePlaying()"></input>';
+					if(isset($_SESSION["townID"])) {
+						$townID = $_SESSION["townID"];
 					
 						$query = "SELECT user_id FROM town_" . $townID . ";";
 						if(mysqli_query($conn, $query)) {
 							$query = "SELECT has_started FROM town_details WHERE town_id = '$townID';";
-							if(mysqli_fetch_assoc(mysqli_query($conn, $query))["has_started"]) {
-								echo '<script>
-									function continuePlaying() {
-										$("body").load("/game.php");
-									}
-								</script>';
-							}
-							else {
-								echo '<script>
-									function continuePlaying() {
-										$("body").load("/pre-game.php");
-									}
-								</script>';
+							if(mysqli_fetch_assoc(mysqli_query($conn, $query))) {
+								echo '<input class="header link" style="padding: 10px 20px 10px 20px;" type="button" value="Continue Playing" onclick="continuePlaying()"></input>';
 							}
 						}
 					}
@@ -284,9 +270,6 @@
 				if(response === "Success!") {
 					document.getElementById('success-bug').style.display = "block";
 					document.getElementById('report').value = "";
-					
-					$('#submit-report').prop('disabled', false);
-					$('#submit-report').val('Submit Bug Report');
 				}
 				else {
 					closeAll();
@@ -295,10 +278,10 @@
 						document.getElementById('error-modal').classList.add("show-modal");
 						document.getElementById('modal-background').style.display = "block";
 					}, 500);
-			
-					$('#submit-report').prop('disabled', false);
-					$('#submit-report').val('Submit Bug Report');
 				}
+
+				$('#submit-report').prop('disabled', false);
+				$('#submit-report').val('Submit Bug Report');
 			}
 
 			$('#submit-report').on('click', function () {
@@ -329,7 +312,7 @@
 			
 			function createTown(response) {
 				if(response === "Success!")
-					$("body").load("/pre-game.php");
+					$("body").load("/lounge.php");
 				else {
 					closeAll();
 					setTimeout(function() {
@@ -380,7 +363,7 @@
 			
 			function joinTown(response) {
 				if(response === "Success!")
-					$("body").load("/pre-game.php");
+					$("body").load("/lounge.php");
 				else {
 					closeAll();
 					setTimeout(function() {

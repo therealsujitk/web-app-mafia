@@ -25,7 +25,7 @@ h1, h2, h3, h4, h5 {
 	margin-left: 30px;
 	margin-top: 50px;
 	transform: translate(0%, -50%);
-	display: block;
+	display: none;
 }
 
 #logo-mobile {
@@ -489,31 +489,6 @@ figcaption {
 	box-shadow: 0 7px 15px #000;
 }
 
-.candidate-mafia {
-
-}
-
-.candidate-medic:hover {
-
-}
-
-
-.candidate-medic {
-
-}
-
-.candidate-medic:hover {
-
-}
-
-.candidate-sherrif {
-
-}
-
-.candidate-sherrif:hover {
-
-}
-
 .divider {
 	border-style: solid;
 	border-color: #936c6c;
@@ -597,6 +572,7 @@ figcaption {
 	#menu-mobile {
 		color: #936c6c;
 		font-size: 1.7em;
+		display: block;
 	}
 	
 	#menu-mobile:hover {
