@@ -112,7 +112,7 @@
 		<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 	</table>
 	<p>Made with love by a team of talented people from <b>BinaryStack</b>.</p>
-	<p>Built By: <b><a class="link2" href="https://instagram.com/abishek.stuff/" target="_blank">@AbishekDevendran</a></b> & <b><a class="link2" href="https://instagram.com/therealsujitk" target="_blank">@therealsujitk</a></b>.</p>
+	<p>Built By: <b><a class="link2" href="https://instagram.com/abishek.stuff/" target="_blank">@AbishekDevendran</a></b> & <b><a class="link2" href="https://therealsuji.tk" target="_blank">@therealsujitk</a></b>.</p>
 </div>
 
 <div id="error-modal" class="modal">
