@@ -47,9 +47,9 @@
 						<?php
 							include('conn.php');
 							session_start();
-							$townID = $_SESSION["townID"];
 							
-							if($townID) {
+							if(isset($_SESSION["townID"])) {
+								$townID = $_SESSION["townID"];
 								echo '<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Continue Playing" onclick="continuePlaying()"></input>';
 							
 								$query = "SELECT user_id FROM town_" . $townID . ";";
