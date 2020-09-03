@@ -387,13 +387,13 @@ textArea:focus {
 }
 
 .copied {
-	background-color: #13eba2;
+	background-color: #b4f1af;
 	opacity: 1;
-	color: #000;
+	color: #33722d;
 }
 
 .copied::after {
-	border-color: #13eba2 transparent transparent transparent;
+	border-color: #b4f1af transparent transparent transparent;
 }
   
 .tooltip .tooltiptext::after {
