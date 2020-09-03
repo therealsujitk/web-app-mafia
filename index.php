@@ -104,6 +104,10 @@
 								echo '<input class="header link" style="padding: 10px 20px 10px 20px;" type="button" value="Continue Playing" onclick="continuePlaying()"></input>';
 							}
 						}
+						else {
+							session_unset();
+							session_destroy();
+						}
 					}
 					
 					mysqli_close($conn);
