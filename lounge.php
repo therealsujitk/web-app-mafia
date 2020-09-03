@@ -72,7 +72,7 @@
 		?>
 	</div>
 
-	<p id="share">Your Town ID is <b><?php echo $townID; ?></b>. <span id="copy" class="link3" onclick="copyText(townID);">Click here</span> to copy.</p>
+	<p id="share">Your Town ID is <b><?php echo $townID; ?></b>. <span class="tooltip link3" onclick="copyText(townID);">Click here<span id="copy" class="tooltiptext copy">Copy</span></span> to copy.</p>
 	<?php
 		$query = "SELECT user_id FROM town_" . $townID . ";";
 		$ownerID = mysqli_fetch_assoc(mysqli_query($conn, $query))["user_id"];

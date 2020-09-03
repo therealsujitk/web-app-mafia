@@ -250,12 +250,14 @@ function copyText(value) {
 	document.body.removeChild(tempInput);
 	
 	let x = document.getElementById('copy');
-	x.classList.add("tooltip");
-	x.innerHTML = 'Click here<span class="tooltiptext">Copied!</span>';
+	x.innerHTML = 'Copied!';
+	x.classList.add('copied');
+	x.classList.remove('copy');
 	
 	setTimeout(function () {
-		x.classList.remove("tooltip");
-		x.innerHTML = 'Click here';
+		x.innerHTML = 'Copy';
+		x.classList.add('copy');
+		x.classList.remove('copied');
 	}, 3000);
 }
 

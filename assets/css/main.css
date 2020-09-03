@@ -360,12 +360,12 @@ textArea:focus {
 .tooltip {
 	position: relative;
 	display: inline-block;
+	border-bottom: 1px dotted #000;
 }
-
+  
 .tooltip .tooltiptext {
-	width: 120px;
-	background-color: black;
-	color: #fff;
+	visibility: hidden;
+	width: 100px;
 	text-align: center;
 	border-radius: 6px;
 	padding: 5px 0;
@@ -373,11 +373,48 @@ textArea:focus {
 	z-index: 1;
 	bottom: 150%;
 	left: 50%;
-	margin-left: -60px;
+	margin-left: -50px;
 }
 
+.copy {
+	background-color: #000;
+	opacity: 0.8;
+	color: #fff;
+}
+
+.copy::after {
+	border-color: #000 transparent transparent transparent;
+}
+
+.copied {
+	background-color: #13eba2;
+	opacity: 1;
+	color: #000;
+}
+
+.copied::after {
+	border-color: #13eba2 transparent transparent transparent;
+}
+  
+.tooltip .tooltiptext::after {
+	content: "";
+	position: absolute;
+	top: 100%;
+	left: 50%;
+	margin-left: -5px;
+	border-width: 5px;
+	border-style: solid;
+}
+  
 .tooltip:hover .tooltiptext {
 	visibility: visible;
+	animation: tooltipAnimation 0.5s;
+	animation-fill-mode: forwards;
+}
+
+@keyframes tooltipAnimation {
+	from {opacity: 0; bottom: 120%;}
+	to {opacity: 0.8; bottom: 150%;}
 }
 
 figcaption {
