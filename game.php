@@ -556,6 +556,7 @@
 	</table>
 	<p>Made with love by a team of talented people from <b>BinaryStack</b>.</p>
 	<p>Credits: <b><a class="link2" href="https://instagram.com/abishek.stuff/" target="_blank">@AbishekDevendran</a></b> & <b><a class="link2" href="https://therealsuji.tk" target="_blank">@therealsujitk</a></b>.</p>
+	<div id="version"><span>v2.1.2</span></div>
 </div>
 
 <div id="error-modal" class="modal">

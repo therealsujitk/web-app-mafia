@@ -559,6 +559,14 @@ figcaption {
 	transform: translate(-50%, -50%);
 }
 
+#version {
+	color: #936c6c;
+	text-align: center;
+	font-size: 12px;
+	font-weight: bold;
+	margin-bottom: 10px;
+}
+
 @media only screen and (orientation: portrait) {
 	#header {
 		display: none;
