@@ -1,0 +1,12 @@
+{
+    "name": "binary-stack/web-app-mafia",
+    "description": "Free multiplayer social deduction game.",
+    "autoload": {
+        "psr-4": {
+            "Mafia\\": ""
+        }
+    },
+    "require": {
+        "cboden/ratchet": "^0.4.3"
+    }
+}
