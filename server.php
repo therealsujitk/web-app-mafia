@@ -1,22 +1,12 @@
 <?php
-namespace Mafia;
-use Ratchet\MessageComponentInterface;
-use Ratchet\ConnectionInterface;
+use Ratchet\Server\IoServer;
+use MyApp\Chat;
 
-Class Mafia implements MessageComponentInterface {
-    public function onOpen(ConnectionInterface $conn) {
+require dirname(__DIR__) . '/vendor/autoload.php';
 
-    }
+$server = IoServer::factory(
+    new Mafia(),
+    3000
+);
 
-    public function onMessage(ConnectionInterface $from, $message) {
-
-    }
-
-    public function onClose(ConnectionInterface $conn) {
-
-    }
-
-    public function onError(ConnectionInterface $conn, \Exception $e) {
-
-    }
-}
+$server->run();
