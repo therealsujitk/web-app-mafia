@@ -45,35 +45,35 @@
 						<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Report Bug" onclick="openBug()"></input>
 						<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="About Us" onclick="openAbout()"></input>
 						<?php
-							include('conn.php');
-							session_start();
-							
-							if(isset($_SESSION["townID"])) {
-								$townID = $_SESSION["townID"];
-							
-								$query = "SELECT user_id FROM town_" . $townID . ";";
-								if(mysqli_query($conn, $query)) {
-									$query = "SELECT has_started FROM town_details WHERE town_id = '$townID';";
-									if(mysqli_fetch_assoc(mysqli_query($conn, $query))["has_started"]) {
-										echo '<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Continue Playing" onclick="continuePlaying()"></input>';
+						include('conn.php');
+						session_start();
+						
+						if(isset($_SESSION["townID"])) {
+							$townID = $_SESSION["townID"];
+						
+							$query = "SELECT user_id FROM town_" . $townID . ";";
+							if(mysqli_query($conn, $query)) {
+								$query = "SELECT has_started FROM town_details WHERE town_id = '$townID';";
+								if(mysqli_fetch_assoc(mysqli_query($conn, $query))["has_started"]) {
+									echo '<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Continue Playing" onclick="continuePlaying()"></input>';
 
-										echo '<script>
-											function continuePlaying() {
-												$("body").load("/game.php");
-											}
-										</script>';
-									}
-									else if(!mysqli_fetch_assoc(mysqli_query($conn, $query))["has_started"]) {
-										echo '<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Continue Playing" onclick="continuePlaying()"></input>';
-										
-										echo '<script>
-											function continuePlaying() {
-												$("body").load("/lounge.php");
-											}
-										</script>';
-									}
+									echo '<script>
+										function continuePlaying() {
+											$("body").load("/game.php");
+										}
+									</script>';
+								}
+								else if(!mysqli_fetch_assoc(mysqli_query($conn, $query))["has_started"]) {
+									echo '<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Continue Playing" onclick="continuePlaying()"></input>';
+									
+									echo '<script>
+										function continuePlaying() {
+											$("body").load("/lounge.php");
+										}
+									</script>';
 								}
 							}
+						}
 						?>
 					</nav>
 				</td>
@@ -94,23 +94,23 @@
 				<input class="header link" style="padding: 10px 20px 10px 20px;" type="button" value="About Us" onclick="openAbout()"></input>
 				</br>
 				<?php
-					if(isset($_SESSION["townID"])) {
-						$townID = $_SESSION["townID"];
-					
-						$query = "SELECT user_id FROM town_" . $townID . ";";
-						if(mysqli_query($conn, $query)) {
-							$query = "SELECT has_started FROM town_details WHERE town_id = '$townID';";
-							if(mysqli_fetch_assoc(mysqli_query($conn, $query))) {
-								echo '<input class="header link" style="padding: 10px 20px 10px 20px;" type="button" value="Continue Playing" onclick="continuePlaying()"></input>';
-							}
-						}
-						else {
-							session_unset();
-							session_destroy();
+				if(isset($_SESSION["townID"])) {
+					$townID = $_SESSION["townID"];
+				
+					$query = "SELECT user_id FROM town_" . $townID . ";";
+					if(mysqli_query($conn, $query)) {
+						$query = "SELECT has_started FROM town_details WHERE town_id = '$townID';";
+						if(mysqli_fetch_assoc(mysqli_query($conn, $query))) {
+							echo '<input class="header link" style="padding: 10px 20px 10px 20px;" type="button" value="Continue Playing" onclick="continuePlaying()"></input>';
 						}
 					}
-					
-					mysqli_close($conn);
+					else {
+						session_unset();
+						session_destroy();
+					}
+				}
+				
+				mysqli_close($conn);
 				?>
 			</nav>
 		</div>

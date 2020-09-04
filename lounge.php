@@ -1,11 +1,11 @@
 <script>
 	<?php
-		include('conn.php');
-		session_start();
-	
-		$userID = $_SESSION["userID"];
-		$townID = $_SESSION["townID"];
-		$town = $_SESSION["town"];
+	include('conn.php');
+	session_start();
+
+	$userID = $_SESSION["userID"];
+	$townID = $_SESSION["townID"];
+	$town = $_SESSION["town"];
 	?>
 
 	var townID = <?php echo json_encode($townID); ?>;
@@ -21,11 +21,11 @@
 				<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Report Bug" onclick="openBug()"></input>
 				<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="About Us" onclick="openAbout()"></input>
 				<?php
-					$query = "SELECT user_id FROM town_" . $townID . ";";
-					$ownerID = mysqli_fetch_assoc(mysqli_query($conn, $query))["user_id"];
-		
-					if($ownerID != $userID)
-						echo '<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Leave Game" onclick="openLeave()"></input>';
+				$query = "SELECT user_id FROM town_" . $townID . ";";
+				$ownerID = mysqli_fetch_assoc(mysqli_query($conn, $query))["user_id"];
+	
+				if($ownerID != $userID)
+					echo '<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Leave Game" onclick="openLeave()"></input>';
 				?>
 			</nav>
 		</td>
@@ -47,11 +47,11 @@
 		<input class="header link" style="padding: 10px 20px 10px 20px;" type="button" value="About Us" onclick="openAbout()"></input>
 		</br>
 		<?php
-			$query = "SELECT user_id FROM town_" . $townID . ";";
-			$ownerID = mysqli_fetch_assoc(mysqli_query($conn, $query))["user_id"];
+		$query = "SELECT user_id FROM town_" . $townID . ";";
+		$ownerID = mysqli_fetch_assoc(mysqli_query($conn, $query))["user_id"];
 
-			if($ownerID != $userID)
-				echo '<input class="header link" style="padding: 10px 20px 10px 20px;" type="button" value="Leave Game" onclick="openLeave()"></input>';
+		if($ownerID != $userID)
+			echo '<input class="header link" style="padding: 10px 20px 10px 20px;" type="button" value="Leave Game" onclick="openLeave()"></input>';
 		?>
 	</nav>
 </div>
@@ -60,25 +60,25 @@
 	<h2 id="town-name" style="margin-bottom: 10px;"><?php echo $town; ?></h2>
 	<div id="player-cards">
 		<?php
-			$query = "SELECT user_id, name, avatar FROM town_" . $townID . ";";
-		
-			if($result = mysqli_query($conn, $query))
-				while($row = mysqli_fetch_assoc($result)) {
-					$name = $row["name"];
-					if($userID == $row["user_id"])
-						$name = $name . " <b>(You)</b>";
-					echo '<figure style="margin: 10px; display: inline-block;"><img style="height: 22vh; max-height: 150px;" src="'. $row["avatar"] .'"></img><figcaption style="width: 17vh; white-space: nowrap; overflow: auto;">' . $name . '</figcaption></figure>';
-				}
+		$query = "SELECT user_id, name, avatar FROM town_" . $townID . ";";
+	
+		if($result = mysqli_query($conn, $query))
+			while($row = mysqli_fetch_assoc($result)) {
+				$name = $row["name"];
+				if($userID == $row["user_id"])
+					$name = $name . " <b>(You)</b>";
+				echo '<figure style="margin: 10px; display: inline-block;"><img style="height: 22vh; max-height: 150px;" src="'. $row["avatar"] .'"></img><figcaption style="width: 17vh; white-space: nowrap; overflow: auto;">' . $name . '</figcaption></figure>';
+			}
 		?>
 	</div>
 
 	<p id="share">Your Town ID is <b><?php echo $townID; ?></b>. <span class="tooltip link3" onclick="copyText(townID);">Click here<span id="copy" class="tooltiptext copy">Copy</span></span> to copy.</p>
 	<?php
-		$query = "SELECT user_id FROM town_" . $townID . ";";
-		$ownerID = mysqli_fetch_assoc(mysqli_query($conn, $query))["user_id"];
-		
-		if($ownerID === $userID)
-			echo '<input id="start" class="btn" type="button" value="Start Game"></input>';
+	$query = "SELECT user_id FROM town_" . $townID . ";";
+	$ownerID = mysqli_fetch_assoc(mysqli_query($conn, $query))["user_id"];
+	
+	if($ownerID === $userID)
+		echo '<input id="start" class="btn" type="button" value="Start Game"></input>';
 	?>
 </div>
 
@@ -144,11 +144,11 @@
 
 <div id="has-started" style="display: none;">
 	<?php
-		$query = "SELECT has_started FROM town_details WHERE town_id = '$townID';";
-		if(mysqli_fetch_assoc(mysqli_query($conn, $query))["has_started"])
-			echo '<span>Let the games begin!</span>';
-		
-		mysqli_close($conn);
+	$query = "SELECT has_started FROM town_details WHERE town_id = '$townID';";
+	if(mysqli_fetch_assoc(mysqli_query($conn, $query))["has_started"])
+		echo '<span>Let the games begin!</span>';
+	
+	mysqli_close($conn);
 	?>
 </div>
 <script>

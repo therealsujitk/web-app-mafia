@@ -1,17 +1,17 @@
 <?php
-	include('conn.php');
+include('conn.php');
 
-	$report = $_POST['report'];
-	$report = str_replace("'", "\'", $report);
-	$report = trim($report);
+$report = $_POST['report'];
+$report = str_replace("'", "\'", $report);
+$report = trim($report);
 
-	if($report == '')
-		die('Success!');
+if($report == '')
+	die('Success!');
 
-	$query = "INSERT INTO bug_reports (report) VALUES('$report');";
-	mysqli_query($conn, $query);
-	
-	mysqli_close($conn);
-	
-	echo 'Success!';
+$query = "INSERT INTO bug_reports (report) VALUES('$report');";
+mysqli_query($conn, $query);
+
+mysqli_close($conn);
+
+echo 'Success!';
 ?>
