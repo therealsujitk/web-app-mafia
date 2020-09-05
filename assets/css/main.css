@@ -382,7 +382,7 @@ textArea:focus {
 }
 
 .copy::after {
-	border-color: #000 transparent transparent transparent;
+	border-color: #222 transparent transparent transparent;
 }
 
 .copied {
