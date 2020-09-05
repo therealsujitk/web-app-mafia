@@ -20,13 +20,7 @@
 				<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Privacy Policy" onclick="openPrivacy()"></input>
 				<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Report Bug" onclick="openBug()"></input>
 				<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="About Us" onclick="openAbout()"></input>
-				<?php
-				$query = "SELECT user_id FROM town_" . $townID . ";";
-				$ownerID = mysqli_fetch_assoc(mysqli_query($conn, $query))["user_id"];
-	
-				if($ownerID != $userID)
-					echo '<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Leave Game" onclick="openLeave()"></input>';
-				?>
+				<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Leave Town" onclick="openLeave()"></input>
 			</nav>
 		</td>
 	</table>
@@ -134,7 +128,7 @@
 	</table>
 	<table cellpadding="0" cellspacing="0" style="width: 100%;">
 		<td><img src="/assets/images/warning.png" style="height: 50px;"></img></td>
-		<td><p style="padding: 0; margin: 0;">Are you sure you want to leave this game? You can always join back using the <b>Town ID</b>.</p></td>
+		<td><p style="padding: 0; margin: 0;">Are you sure you want to leave this town? You can always join back using the <b>Town ID</b>.</p></td>
 	</table>
 	<table align="right">
 		<td style="text-align: right; padding-right: 2.5px;"><input class="btn3" type="button" value="Cancel" onclick="closeAll()"></td>
@@ -183,7 +177,7 @@
 	
 		$.ajax({
 			type: 'POST',
-			url: 'build-town.php',
+			url: '/resources/build-town.php',
 			error: function() {
 				closeAll();
 				setTimeout(function() {
@@ -198,16 +192,20 @@
 		}).then(response => buildTown(response));
 	});
 
-	var lounge = setInterval(function(){
-		$("#player-cards").load("/lounge.php #player-cards > *");
-		$("#has-started").load("/lounge.php #has-started > *");
-		
-		var x = document.getElementById('has-started').innerHTML.trim();
-		if(x != '') {
-			clearInterval(lounge);
-			$("body").load("/game.php");
+	conn.onmessage = function(e) {
+		if(e.data === '*') {
+			$("#town-players").load("/lounge.php #town-players > *", function(response, status) {
+				if(status !=  "success") {
+					closeAll();
+					setTimeout(function() {
+						document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
+						document.getElementById('error-modal').classList.add("show-modal");
+						document.getElementById('modal-background').style.display = "block";
+					}, 500);
+				}
+			});
 		}
-	}, 1000);
+	};
 
 	function submitReport(response) {
 		if(response === "Success!") {
@@ -235,7 +233,7 @@
 
 		$.ajax({
 			type: 'POST',
-			url: 'report-bug.php',
+			url: '/resources/report-bug.php',
 			data: {
 				report: report
 			},
@@ -255,6 +253,7 @@
 	
 	function leaveGame(response) {
 		if(response === "Success!") {
+			conn.send('*' + townID);
 			window.location.href = window.location.href;
 		}
 		else {
@@ -276,7 +275,7 @@
 	
 		$.ajax({
 			type: 'POST',
-			url: 'leave-game.php',
+			url: '/resources/leave-town.php',
 			data: {
 				check: 'true'
 			},

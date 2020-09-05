@@ -915,7 +915,7 @@
 
 		$.ajax({
 			type: 'POST',
-			url: '/send-message.php',
+			url: '/resources/send-message.php',
 			data: {
 				message: message
 			},
@@ -967,7 +967,7 @@
 			closeAll();
 		$.ajax({
 			type: 'POST',
-			url: '/register-vote.php',
+			url: '/resources/register-vote.php',
 			data: {
 				role: role,
 				vote: vote
@@ -1012,7 +1012,7 @@
 
 		$.ajax({
 			type: 'POST',
-			url: 'report-bug.php',
+			url: '/resources/report-bug.php',
 			data: {
 				report: report
 			},
@@ -1046,7 +1046,7 @@
 	
 		$.ajax({
 			type: 'POST',
-			url: 'leave-game.php',
+			url: '/resources/leave-game.php',
 			data: {
 				check: 'true'
 			},

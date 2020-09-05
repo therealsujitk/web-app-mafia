@@ -15,7 +15,24 @@ Class Mafia implements MessageComponentInterface {
     }
 
     public function onMessage(ConnectionInterface $from, $message) {
-        echo $message;
+        $action = substr($message, 0, 1);
+
+        if($action == "*") {
+            $townID = substr($message, 1);
+            $this->players->attach($from, $townID);
+
+            foreach ($this->players as $player) {
+                if ($this->players[$player] == $townID && $player != $from) {
+                    $player->send('*');
+                }
+            }
+        }
+        else if($action == "#") {
+            //Player voted
+        }
+        else {
+
+        }
     }
 
     public function onClose(ConnectionInterface $conn) {

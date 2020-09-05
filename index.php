@@ -297,7 +297,7 @@
 
 				$.ajax({
 					type: 'POST',
-					url: 'report-bug.php',
+					url: '/resources/report-bug.php',
 					data: {
 						report: report
 					},
@@ -314,10 +314,14 @@
 					}
 				}).then(response => submitReport(response));
 			});
+
+			var conn = new WebSocket('ws://' + window.location.hostname + ':3000');
 			
 			function createTown(response) {
-				if(response === "Success!")
-					$("body").load("/lounge.php");
+				if(response.slice(0, 8) === "Success!") {
+					conn.send('*' + response.slice(8));
+					$("body").load("lounge.php");
+				}
 				else {
 					closeAll();
 					setTimeout(function() {
@@ -345,7 +349,7 @@
 
 				$.ajax({
 					type: 'POST',
-					url: 'initialize-town.php',
+					url: '/resources/initialize-town.php',
 					data: {
 						town: town,
 						mob: mob,
@@ -366,9 +370,11 @@
 				}).then(response => createTown(response));
 			});
 			
-			function joinTown(response) {
-				if(response === "Success!")
-					$("body").load("/lounge.php");
+			function joinTown(response, townID) {
+				if(response === "Success!") {
+					conn.send('*' + townID);
+					$("body").load("lounge.php");
+				}
 				else {
 					closeAll();
 					setTimeout(function() {
@@ -396,7 +402,7 @@
 
 				$.ajax({
 					type: 'POST',
-					url: 'join-town.php',
+					url: '/resources/join-town.php',
 					data: {
 						townID: townID,
 						name: name,
@@ -413,7 +419,7 @@
 						$('#join').prop('disabled', false);
 						$('#join').val('Join Town');
 					}
-				}).then(response => joinTown(response));
+				}).then(response => joinTown(response, townID));
 			});
 		
 			function getCookie(cname) {

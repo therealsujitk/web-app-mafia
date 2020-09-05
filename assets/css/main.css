@@ -377,8 +377,7 @@ textArea:focus {
 }
 
 .copy {
-	background-color: #000;
-	opacity: 0.8;
+	background-color: #222;
 	color: #fff;
 }
 
@@ -388,7 +387,6 @@ textArea:focus {
 
 .copied {
 	background-color: #b4f1af;
-	opacity: 1;
 	color: #33722d;
 }
 
@@ -414,7 +412,7 @@ textArea:focus {
 
 @keyframes tooltipAnimation {
 	from {opacity: 0; bottom: 120%;}
-	to {opacity: 0.8; bottom: 150%;}
+	to {opacity: 1; bottom: 150%;}
 }
 
 figcaption {
