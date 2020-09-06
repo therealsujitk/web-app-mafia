@@ -40,13 +40,7 @@
 		</br>
 		<input class="header link" style="padding: 10px 20px 10px 20px;" type="button" value="About Us" onclick="openAbout()"></input>
 		</br>
-		<?php
-		$query = "SELECT user_id FROM town_" . $townID . ";";
-		$ownerID = mysqli_fetch_assoc(mysqli_query($conn, $query))["user_id"];
-
-		if($ownerID != $userID)
-			echo '<input class="header link" style="padding: 10px 20px 10px 20px;" type="button" value="Leave Game" onclick="openLeave()"></input>';
-		?>
+		<input class="header link" style="padding: 10px 20px 10px 20px;" type="button" value="Leave Game" onclick="openLeave()"></input>
 	</nav>
 </div>
 
@@ -66,13 +60,15 @@
 		?>
 	</div>
 
-	<p id="share">Your Town ID is <b><?php echo $townID; ?></b>. <span class="tooltip link3" onclick="copyText(townID);">Click here<span id="copy" class="tooltiptext copy">Copy</span></span> to copy.</p>
+	<p id="share">Your Town ID is <b><?php echo $townID; ?></b>. <span class="tooltip link3" onclick="copyText(townID);">Click here<span id="copy" class="tooltiptext copy">Copy</span></span> to copy the town's link.</p>
 	<?php
 	$query = "SELECT user_id FROM town_" . $townID . ";";
 	$ownerID = mysqli_fetch_assoc(mysqli_query($conn, $query))["user_id"];
 	
 	if($ownerID === $userID)
-		echo '<input id="start" class="btn" type="button" value="Start Game"></input>';
+		echo '<input id="start" class="btn" type="button" value="Start Game" onclick="buildTown();"></input>';
+	
+	mysqli_close($conn);
 	?>
 </div>
 
@@ -96,7 +92,7 @@
 	<div id="bug-report" style="margin: 10px;">
 		<textArea id="report" class="text-box" placeholder="Write a bug report..."></textArea>
 		<p id="success-bug" style="margin: 10px; margin-top: 0; margin-bottom: 0; color: #c80000; display: none;">Success! Your report has been submitted.</p>
-		<input id="submit-report" class="btn" type="button" style="margin-top: 10px;" value="Submit Bug Report"></input>
+		<input id="submit-report" class="btn" type="button" style="margin-top: 10px;" value="Submit Bug Report" onclick="reportBug();"></input>
 	</div>
 </div>
 
@@ -132,69 +128,48 @@
 	</table>
 	<table align="right">
 		<td style="text-align: right; padding-right: 2.5px;"><input class="btn3" type="button" value="Cancel" onclick="closeAll()"></td>
-		<td style="text-align: right; padding-left: 2.5px;"><input id="leave-game" class="btn" type="button" value="Yes, I'm sure"></td>
+		<td style="text-align: right; padding-left: 2.5px;"><input id="leave-game" class="btn" type="button" value="Yes, I'm sure" onclick="leaveGame();"></td>
 	</table>
 </div>
 
-<div id="has-started" style="display: none;">
-	<?php
-	$query = "SELECT has_started FROM town_details WHERE town_id = '$townID';";
-	if(mysqli_fetch_assoc(mysqli_query($conn, $query))["has_started"])
-		echo '<span>Let the games begin!</span>';
-	
-	mysqli_close($conn);
-	?>
+<div id="splash-background" class="splash-background"></div>
+
+<div id="splash" class="splash">
+	<img src="/assets/images/logo.png" style="width: 25%;"></img>
+	</br></br>
+	<img src="/assets/images/loading.gif"></img>
 </div>
+
 <script>
-	function vhCalc() {
-	    let vh = window.innerHeight * 0.01;
-        document.documentElement.style.setProperty('--vh', `${vh}px`);
-    }
-    
-    vhCalc();
-    
-    window.addEventListener('resize', () => {
-    	vhCalc();
-    });
-
-	function buildTown(response) {
-		if(response != "Success!") {
-			closeAll();
-			setTimeout(function() {
-				document.getElementById('error-message').innerHTML = response;
-				document.getElementById('error-modal').classList.add("show-modal");
-				document.getElementById('modal-background').style.display = "block";
-			}, 500);
-			
-			$('#start').prop('disabled', false);
-			$('#start').val('Start Game');
-		}
-	}
-	
-	$('#start').on('click', function (event) {
-		$('#start').prop('disabled', true);
-		$('#start').val('Please wait...');
-	
-		$.ajax({
-			type: 'POST',
-			url: '/resources/build-town.php',
-			error: function() {
-				closeAll();
-				setTimeout(function() {
-					document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
-					document.getElementById('error-modal').classList.add("show-modal");
-					document.getElementById('modal-background').style.display = "block";
-				}, 500);
-				
-				$('#start').prop('disabled', false);
-				$('#start').val('Start Game');
-			}
-		}).then(response => buildTown(response));
-	});
-
 	conn.onmessage = function(e) {
 		if(e.data === '*') {
-			$("#town-players").load("/lounge.php #town-players > *", function(response, status) {
+			$("#town-players").load("lounge.php #town-players > *", function(response, status) {
+				if(status !=  "success") {
+					closeAll();
+					setTimeout(function() {
+						document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
+						document.getElementById('error-modal').classList.add("show-modal");
+						document.getElementById('modal-background').style.display = "block";
+					}, 500);
+				}
+			});
+		}
+		else if(e.data === '!') {
+			document.getElementById('splash-background').classList.add('show-splash');
+			document.getElementById('splash').classList.add('show-splash');
+		}
+		else if(e.data === '%') {
+			document.getElementById('splash-background').classList.add('hide-splash');
+			document.getElementById('splash').classList.add('hide-splash');
+			setTimeout(function() {
+				document.getElementById('splash-background').classList.remove('show-splash');
+				document.getElementById('splash-background').classList.remove('hide-splash');
+				document.getElementById('splash').classList.remove('show-splash');
+				document.getElementById('splash').classList.remove('hide-splash');
+			}, 500);
+		}
+		else if(e.data === '$') {
+			$("body").load("game.php", function(response, status) {
 				if(status !=  "success") {
 					closeAll();
 					setTimeout(function() {
@@ -206,90 +181,4 @@
 			});
 		}
 	};
-
-	function submitReport(response) {
-		if(response === "Success!") {
-			document.getElementById('success-bug').style.display = "block";
-			document.getElementById('report').value = "";
-		}
-		else {
-			closeAll();
-			setTimeout(function() {
-				document.getElementById('error-message').innerHTML = response;
-				document.getElementById('error-modal').classList.add("show-modal");
-				document.getElementById('modal-background').style.display = "block";
-			}, 500);
-		}
-
-		$('#submit-report').prop('disabled', false);
-		$('#submit-report').val('Submit Bug Report');
-	}
-
-	$('#submit-report').on('click', function () {
-		$('#submit-report').prop('disabled', true);
-		$('#submit-report').val('Please wait...');
-	
-		let report = document.getElementById('report').value;
-
-		$.ajax({
-			type: 'POST',
-			url: '/resources/report-bug.php',
-			data: {
-				report: report
-			},
-			error: function() {
-				closeAll();
-				setTimeout(function() {
-					document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
-					document.getElementById('error-modal').classList.add("show-modal");
-					document.getElementById('modal-background').style.display = "block";
-				}, 500);
-				
-				$('#submit-report').prop('disabled', false);
-				$('#submit-report').val('Submit Bug Report');
-			}
-		}).then(response => submitReport(response));
-	});
-	
-	function leaveGame(response) {
-		if(response === "Success!") {
-			conn.send('*' + townID);
-			window.location.href = window.location.href;
-		}
-		else {
-			closeAll();
-			setTimeout(function() {
-				document.getElementById('error-message').innerHTML = response;
-				document.getElementById('error-modal').classList.add("show-modal");
-				document.getElementById('modal-background').style.display = "block";
-			}, 500);
-			
-			$('#leave-game').prop('disabled', false);
-			$('#leave-game').val("Yes, I'm sure");
-		}
-	}
-
-	$('#leave-game').on('click', function () {
-		$('#leave-game').prop('disabled', true);
-		$('#leave-game').val('Please wait...');
-	
-		$.ajax({
-			type: 'POST',
-			url: '/resources/leave-town.php',
-			data: {
-				check: 'true'
-			},
-			error: function() {
-				closeAll();
-				setTimeout(function() {
-					document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
-					document.getElementById('error-modal').classList.add("show-modal");
-					document.getElementById('modal-background').style.display = "block";
-				}, 500);
-				
-				$('#leave-game').prop('disabled', false);
-				$('#leave-game').val("Yes, I'm sure");
-			}
-		}).then(response => leaveGame(response));
-	});
 </script>

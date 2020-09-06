@@ -421,6 +421,44 @@ figcaption {
 	text-align: center;
 }
 
+.splash-background {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background: #1f1414;
+	opacity: 1;
+	display: none;
+}
+
+.splash {
+	position: absolute;
+	text-align: center;
+	margin-top: 50vh;
+	transform: translate(0%, -50%);
+	display: none;
+}
+
+.show-splash {
+	display: block;
+	animation: fadeInSplash 0.5s;
+	animation-fill-mode: forwards;
+}
+
+@keyframes fadeInSplash {
+	from {opacity: 0;}
+	to {opacity: 1;}
+}
+
+.hide-splash {
+	animation: fadeOutSplash 0.5s;
+	animation-fill-mode: forwards;
+}
+
+@keyframes fadeOutSplash {
+	from {opacity: 1;}
+	to {opacity: 0;}
+}
+
 #game {
 	position: absolute;
 	margin-left: 50%;

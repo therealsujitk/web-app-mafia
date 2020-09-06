@@ -838,11 +838,6 @@
 </div>
 
 <script>
-	function vhCalc() {
-	    let vh = window.innerHeight * 0.01;
-        document.documentElement.style.setProperty('--vh', `${vh}px`);
-    }
-    
     function gameSpaceCalc() {
     	let totalHeight = window.innerHeight;
     	let headerHeight = document.getElementById('header').offsetHeight;
@@ -879,12 +874,10 @@
     	let gameSpaceHeightR = newsBarHeight + gameFooterHeight + gameSpaceHeight;
     	document.documentElement.style.setProperty('--gsr', `${gameSpaceHeightR}px`);
     }
-    
-    vhCalc();
+
     gameSpaceCalc();
     
     window.addEventListener('resize', () => {
-    	vhCalc();
     	gameSpaceCalc();
     });
 
@@ -985,50 +978,6 @@
 			}
 		}).then(response => regVote(response));
 	}
-	
-	function submitReport(response) {
-		if(response === "Success!") {
-			document.getElementById('success-bug').style.display = "block";
-			document.getElementById('report').value = "";
-		}
-		else {
-			closeAll();
-			setTimeout(function() {
-				document.getElementById('error-message').innerHTML = response;
-				document.getElementById('error-modal').classList.add("show-modal");
-				document.getElementById('modal-background').style.display = "block";
-			}, 500);
-		}
-
-		$('#submit-report').prop('disabled', false);
-		$('#submit-report').val('Submit Bug Report');
-	}
-
-	$('#submit-report').on('click', function () {
-		$('#submit-report').prop('disabled', true);
-		$('#submit-report').val('Please wait...');
-	
-		let report = document.getElementById('report').value;
-
-		$.ajax({
-			type: 'POST',
-			url: '/resources/report-bug.php',
-			data: {
-				report: report
-			},
-			error: function() {
-				closeAll();
-				setTimeout(function() {
-					document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
-					document.getElementById('error-modal').classList.add("show-modal");
-					document.getElementById('modal-background').style.display = "block";
-				}, 500);
-				
-				$('#submit-report').prop('disabled', false);
-				$('#submit-report').val('Submit Bug Report');
-			}
-		}).then(response => submitReport(response));
-	});
 	
 	function clearSession(response) {
 		if(response === "Success!") {
