@@ -8,7 +8,7 @@ $message = str_replace("'", "\'", $message);
 $message = trim($message);
 
 if($message === '')
-	die('Success!');
+	die('success');
 
 if($_SESSION["dailyIndex"]%2 == 0) {
 	$query = "SELECT user_id FROM town_" . $_SESSION["townID"] . " WHERE is_mafia = 1 AND is_killed = 0 AND is_executed = 0 AND name = '$name';";
@@ -27,11 +27,10 @@ else {
 		mysqli_query($conn, $query);
 	}
 	else {
-		die('Sorry, You are not allowed to send messages.');
+		die('Sorry, You are not allowed to send messages right now.');
 	}
 }
 
 mysqli_close($conn);
 
-echo 'Success!';
-?>
+echo 'success';

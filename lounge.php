@@ -142,6 +142,7 @@
 
 <script>
 	conn.onmessage = function(e) {
+		console.log(e.data);
 		if(e.data === '*') {
 			$("#town-players").load("lounge.php #town-players > *", function(response, status) {
 				if(status !=  "success") {

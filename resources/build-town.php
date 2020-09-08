@@ -218,5 +218,4 @@ mysqli_query($conn, $query);
 
 mysqli_close($conn);
 
-echo 'Success!';
-?>
+echo 'success';

@@ -2,11 +2,10 @@
 <html>
 	<head>
 		<link rel="stylesheet" type="text/css" href="/assets/css/main.css">
-		<link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet">
 		<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 		<meta content="utf-8" http-equiv="encoding">
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
-		<script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+		<script src="/node_modules/jquery/dist/jquery.min.js"></script>
 		<script src="/assets/js/main.js"></script>
 		<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
 		<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
@@ -121,7 +120,7 @@
 				<tr>
 					<td align="center">
 						<i class="btn2 fas fa-caret-left fa-3x prev-next-mobile" onclick="prev()"></i>
-						<img id="avatar" src="">
+						<img id="avatar">
 						<i class="btn2 fas fa-caret-right fa-3x prev-next-mobile" onclick="next()"></i>
 						<img class="cache" style="display: none;" src="/assets/avatars/avatar_01.png">
 						<img class="cache" style="display: none;" src="/assets/avatars/avatar_02.png">
@@ -254,7 +253,15 @@
 				<td><p id="error-message" style="padding: 0; margin: 0;"></p></td>
 			</table>
 		</div>
-		
+
+		<div id="splash-background" class="splash-background"></div>
+
+		<div id="splash" class="splash">
+			<img src="/assets/images/logo.png" style="width: 25%;"></img>
+			</br></br>
+			<img src="/assets/images/loading.gif"></img>
+		</div>
+				
 		<script>
 			setIndex();
 

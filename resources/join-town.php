@@ -14,7 +14,7 @@ $query2 = "SELECT name FROM town_" . $townID . " WHERE name = '$name';";
 
 if(isset($_SESSION["townID"])) {
 	if($townID == $_SESSION["townID"] && $townID != "") {
-		die("You are already in this town. Click <b>Continue Playing</b> at the top right corner to get back to your game.");
+		die("You are already in this town. Click <b>Continue Playing</b> in the menu to get back to your game.");
 	}
 }
 
@@ -60,6 +60,6 @@ $_SESSION["town"] = $town;
 $_SESSION["mob"] = $mob;
 $_SESSION["dailyIndex"] = '0';
 $_SESSION["message"] = '';
+$_SESSION["revealed"] = '';
 
-echo 'Success!';
-?>
+echo 'success';

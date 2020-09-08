@@ -1,3 +1,11 @@
+@font-face {
+	font-family: 'Raleway';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('../fonts/Raleway-Regular.ttf');
+}
+
 body {
 	background: #1f1414;
 	font-family: 'Raleway', sans-serif;
@@ -428,6 +436,7 @@ figcaption {
 	background: #1f1414;
 	opacity: 1;
 	display: none;
+	z-index: 5;
 }
 
 .splash {
@@ -436,6 +445,7 @@ figcaption {
 	margin-top: 50vh;
 	transform: translate(0%, -50%);
 	display: none;
+	z-index: 5;
 }
 
 .show-splash {
@@ -482,7 +492,7 @@ figcaption {
 	border-radius: 20px;
 	border-color: #936c6c;
 	vertical-align: top;
-	padding: 1.5%;
+	padding: 15px;
 }
 
 #game-details {

@@ -20,5 +20,4 @@ session_unset();
 session_destroy();
 mysqli_close($conn);
 
-echo 'Success!';
-?>
+echo 'success';

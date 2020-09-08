@@ -6,12 +6,11 @@ $report = str_replace("'", "\'", $report);
 $report = trim($report);
 
 if($report == '')
-	die('Success!');
+	die('success');
 
 $query = "INSERT INTO bug_reports (report) VALUES('$report');";
 mysqli_query($conn, $query);
 
 mysqli_close($conn);
 
-echo 'Success!';
-?>
+echo 'success';

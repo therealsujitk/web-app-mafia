@@ -30,7 +30,7 @@ function uniqueID() {
 	
 	$ID = '';
 	
-	for($i=0; $i<8; ++$i) {
+	for($i=0; $i<5; ++$i) {
 		$ID = $ID.$arr[rand(0, 35)];
 	}
 		
@@ -95,6 +95,6 @@ $_SESSION["town"] = $town;
 $_SESSION["mob"] = $mob;
 $_SESSION["dailyIndex"] = '0';
 $_SESSION["message"] = '';
+$_SESSION["revealed"] = '';
 
-echo 'Success!' . $townID;
-?>
+echo 'success' . $townID;
