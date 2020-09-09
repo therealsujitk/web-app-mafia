@@ -30,7 +30,7 @@ function uniqueID() {
 	
 	$ID = '';
 	
-	for($i=0; $i<5; ++$i) {
+	for($i=0; $i<7; ++$i) {
 		$ID = $ID.$arr[rand(0, 35)];
 	}
 		
