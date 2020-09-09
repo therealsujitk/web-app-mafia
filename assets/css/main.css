@@ -448,6 +448,10 @@ figcaption {
 	z-index: 5;
 }
 
+#splash-logo {
+	width: 25%;
+}
+
 .show-splash {
 	display: block;
 	animation: fadeInSplash 0.5s;
@@ -592,6 +596,7 @@ figcaption {
 	margin-left: 50%;
 	box-shadow: 0 7px 15px #000;
 	transform: translate(-50%, -100px);
+	z-index: 1;
 }
 
 .show-alert {
@@ -899,6 +904,10 @@ figcaption {
 	
 	#stats {
 		width: 100%;
+	}
+
+	#splash-logo {
+		width: 60%;
 	}
 }
 

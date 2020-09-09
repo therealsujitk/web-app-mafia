@@ -69,10 +69,14 @@
 									echo '<script>
 										function continuePlaying() {
 											conn.send("' . $townID . '")
-											$("body").load("/lounge.php");
+											$("body").load("/lobby.php");
 										}
 									</script>';
 								}
+							}
+							else {
+								session_unset();
+								session_destroy();
 							}
 						}
 						?>
@@ -100,25 +104,17 @@
 					$townID = $_SESSION["townID"];
 				
 					$query = "SELECT user_id FROM town_" . $townID . ";";
-					if(mysqli_query($conn, $query)) {
-						$query = "SELECT has_started FROM town_details WHERE town_id = '$townID';";
-						if(mysqli_fetch_assoc(mysqli_query($conn, $query))) {
-							echo '<input class="header link" style="padding: 10px 20px 10px 20px;" type="button" value="Continue Playing" onclick="continuePlaying()"></input>';
-						}
-					}
-					else {
-						session_unset();
-						session_destroy();
-					}
+					if(mysqli_query($conn, $query))
+						echo '<input class="header link" style="padding: 10px 20px 10px 20px;" type="button" value="Continue Playing" onclick="continuePlaying()"></input>';
 				}
 				?>
 			</nav>
 		</div>
 
-		<div align="center">
+		<div>
 			<table id="user-details" cellpadding="0" cellspacing="0">
 				<tr>
-					<td align="center">
+					<td style="text-align: center">
 						<i class="btn2 fas fa-caret-left fa-3x prev-next-mobile" onclick="prev()"></i>
 						<img id="avatar">
 						<i class="btn2 fas fa-caret-right fa-3x prev-next-mobile" onclick="next()"></i>
@@ -257,7 +253,7 @@
 		<div id="splash-background" class="splash-background"></div>
 
 		<div id="splash" class="splash">
-			<img src="/assets/images/logo.png" style="width: 25%;"></img>
+			<img id="splash-logo" src="/assets/images/logo.png"></img>
 			</br></br>
 			<img src="/assets/images/loading.gif"></img>
 		</div>

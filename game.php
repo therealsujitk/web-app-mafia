@@ -26,6 +26,163 @@
 	</table>
 </div>
 
+<div id="notification" class="alert"></div>
+
+<div style="display: none;">
+<?php
+$query = "SELECT daily_index FROM town_details WHERE town_id = '$townID';";
+$tempIndex = mysqli_fetch_assoc(mysqli_query($conn, $query))["daily_index"];
+
+if($_SESSION["dailyIndex"] != $tempIndex) {
+	if($tempIndex%2 == 0) {
+		$_SESSION["dailyIndex"] = $tempIndex;
+		$_SESSION["revealed"] = '';
+
+		$prev = $tempIndex/2;
+
+		$query = "SELECT COUNT(name) FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0;";
+		$dayVoteMajority = mysqli_fetch_assoc(mysqli_query($conn, $query))["COUNT(name)"] / 2;
+
+		$executed = '';
+	
+		$query = "SELECT COUNT(day_" . $prev . "), day_" . $prev . " FROM town_" . $townID . " WHERE day_" . $prev . " <> 0 GROUP BY day_" . $prev . " ORDER BY COUNT(day_" . $prev . ") DESC;";
+		$row = mysqli_fetch_assoc(mysqli_query($conn, $query));
+		if($row["COUNT(day_" . $prev . ")"] > $dayVoteMajority) {
+			$query = "SELECT name FROM town_" . $townID . " WHERE user_id = " . $row["day_" . $prev] . ";";
+			$executed = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
+
+			$query = "SELECT is_mafia, is_poser, is_medic, is_sherrif FROM town_" . $townID . " WHERE name = '$executed';";
+		
+			if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_mafia"])
+				$role = 'a *Mafia* member';
+			else if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_poser"])
+				$role = 'the *Poser*';
+			else if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_sherrif"])
+				$role = 'the towns *Sheriff*';
+			else if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_medic"])
+				$role = 'the towns *Medic*';
+			else
+				$role = 'just a *Citizen*';
+		}
+		
+		$message = '<p id="news-update">You are in the underworld. There is no way to contact anyone from here. Maybe make a deal with Lucifer?</p>';
+		$postMessage = 'The citizens of *' . $town . '* are sleeping. Zzz</p>';
+		
+		$flag = 1;
+		
+		$query = "SELECT user_id FROM town_" . $townID . " WHERE is_mafia = 1 AND is_killed = 0 AND is_executed = 0 AND user_id = " . $userID . ";";
+		if(mysqli_fetch_assoc(mysqli_query($conn, $query)) && $flag) {
+			$query = "SELECT name FROM town_" . $townID . " WHERE is_mafia = 1 AND is_killed = 0 AND is_executed = 0;";
+			$killer = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
+			$postMessage = 'Discuss below with the other mafia members on who is to be killed, after that *' . $killer . '* has to click the *Kill* button to choose the next victim.</p>';
+			$flag = 0;
+		}
+		
+		$query = "SELECT user_id FROM town_" . $townID . " WHERE is_medic = 1 AND is_killed = 0 AND is_executed = 0 AND user_id = " . $userID . ";";
+		if(mysqli_fetch_assoc(mysqli_query($conn, $query)) && $flag) {
+			$postMessage = 'Click the *Heal* button to choose who you\'d like to heal tonight.</p>';
+			$flag = 0;
+		}
+		
+		$query = "SELECT user_id FROM town_" . $townID . " WHERE is_sherrif = 1 AND is_killed = 0 AND is_executed = 0 AND user_id = " . $userID . ";";
+		if(mysqli_fetch_assoc(mysqli_query($conn, $query)) && $flag) {
+			$postMessage = 'Click the *Reveal* button to find out more about the citizens of *' . $town . '* before the night ends.</p>';
+			$flag = 0;
+		}
+		
+		$query = "SELECT user_id FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0 AND user_id = " . $userID . ";";
+		if(mysqli_fetch_assoc(mysqli_query($conn, $query)))
+			if($executed != '')
+				$message = '<p id="news-update">Citizens of *' . $town . '*, after the execution it was discovered that *' . $executed . '* was ' . $role . '. ' . $postMessage;
+			else
+				$message = '<p id="news-update">Citizens of *' . $town . '*, yesterday no one was executed. ' . $postMessage;
+		
+		$_SESSION["message"] = $message;
+	}
+	else {
+		$_SESSION["dailyIndex"] = $tempIndex;
+
+		$prev = $tempIndex/2 - 0.5;
+		
+		$query = "SELECT name FROM town_" . $townID . " WHERE night_" . $prev . " <> 0;";
+		$killed = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
+		$query = "SELECT name FROM town_" . $townID . " WHERE medic_" . $prev . " <> 0;";
+		$healed = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
+		
+		$message = '<p id="news-update">You are in the underworld. There is no way to contact anyone from here. Maybe make a deal with Lucifer?';
+		
+		$query = "SELECT name FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0 AND user_id = " . $userID . ";";
+		if(mysqli_fetch_assoc(mysqli_query($conn, $query))) {
+			if($killed != $healed)
+				$message = '<p id="news-update">Citizens of *' . $town . '*, I\'m afraid I have some bad news. Last night *' . $mob . '* struck again and murdered *' . $killed . '*. Discuss with other citizens on who you think should be executed for the henious crime, after that click the *Vote* button below.</p>';
+			else
+				$message = '<p id="news-update">Citizens of *' . $town . '*, Last night our medic saved the day, there were no casualities. However, this town is still not free from the mafia. Discuss with other citizens on who you think the mafia members might be, after that click the *Vote* button below.</p>';
+		}
+		
+		$_SESSION["message"] = $message;
+	}
+}
+
+echo $_SESSION["message"];
+
+if($_SESSION["dailyIndex"] == 0) {
+	$message = '<p id="news-update">The citizens of *' . $town . '* are sleeping. Zzz</p>';
+	$flag = 1;
+
+	$query = "SELECT user_id FROM town_" . $townID . " WHERE is_mafia = 1 AND user_id = " . $userID . ";";
+	if(mysqli_fetch_assoc(mysqli_query($conn, $query)) && $flag) {
+		$query = "SELECT name FROM town_" . $townID . " WHERE is_mafia = 1;";
+		$killer = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
+		$message = '<p id="news-update">Welcome members of *' . $mob . '*, discuss below on who you would like to kill, after that *' . $killer . '* has to click the *Kill* button to choose the first victim.</p>';
+		$query = "SELECT medic_0 FROM town_" . $townID . " WHERE night_0 <> 0;";
+		if($name == $killer && !mysqli_fetch_assoc(mysqli_query($conn, $query)))
+			$message = $message . '<script>
+				let notification = document.getElementById("notification");
+				notification.innerHTML = "We are waiting for you to choose your victim.";
+				notification.classList.remove("hide-alert");
+				notification.classList.add("show-alert");
+			</script>';
+		$flag = 0;
+	}
+
+	$query = "SELECT user_id FROM town_" . $townID . " WHERE is_poser = 1 AND user_id = " . $userID . ";";
+	if(mysqli_fetch_assoc(mysqli_query($conn, $query)) && $flag) {
+		$message = '<p id="news-update">Hello there! You probably already know this but, you are the poser. The mafia members are marked in red for you, you have to try and make sure they don\'t get caught.</p>';
+		$flag = 0;
+	}
+
+	$query = "SELECT user_id FROM town_" . $townID . " WHERE is_medic = 1 AND user_id = " . $userID . ";";
+	if(mysqli_fetch_assoc(mysqli_query($conn, $query)) && $flag) {
+		$message = '<p id="news-update">Hello there! You probably already know this but, you are the towns medic. Click the *Heal* button below to use your amazing abilities. :)</p>';
+		$query = "SELECT medic_0 FROM town_" . $townID . " WHERE medic_0 <> 0;";
+		if(!mysqli_fetch_assoc(mysqli_query($conn, $query)))
+			$message = $message . '<script>
+				let notification = document.getElementById("notification");
+				notification.innerHTML = "We are waiting for you to save a citizen.";
+				notification.classList.remove("hide-alert");
+				notification.classList.add("show-alert");
+			</script>';
+		$flag = 0;
+	}
+
+	$query = "SELECT user_id FROM town_" . $townID . " WHERE is_sherrif = 1 AND user_id = " . $userID . ";";
+	if(mysqli_fetch_assoc(mysqli_query($conn, $query)) && $flag) {
+		$message = '<p id="news-update">Hello there! You probably already know this but, you are the towns sheriff. Click the *Reveal* button below to check whether a citizen is a mafia member. Remember, you only have this ability while the night lasts.</p>';
+		if($_SESSION["revealed"] == '')
+			$message = $message . '<script>
+				let notification = document.getElementById("notification");
+				notification.innerHTML = "Hurry up! You\'re running out of time!!";
+				notification.classList.remove("hide-alert");
+				notification.classList.add("show-alert");
+			</script>';
+		$flag = 0;
+	}
+
+	echo $message;
+}
+?>
+</div>
+
 <div id="header-mobile">
 	<i id="menu-mobile" class="fas fa-bars" onclick="openMenu();"></i>
 	<div id="logo-mobile"><h3>
@@ -263,164 +420,7 @@
 			</td>
 		</td>
 	</table>
-	<div id="default-news" style="display: none;">
-	<?php
-	$message = 'The citizens of *' . $town . '* are sleeping. Zzz';
-	$flag = 1;
-
-	$query = "SELECT user_id FROM town_" . $townID . " WHERE is_mafia = 1 AND user_id = " . $userID . ";";
-	if(mysqli_fetch_assoc(mysqli_query($conn, $query)) && $flag) {
-		$query = "SELECT name FROM town_" . $townID . " WHERE is_mafia = 1;";
-		$killer = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
-		$message = 'Welcome members of *' . $mob . '*, discuss below on who you would like to kill, after that *' . $killer . '* has to click the *Kill* button to choose the first victim.';
-		$query = "SELECT medic_0 FROM town_" . $townID . " WHERE night_0 <> 0;";
-		if($name == $killer && !mysqli_fetch_assoc(mysqli_query($conn, $query)))
-			$message = $message . '<script>
-				let notification = document.getElementById("notification");
-				notification.innerHTML = "We are waiting for you to choose your victim.";
-				notification.classList.remove("hide-alert");
-				notification.classList.add("show-alert");
-			</script>';
-		$flag = 0;
-	}
-
-	$query = "SELECT user_id FROM town_" . $townID . " WHERE is_poser = 1 AND user_id = " . $userID . ";";
-	if(mysqli_fetch_assoc(mysqli_query($conn, $query)) && $flag) {
-		$message = 'Hello there! You probably already know this but, you are the poser. The mafia members are marked in red for you, you have to try and make sure they don\'t get caught.';
-		$flag = 0;
-	}
-
-	$query = "SELECT user_id FROM town_" . $townID . " WHERE is_medic = 1 AND user_id = " . $userID . ";";
-	if(mysqli_fetch_assoc(mysqli_query($conn, $query)) && $flag) {
-		$message = 'Hello there! You probably already know this but, you are the towns medic. Click the *Heal* button below to use your amazing abilities. :)';
-		$query = "SELECT medic_0 FROM town_" . $townID . " WHERE medic_0 <> 0;";
-		if(!mysqli_fetch_assoc(mysqli_query($conn, $query)))
-			$message = $message . '<script>
-				let notification = document.getElementById("notification");
-				notification.innerHTML = "We are waiting for you to save a citizen.";
-				notification.classList.remove("hide-alert");
-				notification.classList.add("show-alert");
-			</script>';
-		$flag = 0;
-	}
-
-	$query = "SELECT user_id FROM town_" . $townID . " WHERE is_sherrif = 1 AND user_id = " . $userID . ";";
-	if(mysqli_fetch_assoc(mysqli_query($conn, $query)) && $flag) {
-		$message = 'Hello there! You probably already know this but, you are the towns sheriff. Click the *Reveal* button below to check whether a citizen is a mafia member. Remember, you only have this ability while the night lasts.';
-		if($_SESSION["revealed"] == '')
-			$message = $message . '<script>
-				let notification = document.getElementById("notification");
-				notification.innerHTML = "Hurry up! You\'re running out of time!!";
-				notification.classList.remove("hide-alert");
-				notification.classList.add("show-alert");
-			</script>';
-		$flag = 0;
-	}
-
-	echo $message;
-	?>
-	</div>
-	<div id="news-update" style="display: none;">
-		<?php
-		$query = "SELECT daily_index FROM town_details WHERE town_id = '$townID';";
-		$tempIndex = mysqli_fetch_assoc(mysqli_query($conn, $query))["daily_index"];
-
-		if($_SESSION["dailyIndex"] != $tempIndex) {
-			if($tempIndex%2 == 0) {
-				$_SESSION["dailyIndex"] = $tempIndex;
-				$_SESSION["revealed"] = '';
-
-				$prev = $tempIndex/2;
-		
-				$query = "SELECT COUNT(name) FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0;";
-				$dayVoteMajority = mysqli_fetch_assoc(mysqli_query($conn, $query))["COUNT(name)"] / 2;
-		
-				$executed = '';
-			
-				$query = "SELECT COUNT(day_" . $prev . "), day_" . $prev . " FROM town_" . $townID . " WHERE day_" . $prev . " <> 0 GROUP BY day_" . $prev . " ORDER BY COUNT(day_" . $prev . ") DESC;";
-				$row = mysqli_fetch_assoc(mysqli_query($conn, $query));
-				if($row["COUNT(day_" . $prev . ")"] > $dayVoteMajority) {
-					$query = "SELECT name FROM town_" . $townID . " WHERE user_id = " . $row["day_" . $prev] . ";";
-					$executed = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
-
-					$query = "SELECT is_mafia, is_poser, is_medic, is_sherrif FROM town_" . $townID . " WHERE name = '$executed';";
-				
-					if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_mafia"])
-						$role = 'a *Mafia* member';
-					else if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_poser"])
-						$role = 'the *Poser*';
-					else if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_sherrif"])
-						$role = 'the towns *Sheriff*';
-					else if(mysqli_fetch_assoc(mysqli_query($conn, $query))["is_medic"])
-						$role = 'the towns *Medic*';
-					else
-						$role = 'just a *Citizen*';
-				}
-				
-				$message = 'You are in the underworld. There is no way to contact anyone from here. Maybe make a deal with Lucifer?';
-				$postMessage = 'The citizens of *' . $town . '* are sleeping. Zzz';
-				
-				$flag = 1;
-				
-				$query = "SELECT user_id FROM town_" . $townID . " WHERE is_mafia = 1 AND is_killed = 0 AND is_executed = 0 AND user_id = " . $userID . ";";
-				if(mysqli_fetch_assoc(mysqli_query($conn, $query)) && $flag) {
-					$query = "SELECT name FROM town_" . $townID . " WHERE is_mafia = 1 AND is_killed = 0 AND is_executed = 0;";
-					$killer = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
-					$postMessage = 'Discuss below with the other mafia members on who is to be killed, after that *' . $killer . '* has to click the *Kill* button to choose the next victim.';
-					$flag = 0;
-				}
-				
-				$query = "SELECT user_id FROM town_" . $townID . " WHERE is_medic = 1 AND is_killed = 0 AND is_executed = 0 AND user_id = " . $userID . ";";
-				if(mysqli_fetch_assoc(mysqli_query($conn, $query)) && $flag) {
-					$postMessage = 'Click the *Heal* button to choose who you\'d like to heal tonight.';
-					$flag = 0;
-				}
-				
-				$query = "SELECT user_id FROM town_" . $townID . " WHERE is_sherrif = 1 AND is_killed = 0 AND is_executed = 0 AND user_id = " . $userID . ";";
-				if(mysqli_fetch_assoc(mysqli_query($conn, $query)) && $flag) {
-					$postMessage = 'Click the *Reveal* button to find out more about the citizens of *' . $town . '* before the night ends.';
-					$flag = 0;
-				}
-				
-				$query = "SELECT user_id FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0 AND user_id = " . $userID . ";";
-				if(mysqli_fetch_assoc(mysqli_query($conn, $query)))
-					if($executed != '')
-						$message = 'Citizens of *' . $town . '*, after the execution it was discovered that *' . $executed . '* was ' . $role . '. ' . $postMessage;
-					else
-						$message = 'Citizens of *' . $town . '*, yesterday no one was executed. ' . $postMessage;
-				
-				$_SESSION["message"] = $message;
-			}
-			else {
-				$_SESSION["dailyIndex"] = $tempIndex;
-
-				$prev = $tempIndex/2 - 0.5;
-				
-				$query = "SELECT name FROM town_" . $townID . " WHERE night_" . $prev . " <> 0;";
-				$killed = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
-				$query = "SELECT name FROM town_" . $townID . " WHERE medic_" . $prev . " <> 0;";
-				$healed = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
-				
-				$message = 'You are in the underworld. There is no way to contact anyone from here. Maybe make a deal with Lucifer?';
-				
-				$query = "SELECT name FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0 AND user_id = " . $userID . ";";
-				if(mysqli_fetch_assoc(mysqli_query($conn, $query))) {
-					if($killed != $healed)
-						$message = 'Citizens of *' . $town . '*, I\'m afraid I have some bad news. Last night *' . $mob . '* struck again and murdered *' . $killed . '*. Discuss with other citizens on who you think should be executed for the henious crime, after that click the *Vote* button below.';
-					else
-						$message = 'Citizens of *' . $town . '*, Last night our medic saved the day, there were no casualities. However, this town is still not free from the mafia. Discuss with other citizens on who you think the mafia members might be, after that click the *Vote* button below.';
-				}
-				
-				$_SESSION["message"] = $message;
-			}
-		}
-
-		echo $_SESSION["message"];
-		?>
-	</div>
 </div>
-
-<div id="notification" class="alert"></div>
 
 <div id="menu-background" onclick="closeMenu()"></div>
 <div id="modal-background" onclick="closeAll()"></div>
@@ -762,7 +762,7 @@
 	document.getElementsByTagName('title')[0].innerHTML = document.getElementById('game-index').innerHTML.slice(4, -5).trim() + ' • ' + town + ' - Mafia';
 	
 	conn.onmessage = function(e) {
-		if(e.data = '^') {
+		if(e.data == '^') {
 			$("#game-display").load("game.php #game-display > *", function(response, status) {
 				if(status !=  "success") {
 					closeAll();
@@ -777,7 +777,7 @@
 				}
 			});
 		}
-		else if(e.data = '#') {
+		else if(e.data == '#') {
 			var messageValue = document.getElementById('chat-box').value;
 			closeAll();
 			$("body").load("game.php", function(response, status) {
@@ -791,7 +791,6 @@
 				}
 				else {
 					document.getElementById('chat-box').value = messageValue;
-					clientUpdate();
 				}
 			});
 		}

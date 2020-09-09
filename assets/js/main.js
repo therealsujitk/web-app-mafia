@@ -204,12 +204,6 @@ function setIndex() {
 	else {
 		document.getElementById('avatar').src = '/assets/avatars/avatar_' + avatarID + '.png';
 	}
-
-	conn.onerror = function() {
-		document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
-		document.getElementById('error-modal').classList.add("show-modal");
-		document.getElementById('modal-background').style.display = "block";
-	}
 }
 
 function setCookie(i) {
@@ -306,7 +300,7 @@ function prev() {
 function createTownResponse(response) {
 	if(response.slice(0, 7) === "success") {
 		conn.send(response.slice(7));
-		$("body").load("lounge.php", function(response, status) {
+		$("body").load("lobby.php", function(response, status) {
 			if(status !=  "success") {
 				document.getElementById('splash-background').classList.add('hide-splash');
 				document.getElementById('splash').classList.add('hide-splash');
@@ -391,7 +385,7 @@ function createTown() {
 function joinTownResponse(response, townID, joinVal) {
 	if(response.slice(0, 7) === "success") {
 		conn.send('*' + townID);
-		$("body").load("lounge.php", function(response, status) {
+		$("body").load("lobby.php", function(response, status) {
 			if(status !=  "success") {
 				document.getElementById('splash-background').classList.add('hide-splash');
 				document.getElementById('splash').classList.add('hide-splash');
@@ -515,7 +509,7 @@ function getCookie(cname) {
 	return null;
 }
 
-//lounge.php
+//lobby.php
 function copyText(value) {
 	let tempInput = document.createElement("input");
 	tempInput.value = 'http://' + window.location.hostname + '/?i=' + value;
@@ -657,6 +651,72 @@ function leaveGame() {
 }
 
 //game.php
+function clientUpdate() {
+	//$("#game-display").animate({ scrollTop: $('#game-display').prop("scrollHeight")}, 500);
+	$("#game-display").scrollTop($("#game-display").prop("scrollHeight"));
+
+	var results = document.getElementById('results').innerHTML;
+	results = results.slice(3, -4).trim();
+
+	if(results != '') {
+		closeAll();
+		document.getElementById('modal-background2').style.display = "block";
+		document.getElementById('win-modal').classList.add("show-modal");
+	}
+	else {
+		if(document.getElementById('alert')) {
+			let alert = document.getElementById('alert').innerHTML;
+			let notification = document.getElementById('notification');
+			notification.innerHTML = alert;
+			notification.classList.remove("hide-alert");
+			notification.classList.add("show-alert");
+		}
+		else {
+			let notification = document.getElementById('notification');
+			if(notification.innerHTML.trim() != '')
+				notification.classList.add("hide-alert");
+			notification.classList.remove("show-alert");
+		}
+	}
+
+	printNews();
+}
+
+function printNews() {
+	if(i) {
+		clearInterval(newsInterval);
+		i = 0;
+	}
+
+	let bold = false;
+	var newsBar = document.getElementById('news');
+	newsBar.innerHTML = "";
+	var news = document.getElementById('news-update').innerHTML.trim();
+	newsInterval = setInterval(function() {
+		if(i < news.length) {
+			if(news[i] === '*') {
+				++i;
+				if(!bold)
+					bold = true;
+				else
+					bold = false;
+			}
+			
+			if(bold)
+				newsBar.innerHTML += news[i].bold();
+			else
+				newsBar.innerHTML += news[i];
+			++i;
+
+			gameSpaceCalc();
+		}
+		else {
+			clearInterval(newsInterval);
+			i = 0;
+		}
+	}, 50);
+}
+
 function gameSpaceCalc() {
 	let totalHeight = window.innerHeight;
 	let headerHeight = document.getElementById('header').offsetHeight;
@@ -814,8 +874,24 @@ function registerVoteResponse(response) {
 		let notification = document.getElementById('notification');
 		notification.classList.add("hide-alert");
 		
-		if(response.slice(7) === '1')
+		if(response.slice(7) === '1') {
 			conn.send('#' + townID);
+			var messageValue = document.getElementById('chat-box').value;
+			closeAll();
+			$("body").load("game.php", function(response, status) {
+				if(status !=  "success") {
+					closeAll();
+					setTimeout(function() {
+						document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
+						document.getElementById('error-modal').classList.add("show-modal");
+						document.getElementById('modal-background').style.display = "block";
+					}, 500);
+				}
+				else {
+					document.getElementById('chat-box').value = messageValue;
+				}
+			});
+		}
 	}
 	else {
 		closeAll();
@@ -850,78 +926,6 @@ function registerVote(role, vote) {
 			}, 500);
 		}
 	}).then(response => registerVoteResponse(response));
-}
-
-function clientUpdate() {
-	//$("#game-display").animate({ scrollTop: $('#game-display').prop("scrollHeight")}, 500);
-	$("#game-display").scrollTop($("#game-display").prop("scrollHeight"));
-
-	var results = document.getElementById('results').innerHTML;
-	results = results.slice(3, -4).trim();
-
-	if(results != '') {
-		closeAll();
-		document.getElementById('modal-background2').style.display = "block";
-		document.getElementById('win-modal').classList.add("show-modal");
-	}
-	else {
-		if(document.getElementById('alert')) {
-			let alert = document.getElementById('alert').innerHTML;
-			let notification = document.getElementById('notification');
-			notification.innerHTML = alert;
-			notification.classList.remove("hide-alert");
-			notification.classList.add("show-alert");
-		}
-		else {
-			let notification = document.getElementById('notification');
-			if(notification.innerHTML.trim() != '')
-				notification.classList.add("hide-alert");
-			notification.classList.remove("show-alert");
-		}
-	}
-
-	var defaultNews = document.getElementById('default-news').innerHTML;
-	var newsUpdate = document.getElementById('news-update').innerHTML;
-	var news = document.getElementById('news');
-
-	if(newsUpdate.trim() === "")
-		printNews(defaultNews.trim());
-	else
-		printNews(newsUpdate.trim());
-}
-
-function printNews(news) {
-	if(i) {
-		clearInterval(newsInterval);
-		i = 0;
-	}
-
-	let bold = false;
-	var newsBar = document.getElementById('news');
-	newsBar.innerHTML = "";
-	newsInterval = setInterval(function() {
-		if(i < news.length) {
-			if(news[i] === '*') {
-				++i;
-				if(!bold)
-					bold = true;
-				else
-					bold = false;
-			}
-			
-			if(bold)
-				newsBar.innerHTML += news[i].bold();
-			else
-				newsBar.innerHTML += news[i];
-			++i;
-
-			gameSpaceCalc();
-		}
-		else {
-			clearInterval(newsInterval);
-			i = 0;
-		}
-	}, 50);
 }
 
 function goHomeResponse(response) {
