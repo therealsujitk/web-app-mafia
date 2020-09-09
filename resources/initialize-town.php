@@ -1,16 +1,23 @@
 <?php
-$name = strip_tags(substr($_POST['name'], 0, 10));
+$name = substr(trim($_POST['name']), 0, 10);
 $avatar = $_POST['avatar'];
-$town = strip_tags(substr($_POST['town'], 0, 20));
-$mob = strip_tags(substr($_POST['mob'], 0, 20));
+$town = substr(trim($_POST['town']), 0, 20);
+$mob = substr(trim($_POST['mob']), 0, 20);
 
 $name = str_replace("'", "\'", $name);
-$town = str_replace("'", "\'", $town);
-$mob = str_replace("'", "\'", $mob);
+$name = str_replace("<", "&lt;", $name);
+$name = str_replace("<", "&gt;", $name);
+$name = str_replace("&", "&amp;", $name);
 
-$name = trim($name);
-$town = trim($town);
-$mob = trim($mob);
+$town = str_replace("'", "\'", $town);
+$town = str_replace("<", "&lt;", $town);
+$town = str_replace(">", "&gt;", $town);
+$town = str_replace("&", "&amp;", $town);
+
+$mob = str_replace("'", "\'", $mob);
+$mob = str_replace("<", "&lt;", $mob);
+$mob = str_replace(">", "&gt;", $mob);
+$mob = str_replace("&", "&amp;", $mob);
 	
 if($name == "")
 	die("Please enter a valid name.");

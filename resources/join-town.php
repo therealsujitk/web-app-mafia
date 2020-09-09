@@ -1,12 +1,14 @@
 <?php
 include('../conn.php');
 session_start();
-$townID = $_POST['townID'];
-$name = strip_tags(substr($_POST['name'], 0, 10));
+$townID = trim($_POST['townID']);
+$name = substr(trim($_POST['name']), 0, 10);
 $avatar = $_POST['avatar'];
 
 $name = str_replace("'", "\'", $name);
-$name = trim($name);
+$name = str_replace("<", "&lt;", $name);
+$name = str_replace("<", "&gt;", $name);
+$name = str_replace("&", "&amp;", $name);
 
 $query = "SELECT COUNT(user_id) FROM town_" . $townID . ";";
 $query1 = "SELECT has_started FROM town_details WHERE town_id = '$townID';";

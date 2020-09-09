@@ -141,7 +141,7 @@
 <div id="has-started" style="display: none;">
 	<?php
 		$query = "SELECT has_started FROM town_details WHERE town_id = '$townID';";
-		if(mysqli_fetch_assoc(mysqli_query($conn, $query))["has_started"])
+		if(mysqli_fetch_assoc(mysqli_query($conn, $query))["has_started"] == '1')
 			echo "<script>
 				$('body').load('game.php', function(response, status) {
 					if(status !=  'success') {

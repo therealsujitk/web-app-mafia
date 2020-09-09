@@ -3,9 +3,11 @@ session_start();
 include('../conn.php');
 
 $name = $_SESSION["name"];
-$message = strip_tags($_POST["message"]);
+$message = trim($_POST["message"]);
 $message = str_replace("'", "\'", $message);
-$message = trim($message);
+$message = str_replace("<", "&lt;", $message);
+$message = str_replace(">", "&gt;", $message);
+$message = str_replace("&", "&amp;", $message);
 
 if($message === '')
 	die('success');

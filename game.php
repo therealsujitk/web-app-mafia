@@ -731,15 +731,34 @@ if($_SESSION["dailyIndex"] == 0) {
 				echo '<script>document.getElementById("results-header").innerHTML = "Citizens Win!"</script>';
 				$flag = 1;
 			}
-			
-			mysqli_close($conn);
 
 			if($flag) {
-				echo 'go home';
+
 			}
 			?>
 		</p></td>
 	</table>
+</div>
+
+<div id="has-started" style="display: none;">
+	<?php
+		$query = "SELECT has_started FROM town_details WHERE town_id = '$townID';";
+		if(mysqli_fetch_assoc(mysqli_query($conn, $query))["has_started"] == '0')
+			echo "<script>
+				$('body').load('lobby.php', function(response, status) {
+					if(status !=  'success') {
+						closeAll();
+						setTimeout(function() {
+							document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
+							document.getElementById('error-modal').classList.add('show-modal');
+							document.getElementById('modal-background').style.display = 'block';
+						}, 500);
+					}
+				});
+			</script>";
+		
+		mysqli_close($conn);
+	?>
 </div>
 
 <script>
