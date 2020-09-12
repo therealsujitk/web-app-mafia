@@ -723,17 +723,17 @@ if($_SESSION["dailyIndex"] == 0) {
 			$flag = 0;
 			if($mafiaPopulation == 0) {
 				echo 'Our town is free from the members of <b>' . $mob . '</b>. All of them are dead.';
-				echo '<script>document.getElementById("results-header").innerHTML = "Mafia Wins!"</script>';
+				echo '<script>document.getElementById("results-header").innerHTML = "Citizens Wins!"</script>';
 				$flag = 1;
 			}
 			else if(($mafiaPopulation == $nonMafiaPopulation)) {
-				echo '<b>' . $mob . '</b> has taken over our town. The game ends here because after the mafia kills one of the citizens tonight, there will never be a majority on who is to be executed.';
-				echo '<script>document.getElementById("results-header").innerHTML = "Citizens Win!"</script>';
+				echo '<b>' . $mob . '</b> has taken over our town. The Mafia now has the majority members.';
+				echo '<script>document.getElementById("results-header").innerHTML = "Mafia Wins!"</script>';
 				$flag = 1;
 			}
 
 			if($flag) {
-
+				echo '</br><input id="restart-game" class="btn" style="margin-top: 10px;" type="button" value="Back to Lobby" onclick="restartGame();"></input>';
 			}
 			?>
 		</p></td>
@@ -810,6 +810,18 @@ if($_SESSION["dailyIndex"] == 0) {
 				}
 				else {
 					document.getElementById('chat-box').value = messageValue;
+				}
+			});
+		}
+		else if(e.data == '@') {
+			$("body").load("lobby.php", function(response, status) {
+				if(status !=  "success") {
+					closeAll();
+					setTimeout(function() {
+						document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
+						document.getElementById('error-modal').classList.add("show-modal");
+						document.getElementById('modal-background').style.display = "block";
+					}, 500);
 				}
 			});
 		}

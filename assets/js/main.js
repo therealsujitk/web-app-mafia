@@ -194,7 +194,7 @@ function setIndex() {
 		document.getElementById('name-mobile').value = getCookie('name');
 	}
 	
-	var avatarID = Math.round(Math.random() * 19) + 1;
+	var avatarID = Math.round(Math.random() * 25) + 1;
 	if(getCookie('avatar') != null) {
 		document.getElementById('avatar').src = getCookie('avatar');
 	}
@@ -271,7 +271,7 @@ function next() {
 	let x = document.getElementById('avatar');
 	let index = x.src.slice(-6, -4);
 
-	if(index == 20)
+	if(index == 26)
 		index = 1;
 	else
 		++index;
@@ -287,7 +287,7 @@ function prev() {
 	let index = x.src.slice(-6, -4);
 
 	if(index == 1)
-		index = 20;
+		index = 26;
 	else
 		--index;
 	
@@ -619,7 +619,7 @@ function leaveGameResponse(response) {
 			document.getElementById('modal-background').style.display = "block";
 		}, 500);
 		
-		var leave = documentt.getElementById('leave-game');
+		var leave = document.getElementById('leave-game');
 		leave.disabled = false;
 		leave.value = "Yes, I'm sure";
 	}
@@ -926,6 +926,59 @@ function registerVote(role, vote) {
 			}, 500);
 		}
 	}).then(response => registerVoteResponse(response));
+}
+
+function restartGameResponse(response) {
+	if(response === "success") {
+		conn.send('@' + townID);
+		$("body").load("lobby.php", function(response, status) {
+			if(status !=  "success") {
+				closeAll();
+				setTimeout(function() {
+					document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
+					document.getElementById('error-modal').classList.add("show-modal");
+					document.getElementById('modal-background').style.display = "block";
+				}, 500);
+			}
+		});
+	}
+	else {
+		closeAll();
+		setTimeout(function() {
+			document.getElementById('error-message').innerHTML = response;
+			document.getElementById('error-modal').classList.add("show-modal");
+			document.getElementById('modal-background').style.display = "block";
+		}, 500);
+		
+		var restart = document.getElementById('restart-game');
+		restart.disabled = false;
+		restart.value = "Back to Lobby";
+	}
+}
+
+function restartGame() {
+	var restart = document.getElementById('restart-game');
+	restart.disabled = true;
+	restart.value = "Please wait...";
+
+	$.ajax({
+		type: 'POST',
+		url: '/resources/restart-game.php',
+		data: {
+			check: 'true'
+		},
+		error: function() {
+			closeAll();
+			setTimeout(function() {
+				document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
+				document.getElementById('error-modal').classList.add("show-modal");
+				document.getElementById('modal-background').style.display = "block";
+			}, 500);
+			
+			restart.disabled = false;
+			restart.value = "Back to Lobby";
+		}
+	}).then(response => restartGameResponse(response));
 }
 
 function goHomeResponse(response) {

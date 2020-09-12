@@ -17,7 +17,7 @@ Class Mafia implements MessageComponentInterface {
     public function onMessage(ConnectionInterface $from, $message) {
         $action = substr($message, 0, 1);
 
-        if($action == "*" || $action == "!" || $action == "%" || $action == "$" || $action == "^" || $action == "#") {
+        if($action == "*" || $action == "!" || $action == "%" || $action == "$" || $action == "^" || $action == "#" || $action == "@") {
             $townID = substr($message, 1);
             $this->players->attach($from, $townID);
 

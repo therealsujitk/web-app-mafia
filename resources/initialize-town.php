@@ -5,19 +5,19 @@ $town = substr(trim($_POST['town']), 0, 20);
 $mob = substr(trim($_POST['mob']), 0, 20);
 
 $name = str_replace("'", "\'", $name);
-$name = str_replace("<", "&lt;", $name);
-$name = str_replace("<", "&gt;", $name);
 $name = str_replace("&", "&amp;", $name);
+$name = str_replace("<", "&lt;", $name);
+$name = str_replace(">", "&gt;", $name);
 
 $town = str_replace("'", "\'", $town);
+$town = str_replace("&", "&amp;", $town);
 $town = str_replace("<", "&lt;", $town);
 $town = str_replace(">", "&gt;", $town);
-$town = str_replace("&", "&amp;", $town);
 
 $mob = str_replace("'", "\'", $mob);
+$mob = str_replace("&", "&amp;", $mob);
 $mob = str_replace("<", "&lt;", $mob);
 $mob = str_replace(">", "&gt;", $mob);
-$mob = str_replace("&", "&amp;", $mob);
 	
 if($name == "")
 	die("Please enter a valid name.");

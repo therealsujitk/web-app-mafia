@@ -138,6 +138,12 @@
 						<img class="cache" style="display: none;" src="/assets/avatars/avatar_18.png">
 						<img class="cache" style="display: none;" src="/assets/avatars/avatar_19.png">
 						<img class="cache" style="display: none;" src="/assets/avatars/avatar_20.png">
+						<img class="cache" style="display: none;" src="/assets/avatars/avatar_21.png">
+						<img class="cache" style="display: none;" src="/assets/avatars/avatar_22.png">
+						<img class="cache" style="display: none;" src="/assets/avatars/avatar_23.png">
+						<img class="cache" style="display: none;" src="/assets/avatars/avatar_24.png">
+						<img class="cache" style="display: none;" src="/assets/avatars/avatar_25.png">
+						<img class="cache" style="display: none;" src="/assets/avatars/avatar_26.png">
 					</td>
 					<td id="details">
 						<table cellpadding="0" cellspacing="0" width="100%">
