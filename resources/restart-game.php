@@ -8,7 +8,7 @@ $check = $_POST["check"];
 $query = "ALTER TABLE town_" . $townID . " RENAME TO town_" . $townID . "_del;";
 mysqli_query($conn, $query);
 
-$query = "CREATE TABLE town_" . $townID . " AS SELECT user_id, name, avatar FROM town_" . $townID . "_del;";
+$query = "CREATE TABLE town_" . $townID . " AS SELECT name, avatar FROM town_" . $townID . "_del;";
 mysqli_query($conn, $query);
 
 $query = "ALTER TABLE town_" . $townID . " ADD user_id INT(2) UNSIGNED AUTO_INCREMENT PRIMARY KEY;";
