@@ -1,13 +1,14 @@
 <?php
+
 session_start();
 include('../conn.php');
 
 $name = $_SESSION["name"];
 $message = trim($_POST["message"]);
 $message = str_replace("'", "\'", $message);
+$message = str_replace("&", "&amp;", $message);
 $message = str_replace("<", "&lt;", $message);
 $message = str_replace(">", "&gt;", $message);
-$message = str_replace("&", "&amp;", $message);
 
 if($message === '')
 	die('success');

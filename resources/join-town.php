@@ -1,4 +1,5 @@
 <?php
+
 include('../conn.php');
 session_start();
 $townID = trim($_POST['townID']);

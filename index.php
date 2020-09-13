@@ -255,14 +255,6 @@
 				<td><p id="error-message" style="padding: 0; margin: 0;"></p></td>
 			</table>
 		</div>
-
-		<div id="splash-background" class="splash-background"></div>
-
-		<div id="splash" class="splash">
-			<img id="splash-logo" src="/assets/images/logo.png"></img>
-			</br></br>
-			<img src="/assets/images/loading.gif"></img>
-		</div>
 				
 		<script>
 			setIndex();

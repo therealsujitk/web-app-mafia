@@ -27,6 +27,10 @@ function openBug() {
 	
 	x.classList.add("show-modal");
 	y.style.display = "block";
+
+	setTimeout(function() {
+		document.getElementById('report').focus();
+	}, 500);
 }
 
 function openPrivacy() {
@@ -161,11 +165,15 @@ function reportBugResponse(response) {
 }
 
 function reportBug() {
+	let report = document.getElementById('report').value;
+	if(report.trim() == "") {
+		closeAll();
+		document.getElementById('report').value = "";
+		return;
+	}
 	var submit = document.getElementById('submit-report');
 	submit.disabled = true;
 	submit.value = "Please wait...";
-
-	let report = document.getElementById('report').value;
 
 	$.ajax({
 		type: 'POST',
@@ -204,6 +212,25 @@ function setIndex() {
 	else {
 		document.getElementById('avatar').src = '/assets/avatars/avatar_' + avatarID + '.png';
 	}
+
+	setTimeout(function() {
+		document.getElementById('name').focus();
+	}, 500);
+	
+	document.getElementById('town').addEventListener("keyup", function(e) {
+		if(e.key === "Enter")
+			document.getElementById('mob').focus();
+	});
+
+	document.getElementById('mob').addEventListener("keyup", function(e) {
+		if(e.key === "Enter")
+			createTown();
+	});
+
+	document.getElementById('town-id').addEventListener("keyup", function(e) {
+		if(e.key === "Enter")
+			joinTown();
+	});
 }
 
 function setCookie(i) {
@@ -241,7 +268,11 @@ function openCreate(i) {
 	
 	x.classList.add("show-modal");
 	y.style.display = "block";
-	
+
+	setTimeout(function() {
+		document.getElementById('town').focus();
+	}, 500);
+
 	setCookie(i);
 }
 
@@ -263,6 +294,10 @@ function openJoin(i) {
 	
 	x.classList.add("show-modal");
 	y.style.display = "block";
+
+	setTimeout(function() {
+		document.getElementById('town-id').focus();
+	}, 500);	
 	
 	setCookie(i);
 }
@@ -318,14 +353,8 @@ function createTownResponse(response) {
 		});
 	}
 	else {
-		document.getElementById('splash-background').classList.add('hide-splash');
-		document.getElementById('splash').classList.add('hide-splash');
 		closeAll();
 		setTimeout(function() {
-			document.getElementById('splash-background').classList.remove('show-splash');
-			document.getElementById('splash-background').classList.remove('hide-splash');
-			document.getElementById('splash').classList.remove('show-splash');
-			document.getElementById('splash').classList.remove('hide-splash');
 			document.getElementById('error-message').innerHTML = response;
 			document.getElementById('error-modal').classList.add("show-modal");
 			document.getElementById('modal-background').style.display = "block";
@@ -341,9 +370,6 @@ function createTown() {
 	var create = document.getElementById('create');
 	create.disabled = true;
 	create.value = "Please wait...";
-
-	document.getElementById('splash-background').classList.add('show-splash');
-	document.getElementById('splash').classList.add('show-splash');
 
 	let town = document.getElementById('town').value;
 	let mob = document.getElementById('mob').value;
@@ -363,14 +389,8 @@ function createTown() {
 			avatar: avatar
 		},
 		error: function() {
-			document.getElementById('splash-background').classList.add('hide-splash');
-			document.getElementById('splash').classList.add('hide-splash');
 			closeAll();
 			setTimeout(function() {
-				document.getElementById('splash-background').classList.remove('show-splash');
-				document.getElementById('splash-background').classList.remove('hide-splash');
-				document.getElementById('splash').classList.remove('show-splash');
-				document.getElementById('splash').classList.remove('hide-splash');
 				document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
 				document.getElementById('error-modal').classList.add("show-modal");
 				document.getElementById('modal-background').style.display = "block";
@@ -387,14 +407,8 @@ function joinTownResponse(response, townID, joinVal) {
 		conn.send('*' + townID);
 		$("body").load("lobby.php", function(response, status) {
 			if(status !=  "success") {
-				document.getElementById('splash-background').classList.add('hide-splash');
-				document.getElementById('splash').classList.add('hide-splash');
 				closeAll();
 				setTimeout(function() {
-					document.getElementById('splash-background').classList.remove('show-splash');
-					document.getElementById('splash-background').classList.remove('hide-splash');
-					document.getElementById('splash').classList.remove('show-splash');
-					document.getElementById('splash').classList.remove('hide-splash');
 					document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
 					document.getElementById('error-modal').classList.add("show-modal");
 					document.getElementById('modal-background').style.display = "block";
@@ -403,14 +417,8 @@ function joinTownResponse(response, townID, joinVal) {
 		});
 	}
 	else {
-		document.getElementById('splash-background').classList.add('hide-splash');
-		document.getElementById('splash').classList.add('hide-splash');
 		closeAll();
 		setTimeout(function() {
-			document.getElementById('splash-background').classList.remove('show-splash');
-			document.getElementById('splash-background').classList.remove('hide-splash');
-			document.getElementById('splash').classList.remove('show-splash');
-			document.getElementById('splash').classList.remove('hide-splash');
 			document.getElementById('error-message').innerHTML = response;
 			document.getElementById('error-modal').classList.add("show-modal");
 			document.getElementById('modal-background').style.display = "block";
@@ -436,9 +444,6 @@ function joinTown(i=1) {
 	var join = document.getElementById('join');
 	join.disabled = true;
 	join.value = "Please wait...";
-
-	document.getElementById('splash-background').classList.add('show-splash');
-	document.getElementById('splash').classList.add('show-splash');
 
 	var joinVal = "";
 	if(document.getElementById('join-town')) {
@@ -470,14 +475,8 @@ function joinTown(i=1) {
 			avatar: avatar
 		},
 		error: function() {
-			document.getElementById('splash-background').classList.add('hide-splash');
-			document.getElementById('splash').classList.add('hide-splash');
 			closeAll();
 			setTimeout(function() {
-				document.getElementById('splash-background').classList.remove('show-splash');
-				document.getElementById('splash-background').classList.remove('hide-splash');
-				document.getElementById('splash').classList.remove('show-splash');
-				document.getElementById('splash').classList.remove('hide-splash');
 				document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
 				document.getElementById('error-modal').classList.add("show-modal");
 				document.getElementById('modal-background').style.display = "block";

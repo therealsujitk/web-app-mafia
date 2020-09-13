@@ -1,4 +1,6 @@
 <?php
+
+
 session_start();
 include('../conn.php');
 $query = "SELECT COUNT(user_id) FROM town_" . $_SESSION["townID"] . ";";

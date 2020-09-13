@@ -1,4 +1,5 @@
 <?php
+
 namespace Mafia;
 use Ratchet\MessageComponentInterface;
 use Ratchet\ConnectionInterface;

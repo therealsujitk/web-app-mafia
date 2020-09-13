@@ -1,4 +1,5 @@
 <?php
+
 $name = substr(trim($_POST['name']), 0, 10);
 $avatar = $_POST['avatar'];
 $town = substr(trim($_POST['town']), 0, 20);
