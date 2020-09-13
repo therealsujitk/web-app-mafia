@@ -24,10 +24,10 @@ mysqli_query($conn, $query);
 $query = "DROP TABLE town_" . $townID . "_del;";
 mysqli_query($conn, $query);
 
-$query = "UPDATE town_details SET has_started = 0, game_index = 0, daily_index = 0, daily_max = 3 WHERE town_id = '$townID';";
+$query = "UPDATE town_details SET time_stamp = NOW() WHERE town_id = '$townID';";
 mysqli_query($conn, $query);
 
-$query = "UPDATE town_details SET time_stamp = NOW() WHERE town_id = '$townID';";
+$query = "UPDATE town_details SET has_started = 0, game_index = 0, daily_index = 0, daily_max = 2 WHERE town_id = '$townID';";
 mysqli_query($conn, $query);
 
 mysqli_close($conn);

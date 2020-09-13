@@ -183,9 +183,6 @@ else if($population > 10) {
 	die('Sorry, you have exceeded the maximum number of players. We do not accept more than <b>ten</b> players.');
 }
 
-$query = "ALTER TABLE town_" . $_SESSION["townID"] . " ADD saved INT(1) NOT NULL DEFAULT 0;";
-mysqli_query($conn, $query);
-
 $query = "ALTER TABLE town_" . $_SESSION["townID"] . " ADD night_0 INT(1) NOT NULL DEFAULT 0;";
 mysqli_query($conn, $query);
 

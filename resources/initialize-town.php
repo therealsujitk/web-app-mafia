@@ -49,7 +49,7 @@ include('../conn.php');
 
 while(true) {
 	$townID = uniqueID();
-	$query = "SELECT * FROM town_details WHERE town_id = " . $townID . ";";
+	$query = "SELECT town_name FROM town_details WHERE town_id = " . $townID . ";";
 	if(!mysqli_query($conn, $query))
 		break;
 }
@@ -97,7 +97,6 @@ mysqli_close($conn);
 
 session_start();
 $_SESSION["townID"] = $townID;
-$_SESSION["userID"] = '1';
 $_SESSION["name"] = $name;
 $_SESSION["town"] = $town;
 $_SESSION["mob"] = $mob;

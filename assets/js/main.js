@@ -215,7 +215,19 @@ function setIndex() {
 
 	setTimeout(function() {
 		document.getElementById('name').focus();
+		if(window.innerWidth < 600)
+			document.getElementById('name-mobile').focus();
 	}, 500);
+
+	document.getElementById('name').addEventListener("keyup", function(e) {
+		if(e.key === "Enter")
+			joinTown();
+	});
+
+	document.getElementById('name-mobile').addEventListener("keyup", function(e) {
+		if(e.key === "Enter")
+			joinTown();
+	});
 	
 	document.getElementById('town').addEventListener("keyup", function(e) {
 		if(e.key === "Enter")
@@ -244,8 +256,8 @@ function setCookie(i) {
 		var name = document.getElementById('name-mobile').value;
 	let avatar = document.getElementById('avatar').src;
 	
-	document.cookie = "name=" + name + ";expires=" + expires + ";path=/";
-	document.cookie = "avatar=" + avatar + ";expires=" + expires + ";path=/";
+	document.cookie = "name=" + name + ";expires=" + expires + ";path=/;SameSite=Lax";
+	document.cookie = "avatar=" + avatar + ";expires=" + expires + ";path=/;SameSite=Lax";
 }
 
 function openCreate(i) {

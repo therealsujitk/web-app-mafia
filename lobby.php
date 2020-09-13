@@ -3,9 +3,12 @@
 	include('conn.php');
 	session_start();
 
-	$userID = $_SESSION["userID"];
+	$name = $_SESSION["name"];
 	$townID = $_SESSION["townID"];
 	$town = $_SESSION["town"];
+	$query = "SELECT user_id FROM town_" . $townID . " WHERE name = '$name';";
+	$_SESSION["userID"] = mysqli_fetch_assoc(mysqli_query($conn, $query))["user_id"];
+	$userID = $_SESSION["userID"];
 	?>
 
 	var townID = <?php echo json_encode($townID); ?>;

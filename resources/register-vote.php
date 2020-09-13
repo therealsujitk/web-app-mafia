@@ -25,8 +25,6 @@ else if($role == 'medic' && mysqli_fetch_assoc(mysqli_query($conn, $query))["is_
 	if(!mysqli_fetch_assoc(mysqli_query($conn, $query))) {
 		$query = "UPDATE town_" . $townID . " SET medic_" . $night . " = 1 WHERE user_id = " . $vote . " AND medic_" . $night . " = 0;";
 		mysqli_query($conn, $query);
-		$query = "UPDATE town_" . $townID . " SET saved = 1 WHERE user_id = " . $vote . " AND saved = 0;";
-		mysqli_query($conn, $query);
 	}
 }
 else if($role == 'sheriff' && mysqli_fetch_assoc(mysqli_query($conn, $query))["is_sherrif"]) {
@@ -113,7 +111,10 @@ if($_SESSION["dailyIndex"] != $tempIndex) {
 			mysqli_query($conn, $query);
 	
 			$query = "SELECT COUNT(name) FROM town_" . $townID . " WHERE is_medic = 1 AND is_killed = 0 AND is_executed = 0;";
-			$max = mysqli_fetch_assoc(mysqli_query($conn, $query))["COUNT(name)"] * 2 + 1;
+			if(mysqli_fetch_assoc(mysqli_query($conn, $query))["COUNT(name)"])
+				$max = 2;
+			else
+				$max = 1;
 			$query = "UPDATE town_details SET daily_max = " . $max . " WHERE town_id = '$townID';";
 			mysqli_query($conn, $query);
 		}

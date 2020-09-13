@@ -599,7 +599,10 @@ if($_SESSION["dailyIndex"] == 0) {
 				</table>';
 			
 				echo '<div id="candidates-box"><div id="candidates">';
-				$query = "SELECT user_id, name, avatar FROM town_" . $townID . " WHERE saved = 0 AND is_killed = 0 AND is_executed = 0;";
+				$prev = $_SESSION["dailyIndex"]/2 - 1;
+				if($prev < 0)
+					$prev = 0;
+				$query = "SELECT user_id, name, avatar FROM town_" . $townID . " WHERE medic_" . $prev . " = 0 AND is_killed = 0 AND is_executed = 0;";
 				if($result = mysqli_query($conn, $query))
 					while($row = mysqli_fetch_assoc($result)) {
 						$name = $row["name"];
