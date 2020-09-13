@@ -1,3 +1,11 @@
+@font-face {
+	font-family: 'Raleway';
+	font-style: normal;
+	font-weight: 400;
+	font-display: swap;
+	src: url('../fonts/Raleway-Regular.ttf');
+}
+
 body {
 	background: #1f1414;
 	font-family: 'Raleway', sans-serif;
@@ -377,18 +385,16 @@ textArea:focus {
 }
 
 .copy {
-	background-color: #000;
-	opacity: 0.8;
+	background-color: #222;
 	color: #fff;
 }
 
 .copy::after {
-	border-color: #000 transparent transparent transparent;
+	border-color: #222 transparent transparent transparent;
 }
 
 .copied {
 	background-color: #b4f1af;
-	opacity: 1;
 	color: #33722d;
 }
 
@@ -414,13 +420,57 @@ textArea:focus {
 
 @keyframes tooltipAnimation {
 	from {opacity: 0; bottom: 120%;}
-	to {opacity: 0.8; bottom: 150%;}
+	to {opacity: 1; bottom: 150%;}
 }
 
 figcaption {
 	margin: 5px;
 	color: #fff;
 	text-align: center;
+}
+
+.splash-background {
+	position: absolute;
+	width: 100%;
+	height: 100%;
+	background: #1f1414;
+	opacity: 1;
+	display: none;
+	z-index: 5;
+}
+
+.splash {
+	position: absolute;
+	text-align: center;
+	margin-top: 50vh;
+	transform: translate(0%, -50%);
+	display: none;
+	z-index: 5;
+}
+
+#splash-logo {
+	width: 25%;
+}
+
+.show-splash {
+	display: block;
+	animation: fadeInSplash 0.5s;
+	animation-fill-mode: forwards;
+}
+
+@keyframes fadeInSplash {
+	from {opacity: 0;}
+	to {opacity: 1;}
+}
+
+.hide-splash {
+	animation: fadeOutSplash 0.5s;
+	animation-fill-mode: forwards;
+}
+
+@keyframes fadeOutSplash {
+	from {opacity: 1;}
+	to {opacity: 0;}
 }
 
 #game {
@@ -446,7 +496,7 @@ figcaption {
 	border-radius: 20px;
 	border-color: #936c6c;
 	vertical-align: top;
-	padding: 1.5%;
+	padding: 15px;
 }
 
 #game-details {
@@ -546,6 +596,7 @@ figcaption {
 	margin-left: 50%;
 	box-shadow: 0 7px 15px #000;
 	transform: translate(-50%, -100px);
+	z-index: 1;
 }
 
 .show-alert {
@@ -853,6 +904,10 @@ figcaption {
 	
 	#stats {
 		width: 100%;
+	}
+
+	#splash-logo {
+		width: 60%;
 	}
 }
 

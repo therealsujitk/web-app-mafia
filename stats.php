@@ -18,25 +18,24 @@
 		<title>Statistics - Mafia</title>
 	</head>
 	<body>
-		<?php
-			include('conn.php');
-		?>
 		<div id="stats">
 			<img src="/assets/images/logo.png" style="height: 13vh; height: calc(var(--vh, 1vh) * 13);"></img>
 			<table style="text-align: center; width: 100%;">
 				<tr>
 					<td id="players-joined" style="font-size: 13vh; font-size: calc(var(--vh, 1vh) * 13); color: #fff; padding-top: 0px;">
 						<?php
-							$query = "SELECT players_joined FROM statistics WHERE id = 1;";
-							echo mysqli_fetch_assoc(mysqli_query($conn, $query))["players_joined"];
+						include('conn.php');
+
+						$query = "SELECT players_joined FROM statistics WHERE id = 1;";
+						echo mysqli_fetch_assoc(mysqli_query($conn, $query))["players_joined"];
 						?>
 					</td>
 					<td id="games-played" style="font-size: 13vh; font-size: calc(var(--vh, 1vh) * 13); color: #fff; padding-top: 0px;">
 						<?php
-							$query = "SELECT games_played FROM statistics WHERE id = 1;";
-							echo mysqli_fetch_assoc(mysqli_query($conn, $query))["games_played"];
-							
-							mysqli_close($conn);
+						$query = "SELECT games_played FROM statistics WHERE id = 1;";
+						echo mysqli_fetch_assoc(mysqli_query($conn, $query))["games_played"];
+						
+						mysqli_close($conn);
 						?>
 					</td>
 				</tr>

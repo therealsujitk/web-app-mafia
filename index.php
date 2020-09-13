@@ -2,11 +2,10 @@
 <html>
 	<head>
 		<link rel="stylesheet" type="text/css" href="/assets/css/main.css">
-		<link href="https://fonts.googleapis.com/css2?family=Raleway&display=swap" rel="stylesheet">
 		<meta content="text/html;charset=utf-8" http-equiv="Content-Type">
 		<meta content="utf-8" http-equiv="encoding">
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
-		<script src="https://code.jquery.com/jquery-3.5.0.js"></script>
+		<script src="/node_modules/jquery/dist/jquery.min.js"></script>
 		<script src="/assets/js/main.js"></script>
 		<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
 		<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
@@ -45,40 +44,47 @@
 						<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Report Bug" onclick="openBug()"></input>
 						<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="About Us" onclick="openAbout()"></input>
 						<?php
-							include('conn.php');
-							session_start();
-							
-							if(isset($_SESSION["townID"])) {
-								$townID = $_SESSION["townID"];
-							
-								$query = "SELECT user_id FROM town_" . $townID . ";";
-								if(mysqli_query($conn, $query)) {
-									$query = "SELECT has_started FROM town_details WHERE town_id = '$townID';";
-									if(mysqli_fetch_assoc(mysqli_query($conn, $query))["has_started"]) {
-										echo '<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Continue Playing" onclick="continuePlaying()"></input>';
+						include('conn.php');
+						session_start();
+						
+						if(isset($_SESSION["townID"])) {
+							$townID = $_SESSION["townID"];
+						
+							$query = "SELECT user_id FROM town_" . $townID . ";";
+							if(mysqli_query($conn, $query)) {
+								$query = "SELECT has_started FROM town_details WHERE town_id = '$townID';";
+								if(mysqli_fetch_assoc(mysqli_query($conn, $query))["has_started"]) {
+									echo '<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Continue Playing" onclick="continuePlaying()"></input>';
 
-										echo '<script>
-											function continuePlaying() {
-												$("body").load("/game.php");
-											}
-										</script>';
-									}
-									else if(!mysqli_fetch_assoc(mysqli_query($conn, $query))["has_started"]) {
-										echo '<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Continue Playing" onclick="continuePlaying()"></input>';
-										
-										echo '<script>
-											function continuePlaying() {
-												$("body").load("/lounge.php");
-											}
-										</script>';
-									}
+									echo '<script>
+										function continuePlaying() {
+											conn.send("' . $townID . '")
+											$("body").load("/game.php");
+										}
+									</script>';
+								}
+								else if(!mysqli_fetch_assoc(mysqli_query($conn, $query))["has_started"]) {
+									echo '<input class="header link" style="padding-left: 10px; padding-right: 10px;" type="button" value="Continue Playing" onclick="continuePlaying()"></input>';
+									
+									echo '<script>
+										function continuePlaying() {
+											conn.send("' . $townID . '")
+											$("body").load("/lobby.php");
+										}
+									</script>';
 								}
 							}
+							else {
+								session_unset();
+								session_destroy();
+							}
+						}
 						?>
 					</nav>
 				</td>
 			</table>
 		</div>
+
 		<div id="header-mobile">
 			<i id="menu-mobile" class="fas fa-bars" onclick="openMenu();"></i>
 			<div id="logo-mobile"><img src="/assets/images/logo.png" style="height: 65px;"></img></div>
@@ -94,32 +100,23 @@
 				<input class="header link" style="padding: 10px 20px 10px 20px;" type="button" value="About Us" onclick="openAbout()"></input>
 				</br>
 				<?php
-					if(isset($_SESSION["townID"])) {
-						$townID = $_SESSION["townID"];
-					
-						$query = "SELECT user_id FROM town_" . $townID . ";";
-						if(mysqli_query($conn, $query)) {
-							$query = "SELECT has_started FROM town_details WHERE town_id = '$townID';";
-							if(mysqli_fetch_assoc(mysqli_query($conn, $query))) {
-								echo '<input class="header link" style="padding: 10px 20px 10px 20px;" type="button" value="Continue Playing" onclick="continuePlaying()"></input>';
-							}
-						}
-						else {
-							session_unset();
-							session_destroy();
-						}
-					}
-					
-					mysqli_close($conn);
+				if(isset($_SESSION["townID"])) {
+					$townID = $_SESSION["townID"];
+				
+					$query = "SELECT user_id FROM town_" . $townID . ";";
+					if(mysqli_query($conn, $query))
+						echo '<input class="header link" style="padding: 10px 20px 10px 20px;" type="button" value="Continue Playing" onclick="continuePlaying()"></input>';
+				}
 				?>
 			</nav>
 		</div>
-		<div align="center">
+
+		<div>
 			<table id="user-details" cellpadding="0" cellspacing="0">
 				<tr>
-					<td align="center">
+					<td style="text-align: center">
 						<i class="btn2 fas fa-caret-left fa-3x prev-next-mobile" onclick="prev()"></i>
-						<img id="avatar" src="">
+						<img id="avatar">
 						<i class="btn2 fas fa-caret-right fa-3x prev-next-mobile" onclick="next()"></i>
 						<img class="cache" style="display: none;" src="/assets/avatars/avatar_01.png">
 						<img class="cache" style="display: none;" src="/assets/avatars/avatar_02.png">
@@ -141,6 +138,12 @@
 						<img class="cache" style="display: none;" src="/assets/avatars/avatar_18.png">
 						<img class="cache" style="display: none;" src="/assets/avatars/avatar_19.png">
 						<img class="cache" style="display: none;" src="/assets/avatars/avatar_20.png">
+						<img class="cache" style="display: none;" src="/assets/avatars/avatar_21.png">
+						<img class="cache" style="display: none;" src="/assets/avatars/avatar_22.png">
+						<img class="cache" style="display: none;" src="/assets/avatars/avatar_23.png">
+						<img class="cache" style="display: none;" src="/assets/avatars/avatar_24.png">
+						<img class="cache" style="display: none;" src="/assets/avatars/avatar_25.png">
+						<img class="cache" style="display: none;" src="/assets/avatars/avatar_26.png">
 					</td>
 					<td id="details">
 						<table cellpadding="0" cellspacing="0" width="100%">
@@ -148,7 +151,7 @@
 							<td style="padding-left: 1px;"><input id="name" class="text-box" type="text" autocomplete="off" spellcheck="false" maxlength = "10"></input></td>
 						</table>
 						<span id="name-error" style="padding-left: 10px; color: #c80000; display: none;">Error! Please enter a valid name.</span>
-						<table cellpadding="0" cellspacing="0">
+						<table id="create-join" cellpadding="0" cellspacing="0">
 							<td><input class="btn" type="button" value="Create a Town" onclick="openCreate(1)"></input></td>
 							<td><input class="btn" type="button" value="Join a Town" onclick="openJoin(1)"></input></td>
 						</table>
@@ -169,7 +172,7 @@
 							<td style="padding-left: 1px;"><input id="name-mobile" class="text-box" type="text" autocomplete="off" spellcheck="false" maxlength = "10"></input></td>
 						</table>
 						<span id="name-error-mobile" style="padding-left: 20px; color: #c80000; display: none;">Error! Please enter a valid name.</span>
-						<table cellpadding="0" cellspacing="0">
+						<table id="create-join-mobile" cellpadding="0" cellspacing="0">
 							<td><input class="btn" type="button" value="Create a Town" onclick="openCreate(0)"></input></td>
 							<td><input class="btn" type="button" value="Join a Town" onclick="openJoin(0)"></input></td>
 						</table>
@@ -198,7 +201,7 @@
 			<div id="bug-report" style="margin: 10px;">
 				<textArea id="report" class="text-box" placeholder="Write a bug report..."></textArea>
 				<p id="success-bug" style="margin: 10px; margin-top: 0; margin-bottom: 0; color: #c80000; display: none;">Success! Your report has been submitted.</p>
-				<input id="submit-report" class="btn" type="button" style="margin-top: 10px;" value="Submit Bug Report"></input>
+				<input id="submit-report" class="btn" type="button" style="margin-top: 10px;" value="Submit Bug Report" onclick="reportBug();"></input>
 			</div>
 		</div>
 		
@@ -209,7 +212,7 @@
 			</table>
 			<p>Made with love by a team of talented people from <b>BinaryStack</b>.</p>
 			<p>Built By: <b><a class="link2" href="https://instagram.com/abishek.stuff/" target="_blank">@AbishekDevendran</a></b> & <b><a class="link2" href="https://therealsuji.tk" target="_blank">@therealsujitk</a></b>.</p>
-			<div id="version"><span>v2.1.2</span></div>
+			<div id="version"><span>v3.0.0</span></div>
 		</div>
 		
 		<div id="create-modal" class="modal">
@@ -227,7 +230,7 @@
 					<td style="padding-left: 1px;"><input id="mob" name="mob" class="text-box" type="text" autocomplete="off" spellcheck="false" placeholder="(optional)" name="mob" maxlength = "20"></input></td>
 				</tr>
 			</table>
-			<input id="create" class="btn" type="button" style="margin: 10px;" value="Create Town"></input>
+			<input id="create" class="btn" type="button" style="margin: 10px;" value="Create Town" onclick="createTown();"></input>
 		</div>
 		
 		<div id="join-modal" class="modal">
@@ -239,7 +242,7 @@
 				<td style="padding-right: 1px;"><span>Town ID:</span></td>
 				<td style="padding-left: 1px;"><input id="town-id" class="text-box" type="text" autocomplete="off" spellcheck="false"></input></td>
 			</table>
-			<input id="join" class="btn" type="button" style="margin: 10px;" value="Join Town"></input>
+			<input id="join" class="btn" type="button" style="margin: 10px;" value="Join Town" onclick="joinTown();"></input>
 		</div>
 		
 		<div id="error-modal" class="modal">
@@ -252,190 +255,23 @@
 				<td><p id="error-message" style="padding: 0; margin: 0;"></p></td>
 			</table>
 		</div>
-		
+				
 		<script>
-			function vhCalc() {
-    		    let vh = window.innerHeight * 0.01;
-                document.documentElement.style.setProperty('--vh', `${vh}px`);
-		    }
-		    
-		    vhCalc();
-            
-            window.addEventListener('resize', () => {
-            	vhCalc();
-            });
-		
-			let avatarID = Math.round(Math.random() * 19) + 1;
-			if(avatarID < 10)
-				document.getElementById('avatar').src = '/assets/avatars/avatar_0' + avatarID + '.png';
-			else
-				document.getElementById('avatar').src = '/assets/avatars/avatar_' + avatarID + '.png';
-		
-			function submitReport(response) {
-				if(response === "Success!") {
-					document.getElementById('success-bug').style.display = "block";
-					document.getElementById('report').value = "";
-				}
-				else {
-					closeAll();
-					setTimeout(function() {
-						document.getElementById('error-message').innerHTML = response;
-						document.getElementById('error-modal').classList.add("show-modal");
-						document.getElementById('modal-background').style.display = "block";
-					}, 500);
-				}
+			setIndex();
 
-				$('#submit-report').prop('disabled', false);
-				$('#submit-report').val('Submit Bug Report');
-			}
-
-			$('#submit-report').on('click', function () {
-				$('#submit-report').prop('disabled', true);
-				$('#submit-report').val('Please wait...');
-	
-				let report = document.getElementById('report').value;
-
-				$.ajax({
-					type: 'POST',
-					url: 'report-bug.php',
-					data: {
-						report: report
-					},
-					error: function() {
-						closeAll();
-						setTimeout(function() {
-							document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
-							document.getElementById('error-modal').classList.add("show-modal");
-							document.getElementById('modal-background').style.display = "block";
-						}, 500);
-						
-						$('#submit-report').prop('disabled', false);
-						$('#submit-report').val('Submit Bug Report');
-					}
-				}).then(response => submitReport(response));
-			});
-			
-			function createTown(response) {
-				if(response === "Success!")
-					$("body").load("/lounge.php");
-				else {
-					closeAll();
-					setTimeout(function() {
-						document.getElementById('error-message').innerHTML = response;
-						document.getElementById('error-modal').classList.add("show-modal");
-						document.getElementById('modal-background').style.display = "block";
-					}, 500);
-					
-					$('#create').prop('disabled', false);
-					$('#create').val('Create Town');
+			<?php
+			if(isset($_GET["i"])) {
+				$query = "SELECT town_name FROM town_details WHERE town_id = '" . $_GET["i"] . "';";
+				if($result = mysqli_fetch_assoc(mysqli_query($conn, $query))) {
+					$townName = $result["town_name"];
+					echo "document.getElementById('create-join').innerHTML = `<td><input id='join-town' class='btn' style='width: 300px;' type='button' value='Join " . $townName . "' onclick='joinTown(1)'></input></td>`;";
+					echo "document.getElementById('create-join-mobile').innerHTML = `<td><input id='join-town-mobile' class='btn' style='width: 300px;' type='button' value='Join " . $townName . "' onclick='joinTown(0)'></input></td>`;";
+					echo "document.getElementById('town-id').value = '" . $_GET["i"] . "';";
 				}
 			}
-		
-			$('#create').on('click', function () {
-				$('#create').prop('disabled', true);
-				$('#create').val('Please wait...');
-			
-				let town = document.getElementById('town').value;
-				let mob = document.getElementById('mob').value;
-				if(window.innerWidth > 600)
-					var name = document.getElementById('name').value;
-				else
-					var name = document.getElementById('name-mobile').value;
-				let avatar = document.getElementById('avatar').src;
 
-				$.ajax({
-					type: 'POST',
-					url: 'initialize-town.php',
-					data: {
-						town: town,
-						mob: mob,
-						name: name,
-						avatar: avatar
-					},
-					error: function() {
-						closeAll();
-						setTimeout(function() {
-							document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
-							document.getElementById('error-modal').classList.add("show-modal");
-							document.getElementById('modal-background').style.display = "block";
-						}, 500);
-						
-						$('#create').prop('disabled', false);
-						$('#create').val('Create Town');
-					}
-				}).then(response => createTown(response));
-			});
-			
-			function joinTown(response) {
-				if(response === "Success!")
-					$("body").load("/lounge.php");
-				else {
-					closeAll();
-					setTimeout(function() {
-						document.getElementById('error-message').innerHTML = response;
-						document.getElementById('error-modal').classList.add("show-modal");
-						document.getElementById('modal-background').style.display = "block";
-						document.getElementById('town-id').value = "";
-					}, 500);
-					
-					$('#join').prop('disabled', false);
-					$('#join').val('Join Town');
-				}
-			}
-			
-			$('#join').on('click', function () {
-				$('#join').prop('disabled', true);
-				$('#join').val('Please wait...');
-			
-				let townID = document.getElementById('town-id').value;
-				if(window.innerWidth > 600)
-					var name = document.getElementById('name').value;
-				else
-					var name = document.getElementById('name-mobile').value;
-				let avatar = document.getElementById('avatar').src;
-
-				$.ajax({
-					type: 'POST',
-					url: 'join-town.php',
-					data: {
-						townID: townID,
-						name: name,
-						avatar: avatar
-					},
-					error: function() {
-						closeAll();
-						setTimeout(function() {
-							document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
-							document.getElementById('error-modal').classList.add("show-modal");
-							document.getElementById('modal-background').style.display = "block";
-						}, 500);
-						
-						$('#join').prop('disabled', false);
-						$('#join').val('Join Town');
-					}
-				}).then(response => joinTown(response));
-			});
-		
-			function getCookie(cname) {
-				var cookieArr = document.cookie.split(";");
-				for(var i = 0; i < cookieArr.length; i++) {
-					var cookiePair = cookieArr[i].split("=");
-					if(cname == cookiePair[0].trim()) {
-						return decodeURIComponent(cookiePair[1]);
-					}
-				}
-
-				return null;
-			}
-		
-			if(getCookie('name') != null) {
-				document.getElementById('name').value = getCookie('name');
-				document.getElementById('name-mobile').value = getCookie('name');
-			}
-		
-			if(getCookie('avatar') != null)
-				document.getElementById('avatar').src = getCookie('avatar');
+			mysqli_close($conn);
+			?>
 		</script>
 	</body>	
 </html>
-

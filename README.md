@@ -36,7 +36,7 @@ CREATE TABLE town_details (
 	has_started INT (2) DEFAULT 0 NOT NULL,
 	game_index INT(2) DEFAULT 0 NOT NULL,
 	daily_index INT(2) DEFAULT 0 NOT NULL,
-	daily_max INT(2) DEFAULT 3 NOT NULL
+	daily_max INT(2) DEFAULT 2 NOT NULL
 );
 ```
 - SQL table **statistics**:
