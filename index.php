@@ -6,6 +6,7 @@
 		<meta content="utf-8" http-equiv="encoding">
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
 		<script src="/node_modules/jquery/dist/jquery.min.js"></script>
+		<script src="/node_modules/thruway.js/dist/thruway.js"></script>
 		<script src="/assets/js/main.js"></script>
 		<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
 		<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
@@ -58,7 +59,6 @@
 
 									echo '<script>
 										function continuePlaying() {
-											conn.send("' . $townID . '")
 											$("body").load("/game.php");
 										}
 									</script>';
@@ -68,7 +68,6 @@
 									
 									echo '<script>
 										function continuePlaying() {
-											conn.send("' . $townID . '")
 											$("body").load("/lobby.php");
 										}
 									</script>';

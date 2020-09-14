@@ -3,6 +3,8 @@
 	"version": "3.0.0",
 	"description": "A free multiplayer social deduction game.",
 	"dependencies": {
-		"jquery": "^3.5.1"
+		"jquery": "^3.5.1",
+		"rxjs": "^6.6.3",
+		"thruway.js": "^2.0.7"
 	}
 }

@@ -1,4 +1,5 @@
-var conn = new WebSocket('ws://' + window.location.hostname + ':3000');
+const wamp = new thruway.Client('ws://localhost:3000', 'mafia');
+
 var i = 0;
 var newsInterval;
 
@@ -346,7 +347,6 @@ function prev() {
 
 function createTownResponse(response) {
 	if(response.slice(0, 7) === "success") {
-		conn.send(response.slice(7));
 		$("body").load("lobby.php", function(response, status) {
 			if(status !=  "success") {
 				document.getElementById('splash-background').classList.add('hide-splash');
@@ -416,7 +416,6 @@ function createTown() {
 
 function joinTownResponse(response, townID, joinVal) {
 	if(response.slice(0, 7) === "success") {
-		conn.send('*' + townID);
 		$("body").load("lobby.php", function(response, status) {
 			if(status !=  "success") {
 				closeAll();
@@ -618,8 +617,7 @@ function buildTown() {
 }
 
 function leaveGameResponse(response) {
-	if(response === "success") {
-		conn.send('*' + townID);
+	if(response.slice(0, 7) === "success") {
 		window.location.href = window.location.href;
 	}
 	else {

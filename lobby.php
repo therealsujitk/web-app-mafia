@@ -58,7 +58,7 @@
 				$name = $row["name"];
 				if($userID == $row["user_id"])
 					$name = $name . " <b>(You)</b>";
-				echo '<figure style="margin: 10px; display: inline-block;"><img style="height: 22vh; max-height: 150px;" src="'. $row["avatar"] .'"></img><figcaption style="width: 17vh; white-space: nowrap; overflow: auto;">' . $name . '</figcaption></figure>';
+				echo '<figure id="' . $row["user_id"] . '" style="margin: 10px; display: inline-block;"><img style="height: 22vh; max-height: 150px;" src="'. $row["avatar"] .'"></img><figcaption style="width: 17vh; white-space: nowrap; overflow: auto;">' . $name . '</figcaption></figure>';
 			}
 		?>
 	</div>
@@ -163,45 +163,31 @@
 </div>
 
 <script>
-	conn.onmessage = function(e) {
-		console.log(e.data);
-		if(e.data === '*') {
-			$("#town-players").load("lobby.php #town-players > *", function(response, status) {
-				if(status !=  "success") {
-					closeAll();
-					setTimeout(function() {
-						document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
-						document.getElementById('error-modal').classList.add("show-modal");
-						document.getElementById('modal-background').style.display = "block";
-					}, 500);
-				}
-			});
+	wamp.topic(townID).subscribe((arr) => {
+		if(arr._args[0] === "player joined") {
+			if(document.getElementById('player-cards')) {
+				let playerCards = document.getElementById('player-cards');
+				playerCards.innerHTML += '<figure id=' + arr._args[1] + ' style="margin: 10px; display: inline-block;"><img style="height: 22vh; max-height: 150px;" src="' + arr._args[2] + '"></img><figcaption style="width: 17vh; white-space: nowrap; overflow: auto;">' + arr._args[3] + '</figcaption></figure>';
+			}
 		}
-		else if(e.data === '!') {
-			document.getElementById('splash-background').classList.add('show-splash');
-			document.getElementById('splash').classList.add('show-splash');
+		else if(arr._args[0] === "player left") {
+			if(document.getElementById('player-cards')) {
+				document.getElementById(arr._args[1]).remove();
+			}
 		}
-		else if(e.data === '%') {
-			document.getElementById('splash-background').classList.add('hide-splash');
-			document.getElementById('splash').classList.add('hide-splash');
-			setTimeout(function() {
-				document.getElementById('splash-background').classList.remove('show-splash');
-				document.getElementById('splash-background').classList.remove('hide-splash');
-				document.getElementById('splash').classList.remove('show-splash');
-				document.getElementById('splash').classList.remove('hide-splash');
-			}, 500);
+		else if(arr._args[0] === "owner left") {
+			if(document.getElementById('player-cards')) {
+				$("#town-players").load("lobby.php #town-players > *", function(response, status) {
+					if(status !=  "success") {
+						closeAll();
+						setTimeout(function() {
+							document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
+							document.getElementById('error-modal').classList.add("show-modal");
+							document.getElementById('modal-background').style.display = "block";
+						}, 500);
+					}
+				});
+			}
 		}
-		else if(e.data === '$') {
-			$("body").load("game.php", function(response, status) {
-				if(status !=  "success") {
-					closeAll();
-					setTimeout(function() {
-						document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
-						document.getElementById('error-modal').classList.add("show-modal");
-						document.getElementById('modal-background').style.display = "block";
-					}, 500);
-				}
-			});
-		}
-	};
+	});
 </script>

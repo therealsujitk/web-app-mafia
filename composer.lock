@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "6fbc2f317677076170fd620c6282286e",
+    "content-hash": "a99f12688f4b39f7c8cd44ffbe3f4df8",
     "packages": [
         {
             "name": "cboden/ratchet",
@@ -228,6 +228,53 @@
             "time": "2016-08-06T14:39:51+00:00"
         },
         {
+            "name": "psr/log",
+            "version": "1.1.3",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/php-fig/log.git",
+                "reference": "0f73288fd15629204f9d42b7055f72dacbe811fc"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/php-fig/log/zipball/0f73288fd15629204f9d42b7055f72dacbe811fc",
+                "reference": "0f73288fd15629204f9d42b7055f72dacbe811fc",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.0"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.1.x-dev"
+                }
+            },
+            "autoload": {
+                "psr-4": {
+                    "Psr\\Log\\": "Psr/Log/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "PHP-FIG",
+                    "homepage": "http://www.php-fig.org/"
+                }
+            ],
+            "description": "Common interface for logging libraries",
+            "homepage": "https://github.com/php-fig/log",
+            "keywords": [
+                "log",
+                "psr",
+                "psr-3"
+            ],
+            "time": "2020-03-23T09:12:05+00:00"
+        },
+        {
             "name": "ralouphie/getallheaders",
             "version": "3.0.3",
             "source": {
@@ -266,6 +313,55 @@
             ],
             "description": "A polyfill for getallheaders.",
             "time": "2019-03-08T08:55:37+00:00"
+        },
+        {
+            "name": "ratchet/pawl",
+            "version": "v0.3.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/ratchetphp/Pawl.git",
+                "reference": "89ec703c76dc893484a2a0ed44b48a37d445abd5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/ratchetphp/Pawl/zipball/89ec703c76dc893484a2a0ed44b48a37d445abd5",
+                "reference": "89ec703c76dc893484a2a0ed44b48a37d445abd5",
+                "shasum": ""
+            },
+            "require": {
+                "evenement/evenement": "^3.0 || ^2.0",
+                "php": ">=5.4",
+                "ratchet/rfc6455": "^0.3",
+                "react/socket": "^1.0 || ^0.8 || ^0.7"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.8"
+            },
+            "suggest": {
+                "reactivex/rxphp": "~2.0"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Ratchet\\Client\\": "src"
+                },
+                "files": [
+                    "src/functions_include.php"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "description": "Asynchronous WebSocket client",
+            "keywords": [
+                "Ratchet",
+                "async",
+                "client",
+                "websocket",
+                "websocket client"
+            ],
+            "time": "2020-07-17T15:32:47+00:00"
         },
         {
             "name": "ratchet/rfc6455",
@@ -672,16 +768,16 @@
         },
         {
             "name": "symfony/deprecation-contracts",
-            "version": "v2.1.3",
+            "version": "v2.2.0",
             "source": {
                 "type": "git",
                 "url": "https://github.com/symfony/deprecation-contracts.git",
-                "reference": "5e20b83385a77593259c9f8beb2c43cd03b2ac14"
+                "reference": "5fa56b4074d1ae755beb55617ddafe6f5d78f665"
             },
             "dist": {
                 "type": "zip",
-                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/5e20b83385a77593259c9f8beb2c43cd03b2ac14",
-                "reference": "5e20b83385a77593259c9f8beb2c43cd03b2ac14",
+                "url": "https://api.github.com/repos/symfony/deprecation-contracts/zipball/5fa56b4074d1ae755beb55617ddafe6f5d78f665",
+                "reference": "5fa56b4074d1ae755beb55617ddafe6f5d78f665",
                 "shasum": ""
             },
             "require": {
@@ -690,7 +786,7 @@
             "type": "library",
             "extra": {
                 "branch-alias": {
-                    "dev-master": "2.1-dev"
+                    "dev-master": "2.2-dev"
                 },
                 "thanks": {
                     "name": "symfony/contracts",
@@ -732,7 +828,7 @@
                     "type": "tidelift"
                 }
             ],
-            "time": "2020-06-06T08:49:21+00:00"
+            "time": "2020-09-07T11:33:47+00:00"
         },
         {
             "name": "symfony/http-foundation",
@@ -1057,6 +1153,282 @@
                 }
             ],
             "time": "2020-08-10T08:03:57+00:00"
+        },
+        {
+            "name": "thruway/client",
+            "version": "0.5.4",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thruway/client.git",
+                "reference": "532604ab58de1e271a368dae406685566c539c87"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thruway/client/zipball/532604ab58de1e271a368dae406685566c539c87",
+                "reference": "532604ab58de1e271a368dae406685566c539c87",
+                "shasum": ""
+            },
+            "require": {
+                "evenement/evenement": "^3.0 || ^2.0",
+                "psr/log": "^1.0",
+                "react/event-loop": "^1.0 || ^0.5 || ^0.4.3",
+                "react/promise-timer": "^1.2.1",
+                "voryx/thruway-common": "^1.0"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.5.4",
+                "thruway/pawl-transport": "dev-master"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Thruway\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matt Bonneau",
+                    "email": "matt@bonneau.net",
+                    "role": "Developer"
+                },
+                {
+                    "name": "David Dan",
+                    "email": "davidwdan@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Thruway WAMP client",
+            "keywords": [
+                "Autobahn",
+                "WAMP",
+                "WAMP2",
+                "WebSockets",
+                "client"
+            ],
+            "time": "2018-04-09T12:18:12+00:00"
+        },
+        {
+            "name": "thruway/pawl-transport",
+            "version": "0.5.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thruway/pawl-transport.git",
+                "reference": "fa297b4aaf74c59fe2fcb41963f55bfcfda70c98"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thruway/pawl-transport/zipball/fa297b4aaf74c59fe2fcb41963f55bfcfda70c98",
+                "reference": "fa297b4aaf74c59fe2fcb41963f55bfcfda70c98",
+                "shasum": ""
+            },
+            "require": {
+                "ratchet/pawl": "^0.3.1"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Thruway\\Transport\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matt Bonneau",
+                    "email": "matt@bonneau.net",
+                    "role": "Developer"
+                },
+                {
+                    "name": "David Dan",
+                    "email": "davidwdan@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Pawl WebSocket Transport for Thruway Client",
+            "keywords": [
+                "Autobahn",
+                "WAMP",
+                "WAMP2",
+                "WebSockets",
+                "client",
+                "sockets",
+                "thruway"
+            ],
+            "time": "2019-07-04T14:58:36+00:00"
+        },
+        {
+            "name": "thruway/ratchet-transport",
+            "version": "0.5.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/thruway/ratchet-transport.git",
+                "reference": "0f6cf96d120b264fbe229577db52be64ec58e4d0"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/thruway/ratchet-transport/zipball/0f6cf96d120b264fbe229577db52be64ec58e4d0",
+                "reference": "0f6cf96d120b264fbe229577db52be64ec58e4d0",
+                "shasum": ""
+            },
+            "require": {
+                "cboden/ratchet": "^0.4",
+                "guzzlehttp/psr7": "^1.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Thruway\\Transport\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matt Bonneau",
+                    "email": "matt@bonneau.net",
+                    "role": "Developer"
+                },
+                {
+                    "name": "David Dan",
+                    "email": "davidwdan@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Ratchet Transport for Thruway",
+            "keywords": [
+                "Autobahn",
+                "WAMP",
+                "WAMP2",
+                "WebSockets",
+                "client",
+                "server",
+                "sockets",
+                "thruway"
+            ],
+            "time": "2017-10-03T13:38:44+00:00"
+        },
+        {
+            "name": "voryx/thruway",
+            "version": "0.6.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/voryx/Thruway.git",
+                "reference": "b82fed26af801e31f68f2889f1838c30a53503e7"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/voryx/Thruway/zipball/b82fed26af801e31f68f2889f1838c30a53503e7",
+                "reference": "b82fed26af801e31f68f2889f1838c30a53503e7",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.6",
+                "react/event-loop": "^1.0 || ^0.5 || ^0.4.3",
+                "react/promise": "^2.3.0",
+                "thruway/client": "^0.5.0",
+                "thruway/ratchet-transport": "^0.5.0",
+                "voryx/thruway-common": "^1.0.5"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^8",
+                "thruway/pawl-transport": "^0.5.0",
+                "thruway/raw-socket-transport": "^0.5.0"
+            },
+            "bin": [
+                "bin/thruway"
+            ],
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Thruway\\": "src/"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matt Bonneau",
+                    "email": "matt@bonneau.net",
+                    "role": "Developer"
+                },
+                {
+                    "name": "David Dan",
+                    "email": "davidwdan@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "Thruway WAMP router core",
+            "keywords": [
+                "Autobahn",
+                "WAMP",
+                "WAMP2",
+                "WebSockets",
+                "client",
+                "server",
+                "sockets"
+            ],
+            "time": "2020-06-12T14:48:41+00:00"
+        },
+        {
+            "name": "voryx/thruway-common",
+            "version": "1.0.5",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/voryx/ThruwayCommon.git",
+                "reference": "694adb0403c4267d1ea78a136da1cafc935d39b5"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/voryx/ThruwayCommon/zipball/694adb0403c4267d1ea78a136da1cafc935d39b5",
+                "reference": "694adb0403c4267d1ea78a136da1cafc935d39b5",
+                "shasum": ""
+            },
+            "replace": {
+                "voryx/thruway-message": "1.*"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "^5.5.4"
+            },
+            "type": "library",
+            "autoload": {
+                "psr-4": {
+                    "Thruway\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Matt Bonneau",
+                    "email": "matt@bonneau.net",
+                    "role": "Developer"
+                },
+                {
+                    "name": "David Dan",
+                    "email": "davidwdan@gmail.com",
+                    "role": "Developer"
+                }
+            ],
+            "description": "WAMP2 Common Library for Thruway",
+            "keywords": [
+                "WAMP",
+                "WAMP2",
+                "thruway",
+                "wamp-proto"
+            ],
+            "time": "2019-01-18T15:59:32+00:00"
         }
     ],
     "packages-dev": [],
