@@ -34,6 +34,8 @@ else {
 	die('Sorry, something went terribly wrong.');
 }
 
+mysqli_close($conn);
+
 $onClose = function ($msg) {
     echo $msg;
 };
@@ -73,5 +75,3 @@ $connection->on('open',
 );
 
 $connection->open();
-
-mysqli_close($conn);

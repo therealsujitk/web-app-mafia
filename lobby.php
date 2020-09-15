@@ -163,10 +163,13 @@
 
 <script>
 	wamp.topic(townID).subscribe((arr) => {
+		var splashTimeout;
+
 		if(arr._args[0] === "player joined") {
 			if(document.getElementById('player-cards')) {
 				let playerCards = document.getElementById('player-cards');
-				playerCards.innerHTML += '<figure id=' + arr._args[1] + ' style="margin: 10px; display: inline-block;"><img style="height: 22vh; max-height: 150px;" src="' + arr._args[2] + '"></img><figcaption style="width: 17vh; white-space: nowrap; overflow: auto;">' + arr._args[3] + '</figcaption></figure>';
+				if(!document.getElementById(arr._args[1]))
+					playerCards.innerHTML += '<figure id=' + arr._args[1] + ' style="margin: 10px; display: inline-block;"><img style="height: 22vh; max-height: 150px;" src="' + arr._args[2] + '"></img><figcaption style="width: 17vh; white-space: nowrap; overflow: auto;">' + arr._args[3] + '</figcaption></figure>';
 			}
 		}
 		else if(arr._args[0] === "player left") {
@@ -177,6 +180,36 @@
 		else if(arr._args[0] === "owner left") {
 			if(document.getElementById('player-cards')) {
 				$("#town-players").load("lobby.php #town-players > *", function(response, status) {
+					if(status !=  "success") {
+						let message = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
+						openError(message);
+					}
+				});
+			}
+		}
+		else if(arr._args[0] === "show splash") {
+			if(document.getElementById('splash')) {
+				document.getElementById('splash-background').classList.add('show-splash');
+				document.getElementById('splash').classList.add('show-splash');
+				isOpen = true;
+
+				splashTimeout = setTimeout(function() {
+					if(document.getElementById('splash').classList.contains('show-splash')) {
+						let message = 'Sorry, timeout error. Please try refreshing this page.';
+						openError(message);
+					}
+				}, 30000);
+			}
+		}
+		else if(arr._args[0] === "hide splash") {
+			if(document.getElementById('splash')) {
+				closeAll();
+				clearTimeout(splashTimeout);
+			}
+		}
+		else if(arr._args[0] === "start game") {
+			if(document.getElementById('player-cards')) {
+				$("body").load("game.php", function(response, status) {
 					if(status !=  "success") {
 						let message = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
 						openError(message);

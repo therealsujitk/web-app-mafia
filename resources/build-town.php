@@ -1,5 +1,10 @@
 <?php
 
+require '../vendor/voryx/thruway/Examples/bootstrap.php';
+
+use Thruway\ClientSession;
+use Thruway\Connection;
+
 session_start();
 include('../conn.php');
 $query = "SELECT COUNT(user_id) FROM town_" . $_SESSION["townID"] . ";";
@@ -217,3 +222,32 @@ mysqli_query($conn, $query);
 mysqli_close($conn);
 
 echo 'success';
+
+$onClose = function ($msg) {
+    echo $msg;
+};
+
+$connection = new Connection(
+    [
+        "realm"   => 'mafia',
+        "onClose" => $onClose,
+        "url"     => 'ws://127.0.0.1:3000',
+    ]
+);
+
+$connection->on('open',
+    function (ClientSession $session) use ($townID, $connection) {
+		$session->publish($townID, ['start game'], [], ["acknowledge" => true])->then(
+			function () {
+				echo "Publish Acknowledged!\n";
+			},
+			function ($error) {
+				echo "Publish Error {$error}\n";
+			}
+		);	
+
+		$connection->close();
+		}
+);
+
+$connection->open();

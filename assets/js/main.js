@@ -191,6 +191,16 @@ function closeAll() {
 			x.classList.remove("hide-modal");
 		}, 500);
 	}
+	if(document.getElementById('splash')) {
+		document.getElementById('splash-background').classList.add('hide-splash');
+		document.getElementById('splash').classList.add('hide-splash');
+		setTimeout(function() {
+			document.getElementById('splash-background').classList.remove('show-splash');
+			document.getElementById('splash-background').classList.remove('hide-splash');
+			document.getElementById('splash').classList.remove('show-splash');
+			document.getElementById('splash').classList.remove('hide-splash');
+		}, 500);
+	}
 	
 	setTimeout(function() {
 		a.style.display = "none";
@@ -590,8 +600,9 @@ function openLeave() {
 }
 
 function buildTownResponse(response) {
-	if(response != "success") {
+	if(response.slice(0, 7) != "success") {
 		openError(response);
+		wamp.publish(townID, 'hide splash');
 		
 		var start = document.getElementById('start');
 		start.disabled = false;
@@ -613,12 +624,18 @@ function buildTown() {
 	start.disabled = true;
 	start.value = "Please wait...";
 
+	wamp.publish(townID, 'show splash');
+	document.getElementById('splash-background').classList.add('show-splash');
+	document.getElementById('splash').classList.add('show-splash');
+	isOpen = true;
+
 	$.ajax({
 		type: 'POST',
 		url: '/resources/build-town.php',
 		error: function() {
 			let message = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
 			openError(message);
+			wamp.publish(townID, 'hide splash');
 
 			start.disabled = false;
 			start.value = "Start Game";
