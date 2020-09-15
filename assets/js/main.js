@@ -2,6 +2,7 @@ const wamp = new thruway.Client('ws://localhost:3000', 'mafia');
 
 var i = 0;
 var newsInterval;
+var isOpen = false;
 
 //All Pages
 function vhCalc() {
@@ -17,29 +18,79 @@ window.addEventListener('resize', () => {
 function openAbout() {
 	let x = document.getElementById('about-modal');
 	let y = document.getElementById('modal-background');
+	let t = 0;
+
+	if(isOpen) {
+		closeAll();
+		t = 500;
+	}
 	
-	x.classList.add("show-modal");
-	y.style.display = "block";
+	setTimeout(function() {			
+		x.classList.add("show-modal");
+		y.style.display = "block";
+	}, t);
+
+	isOpen = true;
 }
 
 function openBug() {
 	let x = document.getElementById('bug-modal');
 	let y = document.getElementById('modal-background');
+	let t = 0;
 	
-	x.classList.add("show-modal");
-	y.style.display = "block";
-
+	if(isOpen) {
+		closeAll();
+		t = 500;
+	}
+	
 	setTimeout(function() {
-		document.getElementById('report').focus();
-	}, 500);
+		x.classList.add("show-modal");
+		y.style.display = "block";
+
+		setTimeout(function() {
+			document.getElementById('report').focus();
+		}, 500);
+	}, t);
+
+	isOpen = true;
 }
 
 function openPrivacy() {
 	let x = document.getElementById('privacy-modal');
 	let y = document.getElementById('modal-background');
+	let t = 0;
 	
-	x.classList.add("show-modal");
-	y.style.display = "block";
+	if(isOpen) {
+		closeAll();
+		t = 500;
+	}
+	
+	setTimeout(function() {
+		x.classList.add("show-modal");
+		y.style.display = "block";
+	}, t);
+
+	isOpen = true;
+}
+
+function openError(message = "Sorry, something went terribly wrong.") {
+	let x = document.getElementById('error-message');
+	let y = document.getElementById('error-modal');
+	let z = document.getElementById('modal-background');
+	let t = 0;
+
+	if(isOpen) {
+		closeAll();
+		t = 500;
+	}
+	
+	setTimeout(function() {
+		x.innerHTML = message;
+		y.classList.add("show-modal");
+		z.style.display = "block";
+	}, t);
+
+	isOpen = true;
 }
 
 function openMenu() {
@@ -144,6 +195,8 @@ function closeAll() {
 	setTimeout(function() {
 		a.style.display = "none";
 	}, 500);
+
+	isOpen = false;
 }
 
 function reportBugResponse(response) {
@@ -152,12 +205,7 @@ function reportBugResponse(response) {
 		document.getElementById('report').value = "";
 	}
 	else {
-		closeAll();
-		setTimeout(function() {
-			document.getElementById('error-message').innerHTML = response;
-			document.getElementById('error-modal').classList.add("show-modal");
-			document.getElementById('modal-background').style.display = "block";
-		}, 500);
+		openError(response);
 	}
 
 	var submit = document.getElementById('submit-report');
@@ -183,12 +231,8 @@ function reportBug() {
 			report: report
 		},
 		error: function() {
-			closeAll();
-			setTimeout(function() {
-				document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
-				document.getElementById('error-modal').classList.add("show-modal");
-				document.getElementById('modal-background').style.display = "block";
-			}, 500);
+			let message = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
+			openError(message);
 			
 			submit.disabled = false;
 			submit.value = "Submit Bug Report";
@@ -278,14 +322,23 @@ function openCreate(i) {
 
 	let x = document.getElementById('create-modal');
 	let y = document.getElementById('modal-background');
+	let t = 0;
 	
-	x.classList.add("show-modal");
-	y.style.display = "block";
-
+	if(isOpen) {
+		closeAll();
+		t = 500;
+	}
+	
 	setTimeout(function() {
-		document.getElementById('town').focus();
-	}, 500);
+		x.classList.add("show-modal");
+		y.style.display = "block";
 
+		setTimeout(function() {
+			document.getElementById('town').focus();
+		}, 500);
+	}, t);
+
+	isOpen = true;
 	setCookie(i);
 }
 
@@ -304,14 +357,23 @@ function openJoin(i) {
 
 	let x = document.getElementById('join-modal');
 	let y = document.getElementById('modal-background');
+	let t = 0;
 	
-	x.classList.add("show-modal");
-	y.style.display = "block";
-
+	if(isOpen) {
+		closeAll();
+		t = 500;
+	}
+	
 	setTimeout(function() {
-		document.getElementById('town-id').focus();
-	}, 500);	
+		x.classList.add("show-modal");
+		y.style.display = "block";
+
+		setTimeout(function() {
+			document.getElementById('town-id').focus();
+		}, 500);
+	}, t);
 	
+	isOpen = true;
 	setCookie(i);
 }
 
@@ -349,28 +411,13 @@ function createTownResponse(response) {
 	if(response.slice(0, 7) === "success") {
 		$("body").load("lobby.php", function(response, status) {
 			if(status !=  "success") {
-				document.getElementById('splash-background').classList.add('hide-splash');
-				document.getElementById('splash').classList.add('hide-splash');
-				closeAll();
-				setTimeout(function() {
-					document.getElementById('splash-background').classList.remove('show-splash');
-					document.getElementById('splash-background').classList.remove('hide-splash');
-					document.getElementById('splash').classList.remove('show-splash');
-					document.getElementById('splash').classList.remove('hide-splash');
-					document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
-					document.getElementById('error-modal').classList.add("show-modal");
-					document.getElementById('modal-background').style.display = "block";
-				}, 500);
+				let message = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
+				openError(message);
 			}
 		});
 	}
 	else {
-		closeAll();
-		setTimeout(function() {
-			document.getElementById('error-message').innerHTML = response;
-			document.getElementById('error-modal').classList.add("show-modal");
-			document.getElementById('modal-background').style.display = "block";
-		}, 500);
+		openError(response);
 		
 		var create = document.getElementById('create');
 		create.disabled = false;
@@ -401,12 +448,8 @@ function createTown() {
 			avatar: avatar
 		},
 		error: function() {
-			closeAll();
-			setTimeout(function() {
-				document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
-				document.getElementById('error-modal').classList.add("show-modal");
-				document.getElementById('modal-background').style.display = "block";
-			}, 500);
+			let message = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
+			openError(message);
 			
 			create.disabled = false;
 			create.value = "Create Town";
@@ -418,22 +461,13 @@ function joinTownResponse(response, townID, joinVal) {
 	if(response.slice(0, 7) === "success") {
 		$("body").load("lobby.php", function(response, status) {
 			if(status !=  "success") {
-				closeAll();
-				setTimeout(function() {
-					document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
-					document.getElementById('error-modal').classList.add("show-modal");
-					document.getElementById('modal-background').style.display = "block";
-				}, 500);
+				let message = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
+				openError(message);
 			}
 		});
 	}
 	else {
-		closeAll();
-		setTimeout(function() {
-			document.getElementById('error-message').innerHTML = response;
-			document.getElementById('error-modal').classList.add("show-modal");
-			document.getElementById('modal-background').style.display = "block";
-		}, 500);
+		openError(response);
 
 		if(document.getElementById('join-town')) {
 			var joinButton = document.getElementById('join-town');
@@ -486,12 +520,8 @@ function joinTown(i=1) {
 			avatar: avatar
 		},
 		error: function() {
-			closeAll();
-			setTimeout(function() {
-				document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
-				document.getElementById('error-modal').classList.add("show-modal");
-				document.getElementById('modal-background').style.display = "block";
-			}, 500);
+			let message = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
+			openError(message);
 			
 			join.disabled = false;
 			join.value = "Join Town";
@@ -544,25 +574,24 @@ function openLeave() {
 	let x = document.getElementById('leave-modal');
 	let y = document.getElementById('modal-background');
 	
-	x.classList.add("show-modal");
-	y.style.display = "block";
+	if(isOpen) {
+		closeAll();
+		setTimeout(function() {
+			x.classList.add("show-modal");
+			y.style.display = "block";
+		}, 500);
+	}
+	else {
+		x.classList.add("show-modal");
+		y.style.display = "block";
+	}
+
+	isOpen = true;
 }
 
 function buildTownResponse(response) {
 	if(response != "success") {
-		conn.send('%' + townID);
-		document.getElementById('splash-background').classList.add('hide-splash');
-		document.getElementById('splash').classList.add('hide-splash');
-		closeAll();
-		setTimeout(function() {
-			document.getElementById('splash-background').classList.remove('show-splash');
-			document.getElementById('splash-background').classList.remove('hide-splash');
-			document.getElementById('splash').classList.remove('show-splash');
-			document.getElementById('splash').classList.remove('hide-splash');
-			document.getElementById('error-message').innerHTML = response;
-			document.getElementById('error-modal').classList.add("show-modal");
-			document.getElementById('modal-background').style.display = "block";
-		}, 500);
+		openError(response);
 		
 		var start = document.getElementById('start');
 		start.disabled = false;
@@ -572,12 +601,8 @@ function buildTownResponse(response) {
 		conn.send('$' + townID);
 		$("body").load("game.php", function(response, status) {
 			if(status !=  "success") {
-				closeAll();
-				setTimeout(function() {
-					document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
-					document.getElementById('error-modal').classList.add("show-modal");
-					document.getElementById('modal-background').style.display = "block";
-				}, 500);
+				let message = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
+				openError(message);
 			}
 		});
 	}
@@ -588,27 +613,12 @@ function buildTown() {
 	start.disabled = true;
 	start.value = "Please wait...";
 
-	conn.send('!' + townID);
-	document.getElementById('splash-background').classList.add('show-splash');
-	document.getElementById('splash').classList.add('show-splash');
-
 	$.ajax({
 		type: 'POST',
 		url: '/resources/build-town.php',
 		error: function() {
-			conn.send('%' + townID);
-			document.getElementById('splash-background').classList.add('hide-splash');
-			document.getElementById('splash').classList.add('hide-splash');
-			closeAll();
-			setTimeout(function() {
-				document.getElementById('splash-background').classList.remove('show-splash');
-				document.getElementById('splash-background').classList.remove('hide-splash');
-				document.getElementById('splash').classList.remove('show-splash');
-				document.getElementById('splash').classList.remove('hide-splash');
-				document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
-				document.getElementById('error-modal').classList.add("show-modal");
-				document.getElementById('modal-background').style.display = "block";
-			}, 500);
+			let message = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
+			openError(message);
 
 			start.disabled = false;
 			start.value = "Start Game";
@@ -621,12 +631,7 @@ function leaveGameResponse(response) {
 		window.location.href = window.location.href;
 	}
 	else {
-		closeAll();
-		setTimeout(function() {
-			document.getElementById('error-message').innerHTML = response;
-			document.getElementById('error-modal').classList.add("show-modal");
-			document.getElementById('modal-background').style.display = "block";
-		}, 500);
+		openError(response);
 		
 		var leave = document.getElementById('leave-game');
 		leave.disabled = false;
@@ -646,12 +651,8 @@ function leaveGame() {
 			check: 'true'
 		},
 		error: function() {
-			closeAll();
-			setTimeout(function() {
-				document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
-				document.getElementById('error-modal').classList.add("show-modal");
-				document.getElementById('modal-background').style.display = "block";
-			}, 500);
+			let message = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
+			openError(message);
 			
 			leave.disabled = false;
 			leave.value = "Yes, I'm sure";
@@ -661,7 +662,6 @@ function leaveGame() {
 
 //game.php
 function clientUpdate() {
-	//$("#game-display").animate({ scrollTop: $('#game-display').prop("scrollHeight")}, 500);
 	$("#game-display").scrollTop($("#game-display").prop("scrollHeight"));
 
 	var results = document.getElementById('results').innerHTML;
@@ -689,41 +689,6 @@ function clientUpdate() {
 	}
 
 	printNews();
-}
-
-function printNews() {
-	if(i) {
-		clearInterval(newsInterval);
-		i = 0;
-	}
-
-	let bold = false;
-	var newsBar = document.getElementById('news');
-	newsBar.innerHTML = "";
-	var news = document.getElementById('news-update').innerHTML.trim();
-	newsInterval = setInterval(function() {
-		if(i < news.length) {
-			if(news[i] === '*') {
-				++i;
-				if(!bold)
-					bold = true;
-				else
-					bold = false;
-			}
-			
-			if(bold)
-				newsBar.innerHTML += news[i].bold();
-			else
-				newsBar.innerHTML += news[i];
-			++i;
-
-			gameSpaceCalc();
-		}
-		else {
-			clearInterval(newsInterval);
-			i = 0;
-		}
-	}, 50);
 }
 
 function gameSpaceCalc() {
@@ -763,20 +728,75 @@ function gameSpaceCalc() {
 	document.documentElement.style.setProperty('--gsr', `${gameSpaceHeightR}px`);
 }
 
+function printNews() {
+	if(i) {
+		clearInterval(newsInterval);
+		i = 0;
+	}
+
+	let bold = false;
+	var newsBar = document.getElementById('news');
+	newsBar.innerHTML = "";
+	var news = document.getElementById('news-update').innerHTML.trim();
+	newsInterval = setInterval(function() {
+		if(i < news.length) {
+			if(news[i] === '*') {
+				++i;
+				if(!bold)
+					bold = true;
+				else
+					bold = false;
+			}
+			
+			if(bold)
+				newsBar.innerHTML += news[i].bold();
+			else
+				newsBar.innerHTML += news[i];
+			++i;
+
+			gameSpaceCalc();
+		}
+		else {
+			clearInterval(newsInterval);
+			i = 0;
+		}
+	}, 50);
+}
+
 function openRole() {
 	let x = document.getElementById('role-modal');
 	let y = document.getElementById('modal-background');
+	let t = 0;
 	
-	x.classList.add("show-modal");
-	y.style.display = "block";
+	if(isOpen) {
+		closeAll();
+		t = 500
+	}
+
+	setTimeout(function(){
+		x.classList.add("show-modal");
+		y.style.display = "block";
+	}, t);
+
+	isOpen = true;
 }
 
 function openVote() {
 	let x = document.getElementById('vote-modal');
 	let y = document.getElementById('modal-background');
+	let t = 0;
+
+	if(isOpen) {
+		closeAll();
+		t = 500;
+	}
 	
-	x.classList.add("show-modal");
-	y.style.display = "block";
+	setTimeout(function() {
+		x.classList.add("show-modal");
+		y.style.display = "block";
+	}, t);
+
+	isOpen = true;
 }
 
 function loadL() {
@@ -813,12 +833,8 @@ function sendMessageResponse(response, message) {
 
 		$("#game-display").load("game.php #game-display > *", function(response, status) {
 			if(status !=  "success") {
-				closeAll();
-				setTimeout(function() {
-					document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
-					document.getElementById('error-modal').classList.add("show-modal");
-					document.getElementById('modal-background').style.display = "block";
-				}, 500);
+				let message = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
+				openError(message);
 			}
 			else {
 				$("#game-display").animate({ scrollTop: $('#game-display').prop("scrollHeight")}, 500);
@@ -826,13 +842,7 @@ function sendMessageResponse(response, message) {
 		});
 	}
 	else {
-		closeAll();
-		setTimeout(function() {
-			document.getElementById('error-message').innerHTML = response;
-			document.getElementById('error-modal').classList.add("show-modal");
-			document.getElementById('modal-background').style.display = "block";
-		}, 500);
-		
+		openError(response);
 		document.getElementById('chat-box').value = message;
 	}
 }
@@ -848,12 +858,8 @@ function sendMessage() {
 			message: message
 		},
 		error: function() {
-			closeAll();
-			setTimeout(function() {
-				document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
-				document.getElementById('error-modal').classList.add("show-modal");
-				document.getElementById('modal-background').style.display = "block";
-			}, 500);
+			let message = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
+			openError(message);
 			
 			document.getElementById('chat-box').value = message;
 		}
@@ -868,49 +874,20 @@ function enterMessage(event) {
 }
 
 function registerVoteResponse(response) {
-	$("#vote-modal").load("game.php #vote-modal > *", function(response, status) {
-		if(status !=  "success") {
-			closeAll();
-			setTimeout(function() {
-				document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
-				document.getElementById('error-modal').classList.add("show-modal");
-				document.getElementById('modal-background').style.display = "block";
-			}, 500);
-		}
-	});
-
 	if(response.slice(0, 7) === "success") {
 		let notification = document.getElementById('notification');
 		notification.classList.add("hide-alert");
-		
-		if(response.slice(7) === '1') {
-			conn.send('#' + townID);
-			var messageValue = document.getElementById('chat-box').value;
-			closeAll();
-			$("body").load("game.php", function(response, status) {
-				if(status !=  "success") {
-					closeAll();
-					setTimeout(function() {
-						document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
-						document.getElementById('error-modal').classList.add("show-modal");
-						document.getElementById('modal-background').style.display = "block";
-					}, 500);
-				}
-				else {
-					document.getElementById('chat-box').value = messageValue;
-				}
-			});
-		}
 	}
 	else {
-		closeAll();
-		setTimeout(function() {
-			document.getElementById('error-message').innerHTML = response;
-			document.getElementById('error-modal').classList.add("show-modal");
-			document.getElementById('modal-background').style.display = "block";
-		}, 500);
-		
+		openError(response);
 	}
+
+	$("#vote-modal").load("game.php #vote-modal > *", function(response, status) {
+		if(status !=  "success") {
+			let message = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
+			openError(message);
+		}
+	});
 }
 
 function registerVote(role, vote) {
@@ -927,12 +904,8 @@ function registerVote(role, vote) {
 			document.getElementById('candidates').innerHTML = '<p>Loading...</p>';
 		},
 		error: function() {
-			closeAll();
-			setTimeout(function() {
-				document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
-				document.getElementById('error-modal').classList.add("show-modal");
-				document.getElementById('modal-background').style.display = "block";
-			}, 500);
+			let message = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
+			openError(message);
 		}
 	}).then(response => registerVoteResponse(response));
 }
@@ -942,22 +915,13 @@ function restartGameResponse(response) {
 		conn.send('@' + townID);
 		$("body").load("lobby.php", function(response, status) {
 			if(status !=  "success") {
-				closeAll();
-				setTimeout(function() {
-					document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
-					document.getElementById('error-modal').classList.add("show-modal");
-					document.getElementById('modal-background').style.display = "block";
-				}, 500);
+				let message = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
+				openError(message);
 			}
 		});
 	}
 	else {
-		closeAll();
-		setTimeout(function() {
-			document.getElementById('error-message').innerHTML = response;
-			document.getElementById('error-modal').classList.add("show-modal");
-			document.getElementById('modal-background').style.display = "block";
-		}, 500);
+		openError(response);
 		
 		var restart = document.getElementById('restart-game');
 		restart.disabled = false;
@@ -977,49 +941,11 @@ function restartGame() {
 			check: 'true'
 		},
 		error: function() {
-			closeAll();
-			setTimeout(function() {
-				document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
-				document.getElementById('error-modal').classList.add("show-modal");
-				document.getElementById('modal-background').style.display = "block";
-			}, 500);
+			let message = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
+			openError(message);
 			
 			restart.disabled = false;
 			restart.value = "Back to Lobby";
 		}
 	}).then(response => restartGameResponse(response));
-}
-
-function goHomeResponse(response) {
-	if(response === "Success!") {
-		window.location.href = window.location.href;
-	}
-	else {
-		$('#home').prop('disabled', false);
-		$('#home').val("Go Home");
-	}
-}
-
-function goHome() {
-	$('#home').prop('disabled', true);
-	$('#home').val('Please wait...');
-
-	$.ajax({
-		type: 'POST',
-		url: '/resources/leave-game.php',
-		data: {
-			check: 'true'
-		},
-		error: function() {
-			closeAll();
-			setTimeout(function() {
-				document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
-				document.getElementById('error-modal').classList.add("show-modal");
-				document.getElementById('modal-background').style.display = "block";
-			}, 500);
-			
-			$('#home').prop('disabled', false);
-			$('#home').val("Go Home");
-		}
-	}).then(response => goHomeResponse(response));
 }

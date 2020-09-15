@@ -113,7 +113,7 @@
 		<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 	</table>
 	<table cellpadding="0" cellspacing="0" style="width: 100%;">
-		<td><img src="/assets/images/error.png" style="height: 50px;"></img></td>
+		<td style="width: 50px;"><img src="/assets/images/error.png" style="height: 50px;"></img></td>
 		<td><p id="error-message" style="padding: 0; margin: 0;"></p></td>
 	</table>
 </div>
@@ -150,9 +150,8 @@
 					if(status !=  'success') {
 						closeAll();
 						setTimeout(function() {
-							document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
-							document.getElementById('error-modal').classList.add('show-modal');
-							document.getElementById('modal-background').style.display = 'block';
+							let message = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
+							openError(message);
 						}, 500);
 					}
 				});
@@ -179,12 +178,8 @@
 			if(document.getElementById('player-cards')) {
 				$("#town-players").load("lobby.php #town-players > *", function(response, status) {
 					if(status !=  "success") {
-						closeAll();
-						setTimeout(function() {
-							document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
-							document.getElementById('error-modal').classList.add("show-modal");
-							document.getElementById('modal-background').style.display = "block";
-						}, 500);
+						let message = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
+						openError(message);
 					}
 				});
 			}

@@ -250,7 +250,7 @@
 				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 			</table>
 			<table cellpadding="0" cellspacing="0" style="width: 100%;">
-				<td><img src="/assets/images/error.png" style="height: 50px;"></img></td>
+				<td style="width: 50px;"><img src="/assets/images/error.png" style="height: 50px;"></img></td>
 				<td><p id="error-message" style="padding: 0; margin: 0;"></p></td>
 			</table>
 		</div>
