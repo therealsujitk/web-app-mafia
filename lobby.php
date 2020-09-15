@@ -163,8 +163,6 @@
 
 <script>
 	wamp.topic(townID).subscribe((arr) => {
-		var splashTimeout;
-
 		if(arr._args[0] === "player joined") {
 			if(document.getElementById('player-cards')) {
 				let playerCards = document.getElementById('player-cards');

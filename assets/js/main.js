@@ -2,6 +2,7 @@ const wamp = new thruway.Client('ws://localhost:3000', 'mafia');
 
 var i = 0;
 var newsInterval;
+var splashTimeout;
 var isOpen = false;
 
 //All Pages
@@ -603,6 +604,7 @@ function buildTownResponse(response) {
 	if(response.slice(0, 7) != "success") {
 		openError(response);
 		wamp.publish(townID, 'hide splash');
+		clearTimeout(splashTimeout);
 		
 		var start = document.getElementById('start');
 		start.disabled = false;
@@ -629,6 +631,13 @@ function buildTown() {
 	document.getElementById('splash').classList.add('show-splash');
 	isOpen = true;
 
+	splashTimeout = setTimeout(function() {
+		if(document.getElementById('splash').classList.contains('show-splash')) {
+			let message = 'Sorry, timeout error. Please try refreshing this page.';
+			openError(message);
+		}
+	}, 30000);
+
 	$.ajax({
 		type: 'POST',
 		url: '/resources/build-town.php',
@@ -636,6 +645,7 @@ function buildTown() {
 			let message = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
 			openError(message);
 			wamp.publish(townID, 'hide splash');
+			clearTimeout(splashTimeout);
 
 			start.disabled = false;
 			start.value = "Start Game";
