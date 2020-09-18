@@ -3,6 +3,7 @@ const wamp = new thruway.Client('ws://localhost:3000', 'mafia');
 var i = 0;
 var newsInterval;
 var splashTimeout;
+var restartTimeout;
 var isOpen = false;
 
 //All Pages
@@ -949,6 +950,7 @@ function restartGameResponse(response) {
 	}
 	else {
 		openError(response);
+		wamp.publish(townID, 'restart failed');
 		
 		var restart = document.getElementById('restart-game');
 		restart.disabled = false;
@@ -960,6 +962,7 @@ function restartGame() {
 	var restart = document.getElementById('restart-game');
 	restart.disabled = true;
 	restart.value = "Please wait...";
+	wamp.publish(townID, 'try restart');
 
 	$.ajax({
 		type: 'POST',
@@ -970,6 +973,7 @@ function restartGame() {
 		error: function() {
 			let message = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
 			openError(message);
+			wamp.publish(townID, 'restart failed');
 			
 			restart.disabled = false;
 			restart.value = "Back to Lobby";

@@ -1,5 +1,10 @@
 <?php
 
+require '../vendor/voryx/thruway/Examples/bootstrap.php';
+
+use Thruway\ClientSession;
+use Thruway\Connection;
+
 session_start();
 include('../conn.php');
 
@@ -155,4 +160,35 @@ if($_SESSION["dailyIndex"] != $tempIndex) {
 
 mysqli_close($conn);
 
-echo 'success' . $nextSession;
+echo 'success';
+
+if($nextSession == '1') {
+	$onClose = function ($msg) {
+		echo $msg;
+	};
+	
+	$connection = new Connection(
+		[
+			"realm"   => 'mafia',
+			"onClose" => $onClose,
+			"url"     => 'ws://127.0.0.1:3000',
+		]
+	);
+	
+	$connection->on('open',
+		function (ClientSession $session) use ($townID, $connection) {
+			$session->publish($townID, ['update index'], [], ["acknowledge" => true])->then(
+				function () {
+					echo "Publish Acknowledged!\n";
+				},
+				function ($error) {
+					echo "Publish Error {$error}\n";
+				}
+			);
+	
+			$connection->close();
+		}
+	);
+	
+	$connection->open();
+}

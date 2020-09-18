@@ -783,8 +783,8 @@ if($_SESSION["dailyIndex"] == 0) {
 	
 	document.getElementsByTagName('title')[0].innerHTML = document.getElementById('game-index').innerHTML.slice(4, -5).trim() + ' • ' + town + ' - Mafia';
 	
-	conn.onmessage = function(e) {
-		if(e.data == '^') {
+	wamp.topic(townID).subscribe((arr) => {
+		if(arr._args[0] === "new message") {
 			$("#game-display").load("game.php #game-display > *", function(response, status) {
 				if(status !=  "success") {
 					closeAll();
@@ -799,7 +799,7 @@ if($_SESSION["dailyIndex"] == 0) {
 				}
 			});
 		}
-		else if(e.data == '#') {
+		else if(arr._args[0] === "update index") {
 			var messageValue = document.getElementById('chat-box').value;
 			closeAll();
 			$("body").load("game.php", function(response, status) {
@@ -816,7 +816,7 @@ if($_SESSION["dailyIndex"] == 0) {
 				}
 			});
 		}
-		else if(e.data == '@') {
+		else if(arr._args[0] === "restart game") {
 			$("body").load("lobby.php", function(response, status) {
 				if(status !=  "success") {
 					closeAll();
@@ -828,7 +828,30 @@ if($_SESSION["dailyIndex"] == 0) {
 				}
 			});
 		}
-	}
+		else if(arr._args[0] === "try restart") {
+			if(document.getElementById('restart-game')) {
+				var restart = document.getElementById('restart-game');
+				restart.disabled = true;
+				restart.value = "Please wait...";
+
+				restartTimeout = setTimeout(function() {
+					restart.disabled = false;
+					restart.value = "Back to Lobby";
+
+					let message = 'Sorry, timeout error. Please try refreshing this page.';
+					openError(message);
+				}, 30000);
+			}
+		}
+		else if(arr._args[0] === "restart failed") {
+			if(document.getElementById('restart-game')) {
+				var restart = document.getElementById('restart-game');
+				restart.disabled = false;
+				restart.value = "Back to Lobby";
+				clearTimeout(restartTimeout);
+			}
+		}
+	});
 
 	window.onbeforeunload = function() {
 		return "Are you sure you want to leave? If your session ends, you won\'t be able to continue playing this game.";
