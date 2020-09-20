@@ -1,9 +1,10 @@
 const wamp = new thruway.Client('ws://localhost:3000', 'mafia');
 
 var i = 0;
-var newsInterval;
-var splashTimeout;
-var restartTimeout;
+var newsInterval = null;
+var splashTimeout = null;
+var indexTimeout = null;
+var restartTimeout = null;
 var isOpen = false;
 
 //All Pages
@@ -757,8 +758,9 @@ function gameSpaceCalc() {
 }
 
 function printNews() {
-	if(i) {
+	if(newsInterval) {
 		clearInterval(newsInterval);
+		newsInterval = null;
 		i = 0;
 	}
 
@@ -785,8 +787,11 @@ function printNews() {
 			gameSpaceCalc();
 		}
 		else {
-			clearInterval(newsInterval);
-			i = 0;
+			if(newsInterval) {
+				clearInterval(newsInterval);
+				newsInterval = null;
+				i = 0;
+			}
 		}
 	}, 50);
 }

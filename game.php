@@ -97,6 +97,23 @@ if($_SESSION["dailyIndex"] != $tempIndex) {
 			else
 				$message = '<p id="news-update">Citizens of *' . $town . '*, yesterday no one was executed. ' . $postMessage;
 		
+		$message .= "<script>
+			indexTimeout = setTimeout(function() {
+				$.ajax({
+					type: 'POST',
+					url: '/resources/register-vote.php',
+					data: {
+						role: 'timeup',
+						vote: ''
+					},
+					error: function() {
+						let message = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
+						openError(message);
+					}
+				});
+			}, 60000);
+		</script>";
+
 		$_SESSION["message"] = $message;
 	}
 	else {
@@ -109,7 +126,7 @@ if($_SESSION["dailyIndex"] != $tempIndex) {
 		$query = "SELECT name FROM town_" . $townID . " WHERE medic_" . $prev . " <> 0;";
 		$healed = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
 		
-		$message = '<p id="news-update">You are in the underworld. There is no way to contact anyone from here. Maybe make a deal with Lucifer?';
+		$message = '<p id="news-update">You are in the underworld. There is no way to contact anyone from here. Maybe make a deal with Lucifer?</p>';
 		
 		$query = "SELECT name FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0 AND user_id = " . $userID . ";";
 		if(mysqli_fetch_assoc(mysqli_query($conn, $query))) {
@@ -118,6 +135,23 @@ if($_SESSION["dailyIndex"] != $tempIndex) {
 			else
 				$message = '<p id="news-update">Citizens of *' . $town . '*, Last night our medic saved the day, there were no casualities. However, this town is still not free from the mafia. Discuss with other citizens on who you think the mafia members might be, after that click the *Vote* button below.</p>';
 		}
+
+		$message .= "<script>
+			indexTimeout = setTimeout(function() {
+				$.ajax({
+					type: 'POST',
+					url: '/resources/register-vote.php',
+					data: {
+						role: 'timeup',
+						vote: ''
+					},
+					error: function() {
+						let message = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
+						openError(message);
+					}
+				});
+			}, 150000);
+		</script>";
 		
 		$_SESSION["message"] = $message;
 	}
@@ -177,6 +211,23 @@ if($_SESSION["dailyIndex"] == 0) {
 			</script>';
 		$flag = 0;
 	}
+
+	$message .= "<script>
+		indexTimeout = setTimeout(function() {
+			$.ajax({
+				type: 'POST',
+				url: '/resources/register-vote.php',
+				data: {
+					role: 'timeup',
+					vote: ''
+				},
+				error: function() {
+					let message = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
+					openError(message);
+				}
+			});
+		}, 60000);
+	</script>";
 
 	echo $message;
 }
@@ -737,6 +788,12 @@ if($_SESSION["dailyIndex"] == 0) {
 
 			if($flag) {
 				echo '</br><input id="restart-game" class="btn" style="margin-top: 10px;" type="button" value="Back to Lobby" onclick="restartGame();"></input>';
+				echo "<script>
+					if(indexTimeout) {
+						clearTimeout(indexTimeout);
+						indexTimeout = null;
+					}
+				</script>";
 			}
 			?>
 		</p></td>
@@ -800,6 +857,10 @@ if($_SESSION["dailyIndex"] == 0) {
 			});
 		}
 		else if(arr._args[0] === "update index") {
+			if(indexTimeout) {
+				clearTimeout(indexTimeout);
+				indexTimeout = null;
+			}
 			var messageValue = document.getElementById('chat-box').value;
 			closeAll();
 			$("body").load("game.php", function(response, status) {
@@ -848,7 +909,10 @@ if($_SESSION["dailyIndex"] == 0) {
 				var restart = document.getElementById('restart-game');
 				restart.disabled = false;
 				restart.value = "Back to Lobby";
-				clearTimeout(restartTimeout);
+				if(restartTimeout) {
+					clearTimeout(restartTimeout);
+					restartTimeout = null;
+				}
 			}
 		}
 	});

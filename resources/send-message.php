@@ -43,6 +43,8 @@ mysqli_close($conn);
 
 echo 'success';
 
+$townID = $_SESSION["townID"];
+
 $onClose = function ($msg) {
 	echo $msg;
 };

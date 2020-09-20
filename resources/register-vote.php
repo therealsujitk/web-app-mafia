@@ -63,6 +63,55 @@ else if($role == 'citizen') {
 	$query = "UPDATE town_" . $townID . " SET day_" . $day . " = " . $vote . " WHERE user_id = " . $userID . " AND day_" . $day . " = 0;";
 	mysqli_query($conn, $query);
 }
+else if($role == 'timeup') {
+	if($dailyIndex %2 == 0) {
+		$query = "SELECT time_stamp FROM town_details WHERE town_id = '$townID' AND time_stamp <= (NOW() - INTERVAL 2.5 MINUTE);";
+		if(mysqli_query($conn, $query)) {
+			$night = $dailyIndex / 2;
+
+			$query = "SELECT user_id FROM town_" . $townID . " WHERE night_" . $night . " <> 0;";
+
+			if(!mysqli_fetch_assoc(mysqli_query($conn, $query))) {
+				$query = "SELECT user_id FROM town_" . $townID . " WHERE is_mafia = 0 ORDER BY RAND();";
+				$vote = mysqli_fetch_assoc(mysqli_query($conn, $query))["user_id"];
+				$query = "UPDATE town_" . $townID . " SET night_" . $night . " = 1 WHERE user_id = " . $vote . " AND night_" . $night . " = 0;";
+				mysqli_query($conn, $query);
+			}
+
+			$query =  "SELECT user_id FROM town_" . $townID . " WHERE is_medic = 1 is_killed = 0 AND is_executed = 0;";
+			if(mysqli_fetch_assoc(mysqli_query($conn, $query))) {
+				$query = "SELECT user_id FROM town_" . $townID . " WHERE medic_" . $night . " <> 0;";
+				if(!mysqli_fetch_assoc(mysqli_query($conn, $query))) {
+					$prev = $night - 1;
+					if($prev < 0)
+						$prev = 0;
+					
+					$query = "SELECT user_id FROM town_" . $townID . " WHERE night_" . $prev . " = 0 ORDER BY RAND();";
+					$vote = mysqli_fetch_assoc(mysqli_query($conn, $query))["user_id"];
+					$query = "UPDATE town_" . $townID . " SET medic_" . $night . " = 1 WHERE user_id = " . $vote . " AND medic_" . $night . " = 0;";
+					mysqli_query($conn, $query);
+				}
+			}
+		}
+	}
+	else {
+		$query = "SELECT time_stamp FROM town_details WHERE town_id = '$townID' AND time_stamp <= (NOW() - INTERVAL 1 MINUTE);";
+		if(mysqli_query($conn, $query)) {
+			$day = $dailyIndex/2 + 0.5;
+
+			$query = "SELECT user_id FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0 and day_" . $day . " = 0;";
+			if($result = mysqli_query($conn, $query)) {
+				while($row = mysqli_fetch_assoc($result)) {
+					$query = "SELECT user_id FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0 ORDER BY RAND();";
+					$vote = mysqli_fetch_assoc(mysqli_query($conn, $query))["user_id"];
+
+					$query = "UPDATE town_" . $townID . " SET day_" . $day . " = " . $vote . " WHERE user_id = " . $row["user_id"] . " AND day_" . $day . " = 0;";
+					mysqli_query($conn, $query);
+				}
+			}
+		}
+	}
+}
 else {
 	die('Sorry, something went terribly wrong.');
 }
@@ -156,6 +205,9 @@ if($_SESSION["dailyIndex"] != $tempIndex) {
 			mysqli_query($conn, $query);
 		}
 	}
+
+	$query = "UPDATE town_details SET time_stamp = NOW() WHERE town_id = '$townID';";
+	mysqli_query($conn, $query);
 }
 
 mysqli_close($conn);
