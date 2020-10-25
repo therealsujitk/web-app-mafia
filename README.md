@@ -30,7 +30,7 @@ CREATE TABLE bug_reports (
 ```sql
 CREATE TABLE town_details (
 	town_id VARCHAR(15) PRIMARY KEY,
-	time_stamp TIMESTAMP NOT NULL,
+	time_stamp TIMESTAMP NULL,
 	town_name VARCHAR(50) NOT NULL,
 	mob_name VARCHAR(50) NOT NULL,
 	has_started INT (2) DEFAULT 0 NOT NULL,

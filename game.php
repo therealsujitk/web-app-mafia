@@ -97,22 +97,23 @@ if($_SESSION["dailyIndex"] != $tempIndex) {
 			else
 				$message = '<p id="news-update">Citizens of *' . $town . '*, yesterday no one was executed. ' . $postMessage;
 		
-		$message .= "<script>
-			indexTimeout = setTimeout(function() {
-				$.ajax({
-					type: 'POST',
-					url: '/resources/register-vote.php',
-					data: {
-						role: 'timeup',
-						vote: ''
-					},
-					error: function() {
-						let message = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
-						openError(message);
-					}
-				});
-			}, 60000);
-		</script>";
+				$message .= "<script>
+				clearInterval(indexTimeout);
+					indexTimeout = setInterval(function() {
+						var timer = document.getElementById('timer');
+						var timerMobile = document.getElementById('timer-mobile');
+						if (timer.innerHTML == '0') {
+							clearInterval(indexTimeout)
+						} else {
+							timer.innerHTML -= 1;
+							timerMobile.innerHTML -= 1;
+							if (timer.innerHTML == '0') {
+								timeUp();
+								clearInterval(indexTimeout)
+							}
+						}
+					}, 1000);
+				</script>";
 
 		$_SESSION["message"] = $message;
 	}
@@ -137,20 +138,21 @@ if($_SESSION["dailyIndex"] != $tempIndex) {
 		}
 
 		$message .= "<script>
-			indexTimeout = setTimeout(function() {
-				$.ajax({
-					type: 'POST',
-					url: '/resources/register-vote.php',
-					data: {
-						role: 'timeup',
-						vote: ''
-					},
-					error: function() {
-						let message = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
-						openError(message);
+			clearInterval(indexTimeout);
+			indexTimeout = setInterval(function() {
+				var timer = document.getElementById('timer');
+				var timerMobile = document.getElementById('timer-mobile');
+				if (timer.innerHTML == '0') {
+					clearInterval(indexTimeout)
+				} else {
+					timer.innerHTML -= 1;
+					timerMobile.innerHTML -= 1;
+					if (timer.innerHTML == '0') {
+						timeUp();
+						clearInterval(indexTimeout)
 					}
-				});
-			}, 150000);
+				}
+			}, 1000);
 		</script>";
 		
 		$_SESSION["message"] = $message;
@@ -213,20 +215,21 @@ if($_SESSION["dailyIndex"] == 0) {
 	}
 
 	$message .= "<script>
-		indexTimeout = setTimeout(function() {
-			$.ajax({
-				type: 'POST',
-				url: '/resources/register-vote.php',
-				data: {
-					role: 'timeup',
-					vote: ''
-				},
-				error: function() {
-					let message = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
-					openError(message);
+		clearInterval(indexTimeout);
+		indexTimeout = setInterval(function() {
+			var timer = document.getElementById('timer');
+			var timerMobile = document.getElementById('timer-mobile');
+			if (timer.innerHTML == '0') {
+				clearInterval(indexTimeout)
+			} else {
+				timer.innerHTML -= 1;
+				timerMobile.innerHTML -= 1;
+				if (timer.innerHTML == '0') {
+					timeUp();
+					clearInterval(indexTimeout)
 				}
-			});
-		}, 60000);
+			}
+		}, 1000);
 	</script>";
 
 	echo $message;
@@ -239,15 +242,15 @@ if($_SESSION["dailyIndex"] == 0) {
 	<div id="logo-mobile"><h3>
 		<?php
 		if($_SESSION["dailyIndex"] == 0) {
-			echo 'The First Night';
+			echo 'The First Night - <span id="timer-mobile" style="font-size: inherit;">60</span>s';
 		}
 		else if($_SESSION["dailyIndex"]%2 == 0) {
 			$night = $_SESSION["dailyIndex"] / 2;
-			echo 'Night ' . $night;
+			echo 'Night ' . $night . ' - <span id="timer-mobile" style="font-size: inherit;">60</span>s';
 		}
 		else {
 			$day = $_SESSION["dailyIndex"]/2 + 0.5;
-			echo 'Day ' . $day;
+			echo 'Day ' . $day . ' - <span id="timer-mobile" style="font-size: inherit;">150</span>s';
 		}
 		?>
 	</h3></div>
@@ -270,15 +273,15 @@ if($_SESSION["dailyIndex"] == 0) {
 			<th id="game-index" style="vertical-align: center;"><h3>
 			<?php
 			if($_SESSION["dailyIndex"] == 0) {
-				echo 'The First Night';
+				echo '<span id="index" style="font-size: inherit;">The First Night</span> - <span id="timer" style="font-size: inherit;">60</span>s';
 			}
 			else if($_SESSION["dailyIndex"]%2 == 0) {
 				$night = $_SESSION["dailyIndex"] / 2;
-				echo 'Night ' . $night;
+				echo '<span id="index" style="font-size: inherit;">Night ' . $night . '</span> - <span id="timer" style="font-size: inherit;">60</span>s';
 			}
 			else {
 				$day = $_SESSION["dailyIndex"]/2 + 0.5;
-				echo 'Day ' . $day;
+				echo '<span id="index" style="font-size: inherit;">Day ' . $day . '</span> - <span id="timer" style="font-size: inherit;">150</span>s';
 			}
 			?>
 			</h3></th>
@@ -838,7 +841,7 @@ if($_SESSION["dailyIndex"] == 0) {
 	}
 	?>
 	
-	document.getElementsByTagName('title')[0].innerHTML = document.getElementById('game-index').innerHTML.slice(4, -5).trim() + ' • ' + town + ' - Mafia';
+	document.getElementsByTagName('title')[0].innerHTML = document.getElementById('index').innerHTML + ' • ' + town + ' - Mafia';
 	
 	wamp.topic(townID).subscribe((arr) => {
 		if(arr._args[0] === "new message") {

@@ -216,13 +216,16 @@ mysqli_query($conn, $query);
 $query = "CREATE TRIGGER daily_trigger_" . $townID . " AFTER UPDATE ON town_" . $townID . " FOR EACH ROW UPDATE town_details SET daily_index = daily_index + 1 WHERE town_id = '$townID' AND game_index >= daily_max;";
 mysqli_query($conn, $query);
 
+$query = "UPDATE town_details SET time_stamp = NOW() WHERE town_id = '$townID';";
+mysqli_query($conn, $query);
+
+$query = "UPDATE town_details SET has_started = 1 WHERE town_id = '$townID';";
+mysqli_query($conn, $query);
+
 $query = "UPDATE statistics SET players_joined = players_joined + " . $population . " WHERE id = 1;";
 mysqli_query($conn, $query);
 
 $query = "UPDATE statistics SET games_played = games_played + 1 WHERE id = 1;";
-mysqli_query($conn, $query);
-
-$query = "UPDATE town_details SET has_started = 1 WHERE town_id = '$townID';";
 mysqli_query($conn, $query);
 
 mysqli_close($conn);

@@ -943,6 +943,21 @@ function registerVote(role, vote) {
 	}).then(response => registerVoteResponse(response));
 }
 
+function timeUp() {
+	$.ajax({
+		type: 'POST',
+		url: '/resources/register-vote.php',
+		data: {
+			role: 'timeup',
+			vote: ''
+		},
+		error: function() {
+			let message = 'Sorry, we are having some trouble communicating with our servers. Please check your internet connection.';
+			openError(message);
+		}
+	});
+}
+
 function restartGameResponse(response) {
 	if(response === "success") {
 		conn.send('@' + townID);
