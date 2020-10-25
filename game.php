@@ -881,6 +881,11 @@ if($_SESSION["dailyIndex"] == 0) {
 			});
 		}
 		else if(arr._args[0] === "restart game") {
+			if(restartTimeout) {
+				clearTimeout(restartTimeout);
+				restartTimeout = null;
+			}
+			
 			$("body").load("lobby.php", function(response, status) {
 				if(status !=  "success") {
 					closeAll();

@@ -612,15 +612,6 @@ function buildTownResponse(response) {
 		start.disabled = false;
 		start.value = "Start Game";
 	}
-	else {
-		conn.send('$' + townID);
-		$("body").load("game.php", function(response, status) {
-			if(status !=  "success") {
-				let message = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
-				openError(message);
-			}
-		});
-	}
 }
 
 function buildTown() {
@@ -861,20 +852,7 @@ function loadR() {
 }
 
 function sendMessageResponse(response, message) {
-	if(response === "success") {
-		conn.send('^' + townID);
-
-		$("#game-display").load("game.php #game-display > *", function(response, status) {
-			if(status !=  "success") {
-				let message = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
-				openError(message);
-			}
-			else {
-				$("#game-display").animate({ scrollTop: $('#game-display').prop("scrollHeight")}, 500);
-			}
-		});
-	}
-	else {
+	if(response.slice(0, 7) != "success") {
 		openError(response);
 		document.getElementById('chat-box').value = message;
 	}
@@ -959,16 +937,7 @@ function timeUp() {
 }
 
 function restartGameResponse(response) {
-	if(response === "success") {
-		conn.send('@' + townID);
-		$("body").load("lobby.php", function(response, status) {
-			if(status !=  "success") {
-				let message = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
-				openError(message);
-			}
-		});
-	}
-	else {
+	if(response != "success") {
 		openError(response);
 		wamp.publish(townID, 'restart failed');
 		

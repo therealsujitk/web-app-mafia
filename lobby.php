@@ -214,6 +214,7 @@
 					clearTimeout(splashTimeout);
 					splashTimeout = null;
 				}
+				
 				$("body").load("game.php", function(response, status) {
 					if(status !=  "success") {
 						let message = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
