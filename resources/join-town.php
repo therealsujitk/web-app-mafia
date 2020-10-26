@@ -1,7 +1,13 @@
 <?php
 
+require '../vendor/voryx/thruway/Examples/bootstrap.php';
+
+use Thruway\ClientSession;
+use Thruway\Connection;
+
 include('../conn.php');
 session_start();
+
 $townID = trim($_POST['townID']);
 $name = substr(trim($_POST['name']), 0, 10);
 $avatar = $_POST['avatar'];
@@ -51,6 +57,9 @@ $query = "SELECT town_name, mob_name FROM town_details WHERE town_id = '$townID'
 $town = mysqli_fetch_assoc(mysqli_query($conn, $query))["town_name"];
 $mob = mysqli_fetch_assoc(mysqli_query($conn, $query))["mob_name"];
 
+$query = "SELECT user_id FROM town_" . $townID . " WHERE name = '$name';";
+$userID = mysqli_fetch_assoc(mysqli_query($conn, $query))["user_id"];
+
 mysqli_close($conn);
 
 $_SESSION["townID"] = $townID;
@@ -62,3 +71,32 @@ $_SESSION["message"] = '';
 $_SESSION["revealed"] = '';
 
 echo 'success';
+
+$onClose = function ($msg) {
+    echo $msg;
+};
+
+$connection = new Connection(
+    [
+        "realm"   => 'mafia',
+        "onClose" => $onClose,
+        "url"     => 'ws://127.0.0.1:3000',
+    ]
+);
+
+$connection->on('open',
+    function (ClientSession $session) use ($townID, $userID, $avatar, $name, $connection) {
+        $session->publish($townID, ['player joined', $userID, $avatar, $name], [], ["acknowledge" => true])->then(
+            function () {
+                echo "Publish Acknowledged!\n";
+            },
+            function ($error) {
+                echo "Publish Error {$error}\n";
+            }
+        );
+
+        $connection->close();
+    }
+);
+
+$connection->open();

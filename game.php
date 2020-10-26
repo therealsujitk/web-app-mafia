@@ -97,6 +97,24 @@ if($_SESSION["dailyIndex"] != $tempIndex) {
 			else
 				$message = '<p id="news-update">Citizens of *' . $town . '*, yesterday no one was executed. ' . $postMessage;
 		
+				$message .= "<script>
+				clearInterval(indexTimeout);
+					indexTimeout = setInterval(function() {
+						var timer = document.getElementById('timer');
+						var timerMobile = document.getElementById('timer-mobile');
+						if (timer.innerHTML == '0') {
+							clearInterval(indexTimeout)
+						} else {
+							timer.innerHTML -= 1;
+							timerMobile.innerHTML -= 1;
+							if (timer.innerHTML == '0') {
+								timeUp();
+								clearInterval(indexTimeout)
+							}
+						}
+					}, 1000);
+				</script>";
+
 		$_SESSION["message"] = $message;
 	}
 	else {
@@ -109,7 +127,7 @@ if($_SESSION["dailyIndex"] != $tempIndex) {
 		$query = "SELECT name FROM town_" . $townID . " WHERE medic_" . $prev . " <> 0;";
 		$healed = mysqli_fetch_assoc(mysqli_query($conn, $query))["name"];
 		
-		$message = '<p id="news-update">You are in the underworld. There is no way to contact anyone from here. Maybe make a deal with Lucifer?';
+		$message = '<p id="news-update">You are in the underworld. There is no way to contact anyone from here. Maybe make a deal with Lucifer?</p>';
 		
 		$query = "SELECT name FROM town_" . $townID . " WHERE is_killed = 0 AND is_executed = 0 AND user_id = " . $userID . ";";
 		if(mysqli_fetch_assoc(mysqli_query($conn, $query))) {
@@ -118,6 +136,24 @@ if($_SESSION["dailyIndex"] != $tempIndex) {
 			else
 				$message = '<p id="news-update">Citizens of *' . $town . '*, Last night our medic saved the day, there were no casualities. However, this town is still not free from the mafia. Discuss with other citizens on who you think the mafia members might be, after that click the *Vote* button below.</p>';
 		}
+
+		$message .= "<script>
+			clearInterval(indexTimeout);
+			indexTimeout = setInterval(function() {
+				var timer = document.getElementById('timer');
+				var timerMobile = document.getElementById('timer-mobile');
+				if (timer.innerHTML == '0') {
+					clearInterval(indexTimeout)
+				} else {
+					timer.innerHTML -= 1;
+					timerMobile.innerHTML -= 1;
+					if (timer.innerHTML == '0') {
+						timeUp();
+						clearInterval(indexTimeout)
+					}
+				}
+			}, 1000);
+		</script>";
 		
 		$_SESSION["message"] = $message;
 	}
@@ -178,6 +214,24 @@ if($_SESSION["dailyIndex"] == 0) {
 		$flag = 0;
 	}
 
+	$message .= "<script>
+		clearInterval(indexTimeout);
+		indexTimeout = setInterval(function() {
+			var timer = document.getElementById('timer');
+			var timerMobile = document.getElementById('timer-mobile');
+			if (timer.innerHTML == '0') {
+				clearInterval(indexTimeout)
+			} else {
+				timer.innerHTML -= 1;
+				timerMobile.innerHTML -= 1;
+				if (timer.innerHTML == '0') {
+					timeUp();
+					clearInterval(indexTimeout)
+				}
+			}
+		}, 1000);
+	</script>";
+
 	echo $message;
 }
 ?>
@@ -188,15 +242,15 @@ if($_SESSION["dailyIndex"] == 0) {
 	<div id="logo-mobile"><h3>
 		<?php
 		if($_SESSION["dailyIndex"] == 0) {
-			echo 'The First Night';
+			echo 'The First Night - <span id="timer-mobile" style="font-size: inherit;">60</span>s';
 		}
 		else if($_SESSION["dailyIndex"]%2 == 0) {
 			$night = $_SESSION["dailyIndex"] / 2;
-			echo 'Night ' . $night;
+			echo 'Night ' . $night . ' - <span id="timer-mobile" style="font-size: inherit;">60</span>s';
 		}
 		else {
 			$day = $_SESSION["dailyIndex"]/2 + 0.5;
-			echo 'Day ' . $day;
+			echo 'Day ' . $day . ' - <span id="timer-mobile" style="font-size: inherit;">150</span>s';
 		}
 		?>
 	</h3></div>
@@ -219,15 +273,15 @@ if($_SESSION["dailyIndex"] == 0) {
 			<th id="game-index" style="vertical-align: center;"><h3>
 			<?php
 			if($_SESSION["dailyIndex"] == 0) {
-				echo 'The First Night';
+				echo '<span id="index" style="font-size: inherit;">The First Night</span> - <span id="timer" style="font-size: inherit;">60</span>s';
 			}
 			else if($_SESSION["dailyIndex"]%2 == 0) {
 				$night = $_SESSION["dailyIndex"] / 2;
-				echo 'Night ' . $night;
+				echo '<span id="index" style="font-size: inherit;">Night ' . $night . '</span> - <span id="timer" style="font-size: inherit;">60</span>s';
 			}
 			else {
 				$day = $_SESSION["dailyIndex"]/2 + 0.5;
-				echo 'Day ' . $day;
+				echo '<span id="index" style="font-size: inherit;">Day ' . $day . '</span> - <span id="timer" style="font-size: inherit;">150</span>s';
 			}
 			?>
 			</h3></th>
@@ -454,7 +508,7 @@ if($_SESSION["dailyIndex"] == 0) {
 	</table>
 	<p>Made with love by a team of talented people from <b>BinaryStack</b>.</p>
 	<p>Credits: <b><a class="link2" href="https://instagram.com/abishek.stuff/" target="_blank">@AbishekDevendran</a></b> & <b><a class="link2" href="https://therealsuji.tk" target="_blank">@therealsujitk</a></b>.</p>
-	<div id="version"><span>v3.0.0</span></div>
+	<div id="version"><span>v3.1.0</span></div>
 </div>
 
 <div id="error-modal" class="modal">
@@ -463,7 +517,7 @@ if($_SESSION["dailyIndex"] == 0) {
 		<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 	</table>
 	<table cellpadding="0" cellspacing="0" style="width: 100%;">
-		<td><img src="/assets/images/error.png" style="height: 50px;"></img></td>
+		<td style="width: 50px;"><img src="/assets/images/error.png" style="height: 50px;"></img></td>
 		<td><p id="error-message" style="padding: 0; margin: 0;"></p></td>
 	</table>
 </div>
@@ -737,6 +791,12 @@ if($_SESSION["dailyIndex"] == 0) {
 
 			if($flag) {
 				echo '</br><input id="restart-game" class="btn" style="margin-top: 10px;" type="button" value="Back to Lobby" onclick="restartGame();"></input>';
+				echo "<script>
+					if(indexTimeout) {
+						clearTimeout(indexTimeout);
+						indexTimeout = null;
+					}
+				</script>";
 			}
 			?>
 		</p></td>
@@ -781,10 +841,10 @@ if($_SESSION["dailyIndex"] == 0) {
 	}
 	?>
 	
-	document.getElementsByTagName('title')[0].innerHTML = document.getElementById('game-index').innerHTML.slice(4, -5).trim() + ' • ' + town + ' - Mafia';
+	document.getElementsByTagName('title')[0].innerHTML = document.getElementById('index').innerHTML + ' • ' + town + ' - Mafia';
 	
-	conn.onmessage = function(e) {
-		if(e.data == '^') {
+	wamp.topic(townID).subscribe((arr) => {
+		if(arr._args[0] === "new message") {
 			$("#game-display").load("game.php #game-display > *", function(response, status) {
 				if(status !=  "success") {
 					closeAll();
@@ -799,7 +859,11 @@ if($_SESSION["dailyIndex"] == 0) {
 				}
 			});
 		}
-		else if(e.data == '#') {
+		else if(arr._args[0] === "update index") {
+			if(indexTimeout) {
+				clearTimeout(indexTimeout);
+				indexTimeout = null;
+			}
 			var messageValue = document.getElementById('chat-box').value;
 			closeAll();
 			$("body").load("game.php", function(response, status) {
@@ -816,7 +880,12 @@ if($_SESSION["dailyIndex"] == 0) {
 				}
 			});
 		}
-		else if(e.data == '@') {
+		else if(arr._args[0] === "restart game") {
+			if(restartTimeout) {
+				clearTimeout(restartTimeout);
+				restartTimeout = null;
+			}
+			
 			$("body").load("lobby.php", function(response, status) {
 				if(status !=  "success") {
 					closeAll();
@@ -828,7 +897,33 @@ if($_SESSION["dailyIndex"] == 0) {
 				}
 			});
 		}
-	}
+		else if(arr._args[0] === "try restart") {
+			if(document.getElementById('restart-game')) {
+				var restart = document.getElementById('restart-game');
+				restart.disabled = true;
+				restart.value = "Please wait...";
+
+				restartTimeout = setTimeout(function() {
+					restart.disabled = false;
+					restart.value = "Back to Lobby";
+
+					let message = 'Sorry, timeout error. Please try refreshing this page.';
+					openError(message);
+				}, 30000);
+			}
+		}
+		else if(arr._args[0] === "restart failed") {
+			if(document.getElementById('restart-game')) {
+				var restart = document.getElementById('restart-game');
+				restart.disabled = false;
+				restart.value = "Back to Lobby";
+				if(restartTimeout) {
+					clearTimeout(restartTimeout);
+					restartTimeout = null;
+				}
+			}
+		}
+	});
 
 	window.onbeforeunload = function() {
 		return "Are you sure you want to leave? If your session ends, you won\'t be able to continue playing this game.";

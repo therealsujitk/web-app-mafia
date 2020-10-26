@@ -6,6 +6,7 @@
 		<meta content="utf-8" http-equiv="encoding">
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.13.0/js/all.min.js"></script>
 		<script src="/node_modules/jquery/dist/jquery.min.js"></script>
+		<script src="/node_modules/thruway.js/dist/thruway.js"></script>
 		<script src="/assets/js/main.js"></script>
 		<link rel="apple-touch-icon" sizes="180x180" href="/assets/favicon/apple-touch-icon.png">
 		<link rel="icon" type="image/png" sizes="32x32" href="/assets/favicon/favicon-32x32.png">
@@ -58,7 +59,6 @@
 
 									echo '<script>
 										function continuePlaying() {
-											conn.send("' . $townID . '")
 											$("body").load("/game.php");
 										}
 									</script>';
@@ -68,7 +68,6 @@
 									
 									echo '<script>
 										function continuePlaying() {
-											conn.send("' . $townID . '")
 											$("body").load("/lobby.php");
 										}
 									</script>';
@@ -212,7 +211,7 @@
 			</table>
 			<p>Made with love by a team of talented people from <b>BinaryStack</b>.</p>
 			<p>Built By: <b><a class="link2" href="https://instagram.com/abishek.stuff/" target="_blank">@AbishekDevendran</a></b> & <b><a class="link2" href="https://therealsuji.tk" target="_blank">@therealsujitk</a></b>.</p>
-			<div id="version"><span>v3.0.0</span></div>
+			<div id="version"><span>v3.1.0</span></div>
 		</div>
 		
 		<div id="create-modal" class="modal">
@@ -251,7 +250,7 @@
 				<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 			</table>
 			<table cellpadding="0" cellspacing="0" style="width: 100%;">
-				<td><img src="/assets/images/error.png" style="height: 50px;"></img></td>
+				<td style="width: 50px;"><img src="/assets/images/error.png" style="height: 50px;"></img></td>
 				<td><p id="error-message" style="padding: 0; margin: 0;"></p></td>
 			</table>
 		</div>

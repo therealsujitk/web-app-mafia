@@ -58,7 +58,7 @@
 				$name = $row["name"];
 				if($userID == $row["user_id"])
 					$name = $name . " <b>(You)</b>";
-				echo '<figure style="margin: 10px; display: inline-block;"><img style="height: 22vh; max-height: 150px;" src="'. $row["avatar"] .'"></img><figcaption style="width: 17vh; white-space: nowrap; overflow: auto;">' . $name . '</figcaption></figure>';
+				echo '<figure id="' . $row["user_id"] . '" style="margin: 10px; display: inline-block;"><img style="height: 22vh; max-height: 150px;" src="'. $row["avatar"] .'"></img><figcaption style="width: 17vh; white-space: nowrap; overflow: auto;">' . $name . '</figcaption></figure>';
 			}
 		?>
 	</div>
@@ -104,7 +104,7 @@
 	</table>
 	<p>Made with love by a team of talented people from <b>BinaryStack</b>.</p>
 	<p>Built By: <b><a class="link2" href="https://instagram.com/abishek.stuff/" target="_blank">@AbishekDevendran</a></b> & <b><a class="link2" href="https://therealsuji.tk" target="_blank">@therealsujitk</a></b>.</p>
-	<div id="version"><span>v3.0.0</span></div>
+	<div id="version"><span>v3.1.0</span></div>
 </div>
 
 <div id="error-modal" class="modal">
@@ -113,7 +113,7 @@
 		<td style="text-align: right;"><i class="header link fas fa-times" onclick="closeAll()"></i></td>
 	</table>
 	<table cellpadding="0" cellspacing="0" style="width: 100%;">
-		<td><img src="/assets/images/error.png" style="height: 50px;"></img></td>
+		<td style="width: 50px;"><img src="/assets/images/error.png" style="height: 50px;"></img></td>
 		<td><p id="error-message" style="padding: 0; margin: 0;"></p></td>
 	</table>
 </div>
@@ -150,9 +150,8 @@
 					if(status !=  'success') {
 						closeAll();
 						setTimeout(function() {
-							document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
-							document.getElementById('error-modal').classList.add('show-modal');
-							document.getElementById('modal-background').style.display = 'block';
+							let message = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
+							openError(message);
 						}, 500);
 					}
 				});
@@ -163,45 +162,66 @@
 </div>
 
 <script>
-	conn.onmessage = function(e) {
-		console.log(e.data);
-		if(e.data === '*') {
-			$("#town-players").load("lobby.php #town-players > *", function(response, status) {
-				if(status !=  "success") {
-					closeAll();
-					setTimeout(function() {
-						document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
-						document.getElementById('error-modal').classList.add("show-modal");
-						document.getElementById('modal-background').style.display = "block";
-					}, 500);
+	wamp.topic(townID).subscribe((arr) => {
+		if(arr._args[0] === "player joined") {
+			if(document.getElementById('player-cards')) {
+				let playerCards = document.getElementById('player-cards');
+				if(!document.getElementById(arr._args[1]))
+					playerCards.innerHTML += '<figure id=' + arr._args[1] + ' style="margin: 10px; display: inline-block;"><img style="height: 22vh; max-height: 150px;" src="' + arr._args[2] + '"></img><figcaption style="width: 17vh; white-space: nowrap; overflow: auto;">' + arr._args[3] + '</figcaption></figure>';
+			}
+		}
+		else if(arr._args[0] === "player left") {
+			if(document.getElementById('player-cards')) {
+				document.getElementById(arr._args[1]).remove();
+			}
+		}
+		else if(arr._args[0] === "owner left") {
+			if(document.getElementById('player-cards')) {
+				$("#town-players").load("lobby.php #town-players > *", function(response, status) {
+					if(status !=  "success") {
+						let message = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
+						openError(message);
+					}
+				});
+			}
+		}
+		else if(arr._args[0] === "show splash") {
+			if(document.getElementById('splash')) {
+				document.getElementById('splash-background').classList.add('show-splash');
+				document.getElementById('splash').classList.add('show-splash');
+				isOpen = true;
+
+				splashTimeout = setTimeout(function() {
+					if(document.getElementById('splash').classList.contains('show-splash')) {
+						let message = 'Sorry, timeout error. Please try refreshing this page.';
+						openError(message);
+					}
+				}, 30000);
+			}
+		}
+		else if(arr._args[0] === "hide splash") {
+			if(document.getElementById('splash')) {
+				closeAll();
+				if(splashTimeout) {
+					clearTimeout(splashTimeout);
+					splashTimeout = null;
 				}
-			});
+			}
 		}
-		else if(e.data === '!') {
-			document.getElementById('splash-background').classList.add('show-splash');
-			document.getElementById('splash').classList.add('show-splash');
-		}
-		else if(e.data === '%') {
-			document.getElementById('splash-background').classList.add('hide-splash');
-			document.getElementById('splash').classList.add('hide-splash');
-			setTimeout(function() {
-				document.getElementById('splash-background').classList.remove('show-splash');
-				document.getElementById('splash-background').classList.remove('hide-splash');
-				document.getElementById('splash').classList.remove('show-splash');
-				document.getElementById('splash').classList.remove('hide-splash');
-			}, 500);
-		}
-		else if(e.data === '$') {
-			$("body").load("game.php", function(response, status) {
-				if(status !=  "success") {
-					closeAll();
-					setTimeout(function() {
-						document.getElementById('error-message').innerHTML = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
-						document.getElementById('error-modal').classList.add("show-modal");
-						document.getElementById('modal-background').style.display = "block";
-					}, 500);
+		else if(arr._args[0] === "start game") {
+			if(document.getElementById('player-cards')) {
+				if(splashTimeout) {
+					clearTimeout(splashTimeout);
+					splashTimeout = null;
 				}
-			});
+
+				$("body").load("game.php", function(response, status) {
+					if(status !=  "success") {
+						let message = 'Sorry, we are having some trouble communicating with our servers. Please try refreshing this page.';
+						openError(message);
+					}
+				});
+			}
 		}
-	};
+	});
 </script>

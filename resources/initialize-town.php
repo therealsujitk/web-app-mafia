@@ -54,7 +54,7 @@ while(true) {
 		break;
 }
 
-$query = "INSERT INTO town_details (town_id, town_name, mob_name) VALUES('$townID', '$town', '$mob');";
+$query = "INSERT INTO town_details (town_id, time_stamp, town_name, mob_name) VALUES('$townID', NOW(), '$town', '$mob');";
 mysqli_query($conn, $query);
 
 $query = "CREATE TABLE town_" . $townID . " (

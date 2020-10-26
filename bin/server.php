@@ -1,23 +1,14 @@
 <?php
 
-use Ratchet\Server\IoServer;
-use Ratchet\Http\HttpServer;
-use Ratchet\WebSocket\WsServer;
-use Mafia\Mafia;
+require '../vendor/voryx/thruway/Examples/bootstrap.php';
 
-require dirname(__DIR__) . '/vendor/autoload.php';
+use Thruway\Peer\Router;
+use Thruway\Transport\RatchetTransportProvider;
 
-$server = IoServer::factory(
-    new HttpServer(
-        new WsServer(
-            new Mafia()
-        )
-    ),
-    3000
-);
+$router = new Router();
 
-echo "listening on *: 3000\n";
+$transportProvider = new RatchetTransportProvider("127.0.0.1", 3000);
 
-$server->run();
+$router->addTransportProvider($transportProvider);
 
-echo "Server has been disconnected.\n";
+$router->start();
