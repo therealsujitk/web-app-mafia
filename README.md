@@ -52,14 +52,20 @@ CREATE TABLE statistics (
 INSERT INTO statistics (id, players_joined, games_played) VALUES ('1', '0', '0');
 ```
 
+### Dependencies
+
+```sh
+$ npm install
+$ composer install
+```
+
 ### Usage
 
-To play the game visit: [`https://playmafia.cf/`](https://playmafia.cf/)
+Run the following command to start the server that sends and receives messages.
 
-### Links
-
-- [Mafia Website](https://mafia.binarystack.org)
-- [BinaryStack Website](https://binarystack.org)
+```sh
+$ php bin/server.php
+```
 
 ### Built by
 
